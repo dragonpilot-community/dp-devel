@@ -334,6 +334,15 @@ def joystick_alert(CP: car.CarParams, CS: car.CarState, sm: messaging.SubMaster,
   vals = f"Gas: {round(gb * 100.)}%, Steer: {round(steer * 100.)}%"
   return NormalPermanentAlert(_("Joystick Mode"), vals)
 
+def speed_limit_adjust_alert(CP: car.CarParams, CS: car.CarState, sm: messaging.SubMaster, metric: bool, soft_disable_time: int) -> Alert:
+  speedLimit = sm['longitudinalPlan'].speedLimit
+  speed = round(speedLimit * (CV.MS_TO_KPH if metric else CV.MS_TO_MPH))
+  message = f'Adjusting to {speed} {"km/h" if metric else "mph"} speed limit'
+  return Alert(
+    message,
+    "",
+    AlertStatus.normal, AlertSize.small,
+    Priority.LOW, VisualAlert.none, AudibleAlert.none, 4.)
 
 
 EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
@@ -583,6 +592,18 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   # more often than expected.
   EventName.localizerMalfunction: {
     # ET.PERMANENT: NormalPermanentAlert(_("Sensor Malfunction"), _("Hardware Malfunction")),
+  },
+
+  EventName.speedLimitActive: {
+    ET.WARNING: Alert(
+      "Cruise set to speed limit",
+      "",
+      AlertStatus.normal, AlertSize.small,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 2.),
+  },
+
+  EventName.speedLimitValueChange: {
+    ET.WARNING: speed_limit_adjust_alert,
   },
 
   # ********** events that affect controls state transitions **********

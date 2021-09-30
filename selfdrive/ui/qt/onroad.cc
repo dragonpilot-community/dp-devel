@@ -4,6 +4,7 @@
 #include <chrono>
 
 #include <QDebug>
+#include <QMouseEvent>
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
@@ -63,12 +64,29 @@ void OnroadWindow::updateState(const UIState &s) {
 }
 
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
-  if (map != nullptr) {
-    bool sidebarVisible = geometry().x() > 0;
+  bool sidebarVisible = geometry().x() > 0;
+  bool propagate_event = true;
+
+    // Toggle speed limit control enabled
+  SubMaster &sm = *(uiState()->sm);
+  auto longitudinal_plan = sm["longitudinalPlan"].getLongitudinalPlan();
+  const QRect speed_limit_touch_rect = speed_sgn_rc.adjusted(-50, -50, 50, 50);
+
+  if (longitudinal_plan.getSpeedLimit() > 0.0 && speed_limit_touch_rect.contains(e->x(), e->y())) {
+    // If touching the speed limit sign area when visible
+    uiState()->scene.last_speed_limit_sign_tap = seconds_since_boot();
+    uiState()->scene.speed_limit_control_enabled = !uiState()->scene.speed_limit_control_enabled;
+    Params().putBool("SpeedLimitControl", uiState()->scene.speed_limit_control_enabled);
+    propagate_event = false;
+  }
+  else if (map != nullptr) {
     map->setVisible(!sidebarVisible && !map->isVisible());
   }
+
   // propagation event to parent(HomeWindow)
-  QWidget::mousePressEvent(e);
+  if (propagate_event) {
+    QWidget::mousePressEvent(e);
+  }
 }
 
 void OnroadWindow::offroadTransition(bool offroad) {
@@ -229,6 +247,30 @@ void NvgWindow::updateState(const UIState &s) {
                                 (std::chrono::system_clock::now().time_since_epoch()).count();
     const bool show_road_name = current_ts - lmd_fix_time < 10000; // hide if fix older than 10s
     setProperty("roadName", show_road_name ? QString::fromStdString(lmd.getCurrentRoadName()) : "");
+
+    const float speed_limit = lp.getSpeedLimit() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    const float speed_limit_offset = lp.getSpeedLimitOffset() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    const auto slcState = lp.getSpeedLimitControlState();
+    const bool sl_force_active = s.scene.speed_limit_control_enabled &&
+                                 seconds_since_boot() < s.scene.last_speed_limit_sign_tap + 2.0;
+    const bool sl_inactive = !sl_force_active && (!s.scene.speed_limit_control_enabled ||
+                             slcState == cereal::LongitudinalPlan::SpeedLimitControlState::INACTIVE);
+    const bool sl_temp_inactive = !sl_force_active && (s.scene.speed_limit_control_enabled &&
+                                  slcState == cereal::LongitudinalPlan::SpeedLimitControlState::TEMP_INACTIVE);
+    const int sl_distance = int(lp.getDistToSpeedLimit() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH) / 10.0) * 10;
+    const QString sl_distance_str(QString::number(sl_distance) + (s.scene.is_metric ? "m" : "f"));
+    const QString sl_offset_str(speed_limit_offset > 0.0 ?
+                                "+" + QString::number(std::nearbyint(speed_limit_offset)) : "");
+    const QString sl_inactive_str(sl_temp_inactive ? "TEMP" : "");
+    const QString sl_substring(sl_inactive || sl_temp_inactive ? sl_inactive_str :
+                               sl_distance > 0 ? sl_distance_str : sl_offset_str);
+
+    setProperty("showSpeedLimit", speed_limit > 0.0);
+    setProperty("speedLimit", QString::number(std::nearbyint(speed_limit)));
+    setProperty("slcSubText", sl_substring);
+    setProperty("slcSubTextSize", sl_inactive || sl_temp_inactive || sl_distance > 0 ? 22.2 : 37.0);
+    setProperty("mapSourcedSpeedLimit", lp.getIsMapSpeedLimit());
+    setProperty("slcActive", !sl_inactive && !sl_temp_inactive);
   }
 
   if (s.scene.calibration_valid) {
@@ -394,6 +436,11 @@ void NvgWindow::drawHud(QPainter &p) {
       drawIcon(p, rect().right() - radius / 2 - bdr_s * 2, radius / 2 + int(bdr_s * 1.5),
                engage_img, bg_colors[status], 1.0);
     }
+
+    // Speed Limit Sign
+    if (showSpeedLimit) {
+      drawSpeedSign(p, speed_sgn_rc, speedLimit, slcSubText, slcSubTextSize, mapSourcedSpeedLimit, slcActive);
+    }
   }
 
   // dm icon
@@ -450,6 +497,38 @@ void NvgWindow::drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, 
 
   configFont(p, "Open Sans", 56, "SemiBold");
   drawCenteredText(p, rvtc.center().x(), rvtc.center().y(), vision_speed, color);
+}
+
+void NvgWindow::drawCircle(QPainter &p, int x, int y, int r, QBrush bg) {
+  p.setPen(Qt::NoPen);
+  p.setBrush(bg);
+  p.drawEllipse(x - r, y - r, 2 * r, 2 * r);
+}
+
+void NvgWindow::drawSpeedSign(QPainter &p, QRect rc, const QString &speed_limit, const QString &sub_text,
+                              int subtext_size, bool is_map_sourced, bool is_active) {
+  const QColor ring_color = is_active ? QColor(255, 0, 0, 255) : QColor(0, 0, 0, 50);
+  const QColor inner_color = QColor(255, 255, 255, is_active ? 255 : 85);
+  const QColor text_color = QColor(0, 0, 0, is_active ? 255 : 85);
+
+  const int x = rc.center().x();
+  const int y = rc.center().y();
+  const int r = rc.width() / 2.0f;
+
+  drawCircle(p, x, y, r, ring_color);
+  drawCircle(p, x, y, int(r * 0.8f), inner_color);
+
+  configFont(p, "Open Sans", 89, "Bold");
+  drawCenteredText(p, x, y, speed_limit, text_color);
+  configFont(p, "Open Sans", subtext_size, "Bold");
+  drawCenteredText(p, x, y + 55, sub_text, text_color);
+
+  if (is_map_sourced) {
+    p.setPen(Qt::NoPen);
+    p.setOpacity(is_active ? 1.0 : 0.3);
+    p.drawPixmap(x - subsign_img_size / 2, y - 55 - subsign_img_size / 2, map_img);
+    p.setOpacity(1.0);
+  }
 }
 
 void NvgWindow::initializeGL() {

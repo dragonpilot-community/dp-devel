@@ -14,6 +14,8 @@ from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDXS as T_IDX
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, CONTROL_N
 from system.swaglog import cloudlog
 from selfdrive.controls.lib.vision_turn_controller import VisionTurnController
+from selfdrive.controls.lib.speed_limit_controller import SpeedLimitController, SpeedLimitResolver
+from selfdrive.controls.lib.events import Events
 
 LON_MPC_STEP = 0.2  # first step is 0.2s
 AWARENESS_DECEL = -0.2  # car smoothly decel at .2m/s^2 when user is distracted
@@ -98,6 +100,8 @@ class Planner:
     self.dp_accel_profile = DP_ACCEL_ECO
     self.cruise_source = 'cruise'
     self.vision_turn_controller = VisionTurnController(CP)
+    self.speed_limit_controller = SpeedLimitController()
+    self.events = Events()
 
   def update(self, sm):
     v_ego = sm['carState'].vEgo
@@ -184,11 +188,20 @@ class Planner:
     longitudinalPlan.visionTurnControllerState = self.vision_turn_controller.state
     longitudinalPlan.visionTurnSpeed = float(self.vision_turn_controller.v_turn)
 
+    longitudinalPlan.speedLimitControlState = self.speed_limit_controller.state
+    longitudinalPlan.speedLimit = float(self.speed_limit_controller.speed_limit)
+    longitudinalPlan.speedLimitOffset = float(self.speed_limit_controller.speed_limit_offset)
+    longitudinalPlan.distToSpeedLimit = float(self.speed_limit_controller.distance)
+    longitudinalPlan.isMapSpeedLimit = bool(self.speed_limit_controller.source == SpeedLimitResolver.Source.map_data)
+    longitudinalPlan.eventsDEPRECATED = self.events.to_msg()
+
     pm.send('longitudinalPlan', plan_send)
 
   def cruise_solutions(self, enabled, v_ego, a_ego, v_cruise, sm):
     # Update controllers
     self.vision_turn_controller.update(enabled, v_ego, a_ego, v_cruise, sm)
+    self.events = Events()
+    self.speed_limit_controller.update(enabled, v_ego, a_ego, sm, v_cruise, self.events)
 
     # Pick solution with lowest velocity target.
     a_solutions = {'cruise': float("inf")}
@@ -197,6 +210,10 @@ class Planner:
     if self.vision_turn_controller.is_active:
       a_solutions['turn'] = self.vision_turn_controller.a_target
       v_solutions['turn'] = self.vision_turn_controller.v_turn
+
+    if self.speed_limit_controller.is_active:
+      a_solutions['limit'] = self.speed_limit_controller.a_target
+      v_solutions['limit'] = self.speed_limit_controller.speed_limit_offseted
 
     source = min(v_solutions, key=v_solutions.get)
 

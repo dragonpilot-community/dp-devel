@@ -224,6 +224,8 @@ void UIState::updateStatus() {
       scene.started_frame = sm->frame;
       wide_camera = Params().getBool("WideCameraOnly");
       scene.show_debug_ui = Params().getBool("ShowDebugUI");
+      scene.speed_limit_control_enabled = Params().getBool("SpeedLimitControl");
+      scene.speed_limit_perc_offset = Params().getBool("SpeedLimitPercOffset");
     }
     started_prev = scene.started;
     emit offroadTransition(!scene.started);
