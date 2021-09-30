@@ -40,6 +40,10 @@ class NvgWindow : public CameraViewWidget {
   Q_PROPERTY(bool dmActive MEMBER dmActive);
   Q_PROPERTY(bool hideDM MEMBER hideDM);
   Q_PROPERTY(int status MEMBER status);
+  //dp
+  Q_PROPERTY(bool showVTC MEMBER showVTC);
+  Q_PROPERTY(QString vtcSpeed MEMBER vtcSpeed);
+  Q_PROPERTY(QColor vtcColor MEMBER vtcColor);
 
 public:
   explicit NvgWindow(VisionStreamType type, QWidget* parent = 0);
@@ -48,6 +52,9 @@ public:
 private:
   void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity);
   void drawText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
+  void drawCenteredText(QPainter &p, int x, int y, const QString &text, QColor color);
+  void drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, const QColor &color, const QString &speed,
+                                  int alpha);
 
   QPixmap engage_img;
   QPixmap dm_img;
@@ -65,6 +72,10 @@ private:
   bool has_us_speed_limit = false;
   bool has_eu_speed_limit = false;
   int status = STATUS_DISENGAGED;
+  //dp
+  bool showVTC = false;
+  QString vtcSpeed;
+  QColor vtcColor;
 
 protected:
   void paintGL() override;

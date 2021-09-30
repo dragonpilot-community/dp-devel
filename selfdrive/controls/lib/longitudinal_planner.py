@@ -13,6 +13,7 @@ from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import LongitudinalMpc
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDXS as T_IDXS_MPC
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, CONTROL_N
 from system.swaglog import cloudlog
+from selfdrive.controls.lib.vision_turn_controller import VisionTurnController
 
 LON_MPC_STEP = 0.2  # first step is 0.2s
 AWARENESS_DECEL = -0.2  # car smoothly decel at .2m/s^2 when user is distracted
@@ -95,6 +96,8 @@ class Planner:
     # dp
     self.dp_accel_profile_ctrl = False
     self.dp_accel_profile = DP_ACCEL_ECO
+    self.cruise_source = 'cruise'
+    self.vision_turn_controller = VisionTurnController(CP)
 
   def update(self, sm):
     v_ego = sm['carState'].vEgo
@@ -123,6 +126,10 @@ class Planner:
     # Prevent divergence, smooth in current v_ego
     self.v_desired_filter.x = max(0.0, self.v_desired_filter.update(v_ego))
 
+    # Get acceleration and active solutions for custom long mpc.
+    self.cruise_source, a_min_sol, v_cruise_sol = self.cruise_solutions(not reset_state, self.v_desired_filter.x,
+                                                                        self.a_desired, v_cruise, sm)
+
     if not self.dp_accel_profile_ctrl:
       accel_limits = [A_CRUISE_MIN, get_max_accel(v_ego)]
     else:
@@ -132,13 +139,14 @@ class Planner:
       # if required so, force a smooth deceleration
       accel_limits_turns[1] = min(accel_limits_turns[1], AWARENESS_DECEL)
       accel_limits_turns[0] = min(accel_limits_turns[0], accel_limits_turns[1])
+
     # clip limits, cannot init MPC outside of bounds
-    accel_limits_turns[0] = min(accel_limits_turns[0], self.a_desired + 0.05)
+    accel_limits_turns[0] = min(accel_limits_turns[0], self.a_desired + 0.05, a_min_sol)
     accel_limits_turns[1] = max(accel_limits_turns[1], self.a_desired - 0.05)
 
     self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
-    self.mpc.update(sm['carState'], sm['radarState'], v_cruise, prev_accel_constraint)
+    self.mpc.update(sm['carState'], sm['radarState'], v_cruise_sol, prev_accel_constraint)
 
     self.v_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.v_solution)
     self.a_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.a_solution)
@@ -168,9 +176,28 @@ class Planner:
     longitudinalPlan.jerks = self.j_desired_trajectory.tolist()
 
     longitudinalPlan.hasLead = sm['radarState'].leadOne.status
-    longitudinalPlan.longitudinalPlanSource = self.mpc.source
+    longitudinalPlan.longitudinalPlanSource = self.mpc.source if self.mpc.source != 'cruise' else self.cruise_source
     longitudinalPlan.fcw = self.fcw
 
     longitudinalPlan.solverExecutionTime = self.mpc.solve_time
 
+    longitudinalPlan.visionTurnControllerState = self.vision_turn_controller.state
+    longitudinalPlan.visionTurnSpeed = float(self.vision_turn_controller.v_turn)
+
     pm.send('longitudinalPlan', plan_send)
+
+  def cruise_solutions(self, enabled, v_ego, a_ego, v_cruise, sm):
+    # Update controllers
+    self.vision_turn_controller.update(enabled, v_ego, a_ego, v_cruise, sm)
+
+    # Pick solution with lowest velocity target.
+    a_solutions = {'cruise': float("inf")}
+    v_solutions = {'cruise': v_cruise}
+
+    if self.vision_turn_controller.is_active:
+      a_solutions['turn'] = self.vision_turn_controller.a_target
+      v_solutions['turn'] = self.vision_turn_controller.v_turn
+
+    source = min(v_solutions, key=v_solutions.get)
+
+    return source, a_solutions[source], v_solutions[source]
