@@ -102,6 +102,9 @@ typedef struct UIScene {
   mat3 view_from_calib = DEFAULT_CALIBRATION;
   cereal::PandaState::PandaType pandaType;
 
+  // Debug UI
+  bool show_debug_ui;
+
   // modelV2
   float lane_line_probs[4];
   float road_edge_stds[2];

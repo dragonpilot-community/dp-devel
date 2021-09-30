@@ -219,6 +219,7 @@ void NvgWindow::updateState(const UIState &s) {
     setProperty("showVTC", vtcState > cereal::LongitudinalPlan::VisionTurnControllerState::DISABLED);
     setProperty("vtcSpeed", QString::number(std::nearbyint(vtc_speed)));
     setProperty("vtcColor", vtc_color);
+    setProperty("showDebugUI", s.scene.show_debug_ui);
   }
 
   if (s.scene.calibration_valid) {
@@ -377,7 +378,7 @@ void NvgWindow::drawHud(QPainter &p) {
 
   // engage-ability icon
   if (engageable) {
-    if (showVTC) {
+    if (showDebugUI && showVTC) {
       drawVisionTurnControllerUI(p, rect().right() - 184 - bdr_s, int(bdr_s * 1.5), 184, vtcColor, vtcSpeed, 100);
     } else {
       // engage-ability icon
