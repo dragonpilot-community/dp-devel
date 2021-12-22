@@ -5,6 +5,7 @@
 
 #include <QDebug>
 #include <QMouseEvent>
+#include <QPainterPath>
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
@@ -187,6 +188,8 @@ NvgWindow::NvgWindow(VisionStreamType type, QWidget* parent) : fps_filter(UI_FRE
   engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size, img_size});
   map_img = loadPixmap("../assets/img_world_icon.png", {subsign_img_size, subsign_img_size});
+  left_img = loadPixmap("../assets/img_turn_left_icon.png", {subsign_img_size, subsign_img_size});
+  right_img = loadPixmap("../assets/img_turn_right_icon.png", {subsign_img_size, subsign_img_size});
 }
 
 void NvgWindow::updateState(const UIState &s) {
@@ -271,6 +274,17 @@ void NvgWindow::updateState(const UIState &s) {
     setProperty("slcSubTextSize", sl_inactive || sl_temp_inactive || sl_distance > 0 ? 22.2 : 37.0);
     setProperty("mapSourcedSpeedLimit", lp.getIsMapSpeedLimit());
     setProperty("slcActive", !sl_inactive && !sl_temp_inactive);
+
+    const float tsc_speed = lp.getTurnSpeed() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    const auto tscState = lp.getTurnSpeedControlState();
+    const int t_distance = int(lp.getDistToTurn() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH) / 10.0) * 10;
+    const QString t_distance_str(QString::number(t_distance) + (s.scene.is_metric ? "m" : "f"));
+
+    setProperty("showTurnSpeedLimit", tsc_speed > 0.0 && (tsc_speed < cur_speed || s.scene.show_debug_ui));
+    setProperty("turnSpeedLimit", QString::number(std::nearbyint(tsc_speed)));
+    setProperty("tscSubText", t_distance > 0 ? t_distance_str : QString(""));
+    setProperty("tscActive", tscState > cereal::LongitudinalPlan::SpeedLimitControlState::TEMP_INACTIVE);
+    setProperty("curveSign", lp.getTurnSign());
   }
 
   if (s.scene.calibration_valid) {
@@ -441,6 +455,12 @@ void NvgWindow::drawHud(QPainter &p) {
     if (showSpeedLimit) {
       drawSpeedSign(p, speed_sgn_rc, speedLimit, slcSubText, slcSubTextSize, mapSourcedSpeedLimit, slcActive);
     }
+
+    // Turn Speed Sign
+    if (showTurnSpeedLimit) {
+      rc.moveTop(speed_sgn_rc.bottom() + bdr_s);
+      drawTrunSpeedSign(p, rc, turnSpeedLimit, tscSubText, curveSign, tscActive);
+    }
   }
 
   // dm icon
@@ -529,6 +549,60 @@ void NvgWindow::drawSpeedSign(QPainter &p, QRect rc, const QString &speed_limit,
     p.drawPixmap(x - subsign_img_size / 2, y - 55 - subsign_img_size / 2, map_img);
     p.setOpacity(1.0);
   }
+}
+
+void NvgWindow::drawTrunSpeedSign(QPainter &p, QRect rc, const QString &turn_speed, const QString &sub_text, 
+                                  int curv_sign, bool is_active) {
+  const QColor border_color = is_active ? QColor(255, 0, 0, 255) : QColor(0, 0, 0, 50);
+  const QColor inner_color = QColor(255, 255, 255, is_active ? 255 : 85);
+  const QColor text_color = QColor(0, 0, 0, is_active ? 255 : 85);
+
+  const int x = rc.center().x();
+  const int y = rc.center().y();
+  const int width = rc.width();
+
+  const float stroke_w = 15.0;
+  const float cS = stroke_w / 2.0 + 4.5;  // half width of the stroke on the corners of the triangle
+  const float R = width / 2.0 - stroke_w / 2.0;
+  const float A = 0.73205;
+  const float h2 = 2.0 * R / (1.0 + A);
+  const float h1 = A * h2;
+  const float L = 4.0 * R / sqrt(3.0);
+
+  // Draw the internal triangle, compensate for stroke width. Needed to improve rendering when in inactive 
+  // state due to stroke transparency being different from inner transparency.
+  QPainterPath path;
+  path.moveTo(x, y - R + cS);
+  path.lineTo(x - L / 2.0 + cS, y + h1 + h2 - R - stroke_w / 2.0);
+  path.lineTo(x + L / 2.0 - cS, y + h1 + h2 - R - stroke_w / 2.0);
+  path.lineTo(x, y - R + cS);
+  p.setPen(Qt::NoPen);
+  p.setBrush(inner_color);
+  p.drawPath(path);
+  
+  // Draw the stroke
+  QPainterPath stroke_path;
+  stroke_path.moveTo(x, y - R);
+  stroke_path.lineTo(x - L / 2.0, y + h1 + h2 - R);
+  stroke_path.lineTo(x + L / 2.0, y + h1 + h2 - R);
+  stroke_path.lineTo(x, y - R);
+  p.setPen(QPen(border_color, stroke_w, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  p.setBrush(Qt::NoBrush);
+  p.drawPath(stroke_path);
+
+  // Draw the turn sign
+  if (curv_sign != 0) {
+    p.setPen(Qt::NoPen);
+    p.setOpacity(is_active ? 1.0 : 0.3);
+    p.drawPixmap(int(x - (subsign_img_size / 2)), int(y - R + stroke_w + 30), curv_sign > 0 ? left_img : right_img);
+    p.setOpacity(1.0);
+  }
+
+  // Draw the texts.
+  configFont(p, "Open Sans", 67, "Bold");
+  drawCenteredText(p, x, y + 25, turn_speed, text_color);
+  configFont(p, "Open Sans", 22, "Bold");
+  drawCenteredText(p, x, y + 65, sub_text, text_color);
 }
 
 void NvgWindow::initializeGL() {

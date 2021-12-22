@@ -55,6 +55,12 @@ class NvgWindow : public CameraViewWidget {
   Q_PROPERTY(bool mapSourcedSpeedLimit MEMBER mapSourcedSpeedLimit);
   Q_PROPERTY(bool slcActive MEMBER slcActive);
 
+  Q_PROPERTY(bool showTurnSpeedLimit MEMBER showTurnSpeedLimit);
+  Q_PROPERTY(QString turnSpeedLimit MEMBER turnSpeedLimit);
+  Q_PROPERTY(QString tscSubText MEMBER tscSubText);
+  Q_PROPERTY(bool tscActive MEMBER tscActive);
+  Q_PROPERTY(int curveSign MEMBER curveSign);
+
 public:
   explicit NvgWindow(VisionStreamType type, QWidget* parent = 0);
   void updateState(const UIState &s);
@@ -68,10 +74,14 @@ private:
   void drawCircle(QPainter &p, int x, int y, int r, QBrush bg);
   void drawSpeedSign(QPainter &p, QRect rc, const QString &speed, const QString &sub_text, int subtext_size, 
                      bool is_map_sourced, bool is_active);
+  void drawTrunSpeedSign(QPainter &p, QRect rc, const QString &speed, const QString &sub_text, int curv_sign, 
+                         bool is_active);
 
   QPixmap engage_img;
   QPixmap dm_img;
   QPixmap map_img;
+  QPixmap left_img;
+  QPixmap right_img;
   const int radius = 192;
   const int img_size = (radius / 2) * 1.5;
   const int subsign_img_size = 35;
@@ -102,6 +112,12 @@ private:
   float slcSubTextSize = 0.0;
   bool mapSourcedSpeedLimit = false;
   bool slcActive = false;
+
+  bool showTurnSpeedLimit = false;
+  QString turnSpeedLimit;
+  QString tscSubText;
+  bool tscActive = false;
+  int curveSign = 0;
 
 protected:
   void paintGL() override;
