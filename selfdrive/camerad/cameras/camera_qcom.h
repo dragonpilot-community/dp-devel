@@ -51,6 +51,7 @@ typedef struct CameraState {
   int camera_num;
   int camera_id;
   int device;
+
   int fps;
   CameraInfo ci;
 
@@ -67,7 +68,7 @@ typedef struct CameraState {
   std::mutex frame_info_lock;
   FrameMetadata frame_metadata[METADATA_BUF_COUNT];
   int frame_metadata_idx;
-  
+
   // exposure
   uint32_t pixel_clock, line_length_pclk;
   uint32_t frame_length;
@@ -82,7 +83,7 @@ typedef struct CameraState {
   camera_apply_exposure_func apply_exposure;
 
   // rear camera only,used for focusing
-  unique_fd actuator_fd;
+  unique_fd actuator_fd, ois_fd, eeprom_fd;
   std::atomic<float> focus_err;
   std::atomic<float> lens_true_pos;
   std::atomic<int> self_recover; // af recovery counter, neg is patience, pos is active
@@ -90,6 +91,9 @@ typedef struct CameraState {
   uint16_t cur_lens_pos;
   int16_t focus[NUM_FOCUS];
   uint8_t confidence[NUM_FOCUS];
+  uint16_t infinity_dac;
+  size_t eeprom_size;
+  uint8_t *eeprom;
 } CameraState;
 
 
