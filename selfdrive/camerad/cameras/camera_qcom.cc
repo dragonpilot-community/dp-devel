@@ -268,26 +268,26 @@ void cameras_init(VisionIpcServer *v, MultiCameraState *s, cl_device_id device_i
               /*fps*/ 20,
 #endif
               device_id, ctx,
-              VISION_STREAM_RGB_BACK, VISION_STREAM_ROAD);
+              VISION_STREAM_RGB_ROAD, VISION_STREAM_ROAD);
   s->road_cam.apply_exposure = imx298_apply_exposure;
 
   if (s->device == DEVICE_OP3T) {
     camera_init(v, &s->driver_cam, CAMERA_ID_S5K3P8SP, 1,
                 /*pixel_clock=*/560000000, /*line_length_pclk=*/5120,
                 /*max_gain=*/510, 10, device_id, ctx,
-                VISION_STREAM_RGB_FRONT, VISION_STREAM_DRIVER);
+                VISION_STREAM_RGB_DRIVER, VISION_STREAM_DRIVER);
     s->driver_cam.apply_exposure = imx179_s5k3p8sp_apply_exposure;
   } else if (s->device == DEVICE_LP3) {
     camera_init(v, &s->driver_cam, CAMERA_ID_OV8865, 1,
                 /*pixel_clock=*/72000000, /*line_length_pclk=*/1602,
                 /*max_gain=*/510, 10, device_id, ctx,
-                VISION_STREAM_RGB_FRONT, VISION_STREAM_DRIVER);
+                VISION_STREAM_RGB_DRIVER, VISION_STREAM_DRIVER);
     s->driver_cam.apply_exposure = ov8865_apply_exposure;
   } else {
     camera_init(v, &s->driver_cam, CAMERA_ID_IMX179, 1,
                 /*pixel_clock=*/251200000, /*line_length_pclk=*/3440,
                 /*max_gain=*/224, 20, device_id, ctx,
-                VISION_STREAM_RGB_FRONT, VISION_STREAM_DRIVER);
+                VISION_STREAM_RGB_DRIVER, VISION_STREAM_DRIVER);
     s->driver_cam.apply_exposure = imx179_s5k3p8sp_apply_exposure;
   }
 
