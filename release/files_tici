@@ -1,5 +1,3 @@
-third_party/snpe/larch64**
-third_party/snpe/aarch64-linux-gcc4.9/*
 third_party/mapbox-gl-native-qt/include/*
 
 selfdrive/timezoned.py

@@ -4,7 +4,12 @@ set -e
 PORT=5555
 
 setprop service.adb.tcp.port $PORT
-sudo systemctl start adbd
+if [ -f /EON ]; then
+  stop adbd
+  start adbd
+else
+  sudo systemctl start adbd
+fi
 
 IP=$(echo $SSH_CONNECTION | awk '{ print $3}')
 echo "then, connect on your computer:"

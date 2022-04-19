@@ -14,6 +14,9 @@
 #include <fstream>
 #include <iostream>
 #include <streambuf>
+#ifdef QCOM
+#include <cutils/properties.h>
+#endif
 
 #include "selfdrive/common/params.h"
 #include "selfdrive/common/swaglog.h"
@@ -33,7 +36,9 @@ kj::Array<capnp::word> logger_build_init_data() {
   MessageBuilder msg;
   auto init = msg.initEvent().initInitData();
 
-  if (Hardware::TICI()) {
+  if (Hardware::EON()) {
+    init.setDeviceType(cereal::InitData::DeviceType::NEO);
+  } else if (Hardware::TICI()) {
     init.setDeviceType(cereal::InitData::DeviceType::TICI);
   } else {
     init.setDeviceType(cereal::InitData::DeviceType::PC);
@@ -55,6 +60,20 @@ kj::Array<capnp::word> logger_build_init_data() {
 
   init.setKernelVersion(util::read_file("/proc/version"));
   init.setOsVersion(util::read_file("/VERSION"));
+
+#ifdef QCOM
+  {
+    std::vector<std::pair<std::string, std::string> > properties;
+    property_list(append_property, (void*)&properties);
+
+    auto lentries = init.initAndroidProperties().initEntries(properties.size());
+    for (int i=0; i<properties.size(); i++) {
+      auto lentry = lentries[i];
+      lentry.setKey(properties[i].first);
+      lentry.setValue(properties[i].second);
+    }
+  }
+#endif
 
   init.setDirty(!getenv("CLEAN"));
 

@@ -24,7 +24,7 @@
 
 #include "selfdrive/loggerd/encoder.h"
 #include "selfdrive/loggerd/logger.h"
-#ifdef QCOM2
+#if defined(QCOM) || defined(QCOM2)
 #include "selfdrive/loggerd/omx_encoder.h"
 #define Encoder OmxEncoder
 #else
@@ -72,11 +72,11 @@ const LogCameraInfo cameras_logged[] = {
     .type = DriverCam,
     .stream_type = VISION_STREAM_DRIVER,
     .filename = "dcamera.hevc",
-    .fps = MAIN_FPS,
+    .fps = MAIN_FPS, // on EONs, more compressed this way
     .bitrate = DCAM_BITRATE,
     .is_h265 = true,
     .has_qcamera = false,
-    .trigger_rotate = true,
+    .trigger_rotate = Hardware::TICI(),
     .enable = true,
     .record = Params().getBool("RecordFront"),
   },

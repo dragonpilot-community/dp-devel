@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock, patch
 from parameterized import parameterized
 
-from selfdrive.thermald.fan_controller import TiciFanController
+with patch("smbus2.SMBus", new=MagicMock()):
+  from selfdrive.thermald.fan_controller import EonFanController, UnoFanController, TiciFanController
 
-ALL_CONTROLLERS = [(TiciFanController,)]
+ALL_CONTROLLERS = [(EonFanController, ), (UnoFanController,), (TiciFanController,)]
+GEN2_CONTROLLERS = [(UnoFanController,), (TiciFanController,)]
 
 def patched_controller(controller_class):
   with patch("os.system", new=Mock()):
@@ -26,7 +28,7 @@ class TestFanController(unittest.TestCase):
     self.wind_up(controller)
     self.assertGreaterEqual(controller.update(max_cpu_temp=100, ignition=True), 70)
 
-  @parameterized.expand(ALL_CONTROLLERS)
+  @parameterized.expand(GEN2_CONTROLLERS)
   def test_offroad_limits(self, controller_class):
     controller = patched_controller(controller_class)
     self.wind_up(controller)
@@ -38,7 +40,7 @@ class TestFanController(unittest.TestCase):
     self.wind_down(controller)
     self.assertEqual(controller.update(max_cpu_temp=10, ignition=False), 0)
 
-  @parameterized.expand(ALL_CONTROLLERS)
+  @parameterized.expand(GEN2_CONTROLLERS)
   def test_limited(self, controller_class):
     controller = patched_controller(controller_class)
     self.wind_up(controller, ignition=True)

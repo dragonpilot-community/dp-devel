@@ -102,6 +102,9 @@ void initApp(int argc, char *argv[]) {
 #endif
 
   setQtSurfaceFormat();
+  if (Hardware::EON()) {
+    QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+  }
 }
 
 void swagLogMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
