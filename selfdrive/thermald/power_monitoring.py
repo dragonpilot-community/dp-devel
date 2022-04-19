@@ -172,13 +172,13 @@ class PowerMonitoring:
     return disable_charging
 
   # See if we need to shutdown
-  def should_shutdown(self, peripheralState, ignition, in_car, offroad_timestamp, started_seen):
+  def should_shutdown(self, peripheralState, ignition, in_car, offroad_timestamp, started_seen, LEON):
     if offroad_timestamp is None:
       return False
 
     now = sec_since_boot()
     panda_charging = (peripheralState.usbPowerMode != log.PeripheralState.UsbPowerMode.client)
-    BATT_PERC_OFF = 10
+    BATT_PERC_OFF = 10 if LEON else 3
 
     should_shutdown = False
     # Wait until we have shut down charging before powering down
