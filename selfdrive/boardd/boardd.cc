@@ -568,6 +568,8 @@ static void pigeon_publish_raw(PubMaster &pm, const std::string &dat) {
 }
 
 void pigeon_thread(Panda *panda) {
+  // we do not run this thread if panda does not have an GPS chip (e.g. white)
+  if (!panda->has_gps) return;
   util::set_thread_name("boardd_pigeon");
 
   PubMaster pm({"ubloxRaw"});

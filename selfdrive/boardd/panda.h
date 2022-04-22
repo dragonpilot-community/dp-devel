@@ -92,6 +92,9 @@ class Panda {
   void set_data_speed_kbps(uint16_t bus, uint16_t speed);
   void can_send(capnp::List<cereal::CanData>::Reader can_data_list);
   bool can_receive(std::vector<can_frame>& out_vec);
+  // support old panda
+  bool is_old_panda = false;
+  bool has_gps = true;
 
 protected:
   // for unit tests
