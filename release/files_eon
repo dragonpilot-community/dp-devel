@@ -1,1 +1,5 @@
 README.md
+
+third_party/snpe_eon/include/**
+third_party/snpe_eon/aarch64**
+third_party/snpe_eon/dsp**

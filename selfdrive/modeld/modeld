@@ -7,7 +7,7 @@ if [ -d /system ]; then
   if [ -f /TICI ]; then # QCOM2
     export LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:/data/pythonpath/third_party/snpe/larch64:$LD_LIBRARY_PATH"
   else # QCOM
-    export LD_LIBRARY_PATH="/data/pythonpath/third_party/snpe/aarch64/:$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="/data/pythonpath/third_party/snpe_eon/aarch64/:$LD_LIBRARY_PATH"
   fi
 else
   # PC

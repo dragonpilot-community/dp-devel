@@ -107,7 +107,7 @@ if arch == "aarch64" or arch == "larch64":
   else:
     rpath = []
     libpath += [
-      "#third_party/snpe/aarch64",
+      "#third_party/snpe_eon/aarch64",
       "#third_party/libyuv/lib",
       "/system/vendor/lib64"
     ]
@@ -208,7 +208,7 @@ env = Environment(
     "#third_party/android_hardware_libhardware/include",
     "#third_party/android_system_core/include",
     "#third_party/linux/include",
-    "#third_party/snpe/include",
+    "#third_party/snpe_eon/include" if arch == "aarch64" else "#third_party/snpe/include",
     "#third_party/mapbox-gl-native-qt/include",
     "#third_party/qrcode",
     "#third_party",

@@ -6,6 +6,9 @@ lenv = env.Clone()
 libs = [cereal, messaging, common, visionipc, gpucommon,
         'OpenCL', 'SNPE', 'capnp', 'zmq', 'kj', 'yuv']
 
+if arch == "aarch64":
+  libs += ['symphony-cpu']
+
 def get_dlsym_offset():
   """Returns the offset between dlopen and dlsym in libdl.so"""
   import ctypes
