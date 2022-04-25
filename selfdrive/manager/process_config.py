@@ -38,6 +38,9 @@ procs = [
   PythonProcess("uploader", "selfdrive.loggerd.uploader", persistent=True),
   PythonProcess("statsd", "selfdrive.statsd", persistent=True),
 
+  NativeProcess("bridge", "cereal/messaging", ["./bridge"], notcar=True),
+  PythonProcess("webjoystick", "tools.joystick.web", notcar=True),
+
   # EON only
   PythonProcess("rtshield", "selfdrive.rtshield", enabled=EON),
   PythonProcess("shutdownd", "selfdrive.hardware.eon.shutdownd", enabled=EON),
