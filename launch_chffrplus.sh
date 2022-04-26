@@ -178,7 +178,6 @@ function launch {
           cd $BASEDIR
 
           echo "Restarting launch script ${LAUNCHER_LOCATION}"
-          unset REQUIRED_NEOS_VERSION
           unset AGNOS_VERSION
           exec "${LAUNCHER_LOCATION}"
         else

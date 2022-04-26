@@ -232,12 +232,16 @@ class TestOnroad(unittest.TestCase):
     result += "----------------- Model Timing -----------------\n"
     result += "------------------------------------------------\n"
     # TODO: this went up when plannerd cpu usage increased, why?
-    cfgs = [("driverState", 0.028, 0.026)]
     if EON:
-      cfgs += [("modelV2", 0.045, 0.04)]
+      cfgs = [
+        ("modelV2", 0.045, 0.04),
+        ("driverState", 0.028, 0.026),
+      ]
     else:
-      cfgs += [("modelV2", 0.035, 0.036), ("driverState", 0.028, 0.026)]
-
+      cfgs = [
+        ("modelV2", 0.050, 0.036),
+        ("driverState", 0.050, 0.026),
+      ]
     for (s, instant_max, avg_max) in cfgs:
       ts = [getattr(getattr(m, s), "modelExecutionTime") for m in self.lr if m.which() == s]
       self.assertLess(max(ts), instant_max, f"high '{s}' execution time: {max(ts)}")
