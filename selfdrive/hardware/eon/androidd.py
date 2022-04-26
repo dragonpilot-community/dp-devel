@@ -31,7 +31,7 @@ def get_modem_state() -> str:
   return ""
 
 def main():
-  set_core_affinity(1)
+  set_core_affinity([1, ])
   set_realtime_priority(1)
 
   procs = {}
