@@ -24,11 +24,11 @@ class EonFanController(BaseFanController):
 
   def __init__(self) -> None:
     super().__init__()
+    self.is_oneplus = os.path.isfile('/ONEPLUS')
     cloudlog.info("Setting up EON fan handler")
 
     self.fan_speed = -1
     self.setup_eon_fan()
-    self.is_oneplus = os.path.isfile('/ONEPLUS')
 
   def setup_eon_fan(self) -> None:
     os.system("echo 2 > /sys/module/dwc3_msm/parameters/otg_switch")
