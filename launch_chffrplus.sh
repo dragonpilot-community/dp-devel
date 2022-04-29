@@ -11,7 +11,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 function two_init {
   mount -o remount,rw /system
   if [ ! -f /ONEPLUS ] && ! $(grep -q "letv" /proc/cmdline); then
-    cp -f "$BASEDIR/selfdrive/hardware/eon/update.zip" "/data/media/0/update.zip"
     sed -i -e 's#/dev/input/event1#/dev/input/event2#g' ~/.bash_profile
     touch /ONEPLUS
   else
@@ -20,6 +19,10 @@ function two_init {
     fi
   fi
   mount -o remount,r /system
+  # always update to the latest update.zip
+  if [ -f /ONEPLUS ]; then
+    cp -f "$BASEDIR/selfdrive/hardware/eon/update.zip" "/data/media/0/update.zip"
+  fi
 
   # set IO scheduler
   setprop sys.io.scheduler noop
