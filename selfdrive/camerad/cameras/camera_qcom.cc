@@ -29,6 +29,38 @@
 // from sniff
 //const uint16_t INFINITY_DAC = 364;
 
+// re-add begin
+// camerad: cleanup DM exposure and move into camera_qcom2.cc (#24391)
+static void driver_cam_auto_exposure(CameraState *c, SubMaster &sm) {
+  static const bool is_rhd = Params().getBool("IsRHD");
+  struct ExpRect {int x1, x2, x_skip, y1, y2, y_skip;};
+  const CameraBuf *b = &c->buf;
+
+  ExpRect def_rect = {is_rhd ? 0 : b->rgb_width * 3 / 5, is_rhd ? b->rgb_width * 2 / 5 : b->rgb_width, 2,
+              b->rgb_height / 3, b->rgb_height, 1};
+
+  static ExpRect rect = def_rect;
+
+  camera_autoexposure(c, set_exposure_target(b, rect.x1, rect.x2, rect.x_skip, rect.y1, rect.y2, rect.y_skip));
+}
+
+void process_driver_camera(MultiCameraState *s, CameraState *c, int cnt) {
+  int j = 3;
+  if (cnt % j == 0) {
+    s->sm->update(0);
+    driver_cam_auto_exposure(c, *(s->sm));
+  }
+  MessageBuilder msg;
+  auto framed = msg.initEvent().initDriverCameraState();
+  framed.setFrameType(cereal::FrameData::FrameType::FRONT);
+  fill_frame_data(framed, c->buf.cur_frame_data);
+  if (env_send_driver) {
+    framed.setImage(get_frame_image(&c->buf));
+  }
+  s->pm->send("driverCameraState", msg);
+}
+// re-add end
+
 extern ExitHandler do_exit;
 
 static int cam_ioctl(int fd, unsigned long int request, void *arg, const char *log_msg = nullptr) {
@@ -1537,7 +1569,7 @@ void cameras_run(MultiCameraState *s) {
   std::vector<std::thread> threads;
   threads.push_back(std::thread(ops_thread, s));
   threads.push_back(start_process_thread(s, &s->road_cam, process_road_camera));
-  threads.push_back(start_process_thread(s, &s->driver_cam, common_process_driver_camera));
+  threads.push_back(start_process_thread(s, &s->driver_cam, process_driver_camera));
 
   CameraState* cameras[2] = {&s->road_cam, &s->driver_cam};
 
