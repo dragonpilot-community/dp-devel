@@ -252,7 +252,9 @@ void CameraViewWidget::vipcConnected(VisionIpcClient *vipc_client) {
   latest_frame = nullptr;
   stream_width = vipc_client->buffers[0].width;
   stream_height = vipc_client->buffers[0].height;
-
+  #ifdef QCOM
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  #endif
   for (int i = 0; i < 3; ++i) {
     glBindTexture(GL_TEXTURE_2D, textures[i]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
