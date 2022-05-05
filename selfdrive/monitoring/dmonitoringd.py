@@ -43,7 +43,8 @@ def dmonitoringd_thread(sm=None, pm=None):
       driver_engaged = len(sm['carState'].buttonEvents) > 0 or \
                         v_cruise != v_cruise_last or \
                         sm['carState'].steeringPressed or \
-                        sm['carState'].gasPressed
+                       sm['carState'].gasPressed or \
+                       sm['carState'].brakePressed
       v_cruise_last = v_cruise
 
     if sm.updated['modelV2']:
