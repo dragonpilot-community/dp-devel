@@ -1,0 +1,532 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-01 14:18+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:153
+msgid "openpilot Unavailable"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:160
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:167
+msgid "TAKE CONTROL IMMEDIATELY"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:194
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:372
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:464
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:516
+msgid "TAKE CONTROL"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:195
+#, python-format
+msgid "Steer Unavailable Below %(speed)d %(unit)s"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:204
+#, python-format
+msgid "Calibration in Progress: %d%%"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:205
+#, python-format
+msgid "Drive Above %(speed)d %(unit)s"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:213
+msgid "Poor GPS reception"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:214
+msgid "If sky is visible, contact support"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:214
+msgid "Check GPS antenna placement"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:220
+msgid "Cruise Mode Disabled"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:222
+msgid "Main Switch Off"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:230
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:262
+msgid "Joystick Mode"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:237
+#, python-format
+msgid "Auto Lane Change starts in %.1f secs"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:238
+msgid "Monitor Other Vehicles"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:245
+#, python-format
+msgid "Adjusting to %(speed)s %(unit)s"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:245
+msgid "km/h"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:245
+msgid "mph"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:269
+msgid "Controls Initializing"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:274
+msgid "Be ready to take over at any time"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:275
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:283
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:292
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:301
+msgid "Always keep hands on wheel and eyes on road"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:282
+msgid "WARNING: This branch is not tested"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:291
+msgid "Dashcam mode"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:300
+msgid "Dashcam mode for unsupported car"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:308
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:348
+msgid "Car Unrecognized"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:309
+msgid "Check comma power connections"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:316
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:347
+msgid "Dashcam Mode"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:324
+msgid "Stock LKAS is turned on"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:325
+msgid "Turn off stock LKAS to engage"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:336
+msgid "openpilot Not Available"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:337
+msgid "Enable Community Features in Settings to Engage"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:355
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:364
+msgid "BRAKE!"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:356
+msgid "Stock AEB: Risk of Collision"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:365
+msgid "Risk of Collision"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:373
+msgid "Lane Departure Detected"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:382
+msgid "openpilot will not brake while gas pressed"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:397
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:398
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:400
+msgid "Vehicle Parameter Identification Failed"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:408
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:601
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:602
+msgid "Steering Temporarily Unavailable"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:416
+msgid "KEEP EYES ON ROAD: Driver Distracted"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:424
+msgid "KEEP EYES ON ROAD"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:425
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:433
+msgid "Driver Distracted"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:432
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:456
+msgid "DISENGAGE IMMEDIATELY"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:440
+msgid "TOUCH STEERING WHEEL: No Face Detected"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:448
+msgid "TOUCH STEERING WHEEL"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:449
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:457
+msgid "Driver Unresponsive"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:465
+msgid "Resume Driving Manually"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:472
+msgid "STOPPED"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:473
+msgid "Press Resume to Move"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:484
+msgid "Steer Left to Start Lane Change Once Safe"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:492
+msgid "Steer Right to Start Lane Change Once Safe"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:500
+msgid "Car Detected in Blindspot"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:508
+msgid "Changing Lanes"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:517
+msgid "Turn Exceeds Steering Limit"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:524
+msgid "Fan Malfunction"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:524
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:529
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:534
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:541
+msgid "Contact Support"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:529
+msgid "Camera Malfunction"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:534
+msgid "GPS Malfunction"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:541
+msgid "Sensor Malfunction"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:546
+msgid "Cruise set to speed limit"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:576
+msgid "Brake Hold Active"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:581
+msgid "Park Brake Engaged"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:586
+msgid "Pedal Pressed During Attempt"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:597
+msgid "Enable Adaptive Cruise"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:608
+msgid "Out of Storage"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:612
+msgid "Out of Storage Space"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:617
+msgid "Speed Too Low"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:622
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:626
+msgid "No Data from Device Sensors"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:623
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:634
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:742
+msgid "Reboot your Device"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:634
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:635
+msgid "Speaker not found"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:639
+msgid "Distraction Level Too High"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:644
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:648
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:649
+msgid "System Overheated"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:654
+msgid "Gear not D"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:663
+msgid "Calibration Invalid"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:663
+msgid "Remount Device and Recalibrate"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:664
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:665
+msgid "Calibration Invalid: Remount Device & Recalibrate"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:670
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:671
+msgid "Calibration in Progress"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:675
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:676
+msgid "Door Open"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:680
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:681
+msgid "Seatbelt Unlatched"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:685
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:686
+msgid "ESP Off"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:690
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:691
+msgid "Low Battery"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:699
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:700
+msgid "Communication Issue between Processes"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:706
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:750
+msgid "System Malfunction: Reboot Your Device"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:711
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:712
+msgid "Radar Error: Restart the Car"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:719
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:720
+msgid "Driving model lagging"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:729
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:730
+msgid "Model Output Uncertain"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:736
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:737
+msgid "Device Fell Off Mount"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:741
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:743
+msgid "Low Memory: Reboot Your Device"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:742
+msgid "Low Memory"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:755
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:756
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:757
+msgid "Cruise Faulted"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:761
+msgid "Controls Mismatch"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:765
+msgid "Road Camera Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:770
+msgid "Driver Camera Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:775
+msgid "Wide Road Camera Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:782
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:783
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:784
+msgid "USB Error: Reboot Your Device"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:792
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:794
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:798
+msgid "CAN Error: Check Connections"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:802
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:808
+msgid "LKAS Fault: Restart the Car"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:804
+msgid "LKAS Fault: Restart the car to engage"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:812
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:818
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:892
+msgid "Cruise Fault: Restart the Car"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:814
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:888
+msgid "Cruise Fault: Restart the car to engage"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:823
+msgid ""
+"Reverse\n"
+"Gear"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:828
+msgid "Reverse Gear"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:834
+msgid "Cruise Is Off"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:841
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:842
+msgid "Planner Solution Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:850
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:851
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:852
+msgid "Harness Malfunction"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:851
+msgid "Check Hardware"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:857
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:866
+msgid "openpilot Canceled"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:858
+msgid "No close lead car"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:861
+msgid "No Close Lead Car"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:867
+msgid "Speed too low"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:875
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:880
+msgid "Speed Too High"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:876
+msgid "Model uncertain at this speed"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:881
+msgid "Slow down to engage"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:902
+msgid "STEERING REQUIRED: Lane Keeping OFF"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:910
+msgid "STEERING REQUIRED: Blinkers ON"
+msgstr ""
