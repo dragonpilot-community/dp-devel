@@ -5,6 +5,7 @@ import sys
 import time
 import textwrap
 from pathlib import Path
+import socket
 
 # NOTE: Do NOT import anything here that needs be built (e.g. params)
 from common.basedir import BASEDIR
@@ -79,7 +80,7 @@ def build(spinner: Spinner, dirty: bool = False) -> None:
         spinner.close()
         if not os.getenv("CI"):
           error_s = "\n \n".join("\n".join(textwrap.wrap(e, 65)) for e in errors)
-          with TextWindow("openpilot failed to build\n \n" + error_s) as t:
+          with TextWindow(("openpilot failed to build (IP: %s)\n \n" % get_ip()) + error_s) as t:
             t.wait_for_exit()
         exit(1)
     else:
@@ -94,6 +95,18 @@ def build(spinner: Spinner, dirty: bool = False) -> None:
       break
     cache_size -= f.stat().st_size
     f.unlink()
+
+def get_ip():
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  try:
+    # doesn't even have to be reachable
+    s.connect(('10.255.255.255', 1))
+    ip = s.getsockname()[0]
+  except:
+    ip = 'N/A'
+  finally:
+    s.close()
+  return ip
 
 
 if __name__ == "__main__" and not PREBUILT:
