@@ -2,6 +2,7 @@
 
 #include "selfdrive/hardware/base.h"
 #include "selfdrive/common/util.h"
+#include "selfdrive/common/params.h"
 
 #ifdef QCOM
 #include "selfdrive/hardware/eon/hardware.h"
@@ -24,7 +25,11 @@ inline std::string log_root() {
   if (const char *env = getenv("LOG_ROOT")) {
     return env;
   }
-  return Hardware::PC() ? util::getenv("HOME") + "/.comma/media/0/realdata" : "/data/media/0/realdata";
+  if (Params().getBool("dp_atl") || Params().getBool("dp_jetson") || Params().getBool("dp_api_custom")) {
+    return "/data/media/0/fakedata";
+  } else {
+    return Hardware::PC() ? util::getenv("HOME") + "/.comma/media/0/realdata" : "/data/media/0/realdata";
+  }
 }
 inline std::string params() {
   return Hardware::PC() ? util::getenv("HOME") + "/.comma/params" : "/data/params";
