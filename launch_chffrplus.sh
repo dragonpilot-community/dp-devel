@@ -30,6 +30,11 @@ function two_init {
     echo noop > $f
   done
 
+  # set vol to 100 when boot
+  service call audio 3 i32 2 i32 50
+  service call audio 3 i32 3 i32 50
+  service call audio 3 i32 4 i32 50
+
   # *** shield cores 2-3 ***
 
   # TODO: should we enable this?
@@ -167,10 +172,10 @@ function launch {
   #    that completed successfully and synced to disk.
 
   if [ -f "${BASEDIR}/.overlay_init" ]; then
-    find ${BASEDIR}/.git -newer ${BASEDIR}/.overlay_init | grep -q '.' 2> /dev/null
-    if [ $? -eq 0 ]; then
-      echo "${BASEDIR} has been modified, skipping overlay update installation"
-    else
+#    find ${BASEDIR}/.git -newer ${BASEDIR}/.overlay_init | grep -q '.' 2> /dev/null
+#    if [ $? -eq 0 ]; then
+#      echo "${BASEDIR} has been modified, skipping overlay update installation"
+#    else
       if [ -f "${STAGING_ROOT}/finalized/.overlay_consistent" ]; then
         if [ ! -d /data/safe_staging/old_openpilot ]; then
           echo "Valid overlay update found, installing"
@@ -189,12 +194,20 @@ function launch {
           # TODO: restore backup? This means the updater didn't start after swapping
         fi
       fi
-    fi
+#    fi
   fi
 
   # handle pythonpath
   ln -sfn $(pwd) /data/pythonpath
   export PYTHONPATH="$PWD:$PWD/pyextra"
+
+  # dp - ignore chmod changes
+  git -C $DIR config core.fileMode false
+
+  # dp - apply custom patch
+  if [ -f "/data/media/0/dp_patcher.py" ]; then
+    python /data/media/0/dp_patcher.py
+  fi
 
   # hardware specific init
   if [ -f /EON ]; then
@@ -208,7 +221,21 @@ function launch {
 
   # start manager
   cd selfdrive/manager
-  ./build.py && ./manager.py
+  if [ -f /EON ]; then
+    if [ ! -f "/system/comma/usr/lib/libgfortran.so.5.0.0" && -f "/data/openpilot/selfdrive/mapd/assets/libgfortran.tar.gz" ]; then
+      mount -o remount,rw /system
+      tar -zxvf /data/openpilot/selfdrive/mapd/assets/libgfortran.tar.gz -C /system/comma/usr/lib/
+      mount -o remount,r /system
+    fi
+    if [ ! -d "/system/comma/usr/lib/python3.8/site-packages/opspline" && -f "/data/openpilot/selfdrive/mapd/assets/opspline.tar.gz" ]; then
+      mount -o remount,rw /system
+      tar -zxvf /data/openpilot/selfdrive/mapd/assets/opspline.tar.gz -C /system/comma/usr/lib/python3.8/site-packages/
+      mount -o remount,r /system
+    fi
+    ./build.py && ./manager.py
+  else
+    ./custom_dep.py && ./build.py && ./manager.py
+  fi
 
   # if broken, keep on screen error
   while true; do sleep 1; done
