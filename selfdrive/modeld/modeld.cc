@@ -55,8 +55,7 @@ static uint64_t get_ts(const VisionIpcBufExtra &extra) {
   return Hardware::TICI() ? extra.timestamp_sof : extra.timestamp_eof;
 }
 
-
-void run_model(ModelState &model, VisionIpcClient &vipc_client_main, VisionIpcClient &vipc_client_extra, bool main_wide_camera, bool use_extra_client) {
+void run_model(ModelState &model, VisionIpcClient &vipc_client_main, VisionIpcClient &vipc_client_extra, bool main_wide_camera, bool use_extra, bool use_extra_client) {
   // messaging
   PubMaster pm({"modelV2", "cameraOdometry"});
   SubMaster sm({"lateralPlan", "roadCameraState", "liveCalibration"});
@@ -124,7 +123,9 @@ void run_model(ModelState &model, VisionIpcClient &vipc_client_main, VisionIpcCl
       }
 
       model_transform_main = update_calibration(extrinsic_matrix_eigen, main_wide_camera, false);
-      model_transform_extra = update_calibration(extrinsic_matrix_eigen, Hardware::TICI(), true);
+      if (use_extra) {
+        model_transform_extra = update_calibration(extrinsic_matrix_eigen, Hardware::TICI(), true);
+      }
       live_calib_seen = true;
     }
 
@@ -176,7 +177,8 @@ int main(int argc, char **argv) {
   }
 
   bool main_wide_camera = Hardware::TICI() ? Params().getBool("EnableWideCamera") : false;
-  bool use_extra_client = Hardware::TICI() && !main_wide_camera;  // set for single camera mode
+  bool use_extra = USE_EXTRA;
+  bool use_extra_client = Hardware::TICI() && use_extra && !main_wide_camera;
 
   // cl init
   cl_device_id device_id = cl_get_device_id(CL_DEVICE_TYPE_DEFAULT);
@@ -184,7 +186,7 @@ int main(int argc, char **argv) {
 
   // init the models
   ModelState model;
-  model_init(&model, device_id, context);
+  model_init(&model, device_id, context, use_extra);
   LOGW("models loaded, modeld starting");
 
   VisionIpcClient vipc_client_main = VisionIpcClient("camerad", main_wide_camera ? VISION_STREAM_WIDE_ROAD : VISION_STREAM_ROAD, true, device_id, context);
@@ -209,7 +211,7 @@ int main(int argc, char **argv) {
       LOGW("connected extra cam with buffer size: %d (%d x %d)", wb->len, wb->width, wb->height);
     }
 
-    run_model(model, vipc_client_main, vipc_client_extra, main_wide_camera, use_extra_client);
+    run_model(model, vipc_client_main, vipc_client_extra, main_wide_camera, use_extra, use_extra_client);
   }
 
   model_free(&model);
