@@ -70,4 +70,16 @@ public:
   static void launch_tethering() {
     launch_activity("com.android.settings/.TetherSettings");
   }
+  static void launch_locale() {
+    // am start -a android.settings.LOCALE_SETTINGS --es extra_prefs_set_next_text 'Close' --es extra_prefs_set_back_text 'Close'
+    launch_activity("com.android.settings/.Settings\\$LocalePickerActivity");
+  }
+  static void launch_vol() {
+    // am start -a android.settings.SOUND_SETTINGS --ez extra_prefs_show_button_bar true --es extra_prefs_set_next_text 'Close' --es extra_prefs_set_back_text 'Close'
+    launch_activity("com.android.settings/.Settings\\$SoundSettingsActivity");
+  }
+  static void launch_datetime() {
+    // am start -a android.settings.DATE_SETTINGS --ez extra_prefs_show_button_bar true --es extra_prefs_set_next_text 'Close' --es extra_prefs_set_back_text 'Close'
+    launch_activity("com.android.settings/.Settings\\$DateTimeSettingsActivity");
+  }
 };
