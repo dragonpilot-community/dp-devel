@@ -1,0 +1,632 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-30 16:37+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ko-KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:153
+msgid "openpilot Unavailable"
+msgstr "오픈파일럿 사용불가"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:160
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:167
+msgid "TAKE CONTROL IMMEDIATELY"
+msgstr "핸들을 잡아주세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:194
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:372
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:464
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:516
+msgid "TAKE CONTROL"
+msgstr "핸들을 잡아주세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:195
+#, fuzzy, python-format
+msgid "Steer Unavailable Below %(speed)d %(unit)s"
+msgstr "%d %s 이하에서는 조향제어가 불가합니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:204
+#, fuzzy, python-format
+msgid "Calibration in Progress: %d%%"
+msgstr "캘리브레이션 진행중: %d%%"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:205
+#, fuzzy, python-format
+msgid "Drive Above %(speed)d %(unit)s"
+msgstr "%(speed)d %(unit)s 이상의 속도로 주행하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:213
+msgid "Poor GPS reception"
+msgstr "GPS 신호 약함"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:214
+msgid "If sky is visible, contact support"
+msgstr "환경에 문제가 없을경우 서비스팀에 연락하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:214
+msgid "Check GPS antenna placement"
+msgstr "GPS안테나 위치를 점검하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:220
+msgid "Cruise Mode Disabled"
+msgstr "크루즈 모드 꺼짐"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:222
+msgid "Main Switch Off"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:230
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:262
+msgid "Joystick Mode"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:237
+#, python-format
+msgid "Auto Lane Change starts in %.1f secs"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:238
+msgid "Monitor Other Vehicles"
+msgstr "다른 차량에 주의하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:245
+#, fuzzy, python-format
+msgid "Adjusting to %(speed)s %(unit)s"
+msgstr "%(speed)d %(unit)s 이상의 속도로 주행하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:245
+msgid "km/h"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:245
+msgid "mph"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:269
+msgid "Controls Initializing"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:274
+msgid "Be ready to take over at any time"
+msgstr "오픈파일럿 사용준비가 되었습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:275
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:283
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:292
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:301
+msgid "Always keep hands on wheel and eyes on road"
+msgstr "안전운전을 위해 항상 핸들을 잡고 도로교통 상황을 주시하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:282
+msgid "WARNING: This branch is not tested"
+msgstr "경고: 이 Branch는 테스트되지 않았습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:291
+msgid "Dashcam mode"
+msgstr "대시캠 모드"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:300
+msgid "Dashcam mode for unsupported car"
+msgstr "안전운전을 위해 항상 핸들을 잡고 도로교통 상황을 주시하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:308
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:348
+msgid "Car Unrecognized"
+msgstr "미인식 차량"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:309
+msgid "Check comma power connections"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:316
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:347
+msgid "Dashcam Mode"
+msgstr "대시캠 모드"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:324
+msgid "Stock LKAS is turned on"
+msgstr "차량의 LKAS 기능이 켜져 있습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:325
+msgid "Turn off stock LKAS to engage"
+msgstr "오픈파일럿 사용을 위해 LKAS를 끄세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:336
+#, fuzzy
+msgid "openpilot Not Available"
+msgstr "오픈파일럿 사용불가"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:337
+#, fuzzy
+msgid "Enable Community Features in Settings to Engage"
+msgstr "개발자 설정에서 커뮤니티 기능을 활성화하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:355
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:364
+msgid "BRAKE!"
+msgstr "브레이크!"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:356
+msgid "Stock AEB: Risk of Collision"
+msgstr "순정 AEB: 충돌 위험"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:365
+msgid "Risk of Collision"
+msgstr "충돌 위험"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:373
+msgid "Lane Departure Detected"
+msgstr "차선이탈이 감지되었습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:382
+msgid "openpilot will not brake while gas pressed"
+msgstr "가속중에는 오픈파일럿 브레이크 작동불가"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:397
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:398
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:400
+msgid "Vehicle Parameter Identification Failed"
+msgstr "차량 매개 변수 식별 실패"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:408
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:601
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:602
+msgid "Steering Temporarily Unavailable"
+msgstr "조향제어가 일시적으로 비활성화 되었습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:416
+msgid "KEEP EYES ON ROAD: Driver Distracted"
+msgstr "도로상황에 주의를 기울이세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:424
+msgid "KEEP EYES ON ROAD"
+msgstr "도로상황에 주의하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:425
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:433
+#, fuzzy
+msgid "Driver Distracted"
+msgstr "운전자 전방주시 불안"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:432
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:456
+msgid "DISENGAGE IMMEDIATELY"
+msgstr "경고: 조향제어가 즉시 해제됩니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:440
+msgid "TOUCH STEERING WHEEL: No Face Detected"
+msgstr "핸들을 터치하세요: 모니터링 없음"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:448
+msgid "TOUCH STEERING WHEEL"
+msgstr "핸들을 터치하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:449
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:457
+#, fuzzy
+msgid "Driver Unresponsive"
+msgstr "운전자 모니터링 없음"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:465
+msgid "Resume Driving Manually"
+msgstr "수동으로 재출발 하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:472
+msgid "STOPPED"
+msgstr "잠시멈춤"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:473
+msgid "Press Resume to Move"
+msgstr "재출발을 위해 RES버튼을 누르세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:484
+#, fuzzy
+msgid "Steer Left to Start Lane Change Once Safe"
+msgstr "차선 변경을 위해 핸들을 좌측으로 살짝 돌리세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:492
+#, fuzzy
+msgid "Steer Right to Start Lane Change Once Safe"
+msgstr "차선 변경을 위해 핸들을 우측으로 살짝 돌리세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:500
+msgid "Car Detected in Blindspot"
+msgstr "측면 차량 접근 중"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:508
+#, fuzzy
+msgid "Changing Lanes"
+msgstr "차선 변경 중"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:517
+msgid "Turn Exceeds Steering Limit"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:524
+#, fuzzy
+msgid "Fan Malfunction"
+msgstr "하네스 오작동"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:524
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:529
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:534
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:541
+msgid "Contact Support"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:529
+#, fuzzy
+msgid "Camera Malfunction"
+msgstr "하네스 오작동"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:534
+#, fuzzy
+msgid "GPS Malfunction"
+msgstr "하네스 오작동"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:541
+#, fuzzy
+msgid "Sensor Malfunction"
+msgstr "하네스 오작동"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:546
+msgid "Cruise set to speed limit"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:576
+msgid "Brake Hold Active"
+msgstr "브레이크 홀드 중"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:581
+msgid "Park Brake Engaged"
+msgstr "파킹브레이크 체결 됨"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:586
+msgid "Pedal Pressed During Attempt"
+msgstr "시작 중 페달 밟음"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:597
+msgid "Enable Adaptive Cruise"
+msgstr "어댑티브 크루즈를 활성화하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:608
+#, fuzzy
+msgid "Out of Storage"
+msgstr "저장공간 부족"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:612
+msgid "Out of Storage Space"
+msgstr "저장공간 부족"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:617
+msgid "Speed Too Low"
+msgstr "차량의 속도 낮음"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:622
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:626
+msgid "No Data from Device Sensors"
+msgstr "EON센서로부터 데이터를 받지 못했습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:623
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:634
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:742
+msgid "Reboot your Device"
+msgstr "장치를 재시작 하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:634
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:635
+msgid "Speaker not found"
+msgstr "스피커를 찾을 수 없습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:639
+msgid "Distraction Level Too High"
+msgstr "운전자 전방주시 매우 불안"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:644
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:648
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:649
+msgid "System Overheated"
+msgstr "시스템이 과열되었습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:654
+msgid "Gear not D"
+msgstr "기어가 드라이브모드가 아닙니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:663
+#, fuzzy
+msgid "Calibration Invalid"
+msgstr "캘리브레이션 진행 중"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:663
+#, fuzzy
+msgid "Remount Device and Recalibrate"
+msgstr "캘리브레이션 유효하지 않음: 장치 위치 조정 및 재 캘리브레이션"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:664
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:665
+#, fuzzy
+msgid "Calibration Invalid: Remount Device & Recalibrate"
+msgstr "캘리브레이션 유효하지 않음: 장치 위치 조정 및 재 캘리브레이션"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:670
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:671
+msgid "Calibration in Progress"
+msgstr "캘리브레이션 진행 중"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:675
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:676
+msgid "Door Open"
+msgstr "도어가 열려있습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:680
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:681
+msgid "Seatbelt Unlatched"
+msgstr "안전벨트를 체결하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:685
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:686
+msgid "ESP Off"
+msgstr "ESP 꺼짐"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:690
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:691
+msgid "Low Battery"
+msgstr "배터리 부족"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:699
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:700
+msgid "Communication Issue between Processes"
+msgstr "프로세스 간 통신 오류가 있습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:706
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:750
+#, fuzzy
+msgid "System Malfunction: Reboot Your Device"
+msgstr "메모리 부족: 장치를 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:711
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:712
+msgid "Radar Error: Restart the Car"
+msgstr "레이더 오류: 차량을 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:719
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:720
+msgid "Driving model lagging"
+msgstr "주행 모델 지연"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:729
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:730
+#, fuzzy
+msgid "Model Output Uncertain"
+msgstr "전방 영상 인식 불안"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:736
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:737
+msgid "Device Fell Off Mount"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:741
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:743
+msgid "Low Memory: Reboot Your Device"
+msgstr "메모리 부족: 장치를 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:742
+#, fuzzy
+msgid "Low Memory"
+msgstr "배터리 부족"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:755
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:756
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:757
+#, fuzzy
+msgid "Cruise Faulted"
+msgstr "크루즈 모드 꺼짐"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:761
+msgid "Controls Mismatch"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:765
+msgid "Road Camera Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:770
+msgid "Driver Camera Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:775
+msgid "Wide Road Camera Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:782
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:783
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:784
+#, fuzzy
+msgid "USB Error: Reboot Your Device"
+msgstr "메모리 부족: 장치를 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:792
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:794
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:798
+msgid "CAN Error: Check Connections"
+msgstr "CAN 오류: CAN 신호를 확인하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:802
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:808
+msgid "LKAS Fault: Restart the Car"
+msgstr "LKAS 오류: 차량을 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:804
+msgid "LKAS Fault: Restart the car to engage"
+msgstr "LKAS 오류: 시작을 위해 차량을 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:812
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:818
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:892
+msgid "Cruise Fault: Restart the Car"
+msgstr "크루즈 오류: 차량을 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:814
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:888
+msgid "Cruise Fault: Restart the car to engage"
+msgstr "크루즈 오류: 시작을 위해 차량을 재시작하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:823
+#, fuzzy
+msgid ""
+"Reverse\n"
+"Gear"
+msgstr "후진 기어"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:828
+msgid "Reverse Gear"
+msgstr "후진 기어"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:834
+msgid "Cruise Is Off"
+msgstr "크루즈 꺼짐"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:841
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:842
+msgid "Planner Solution Error"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:850
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:851
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:852
+msgid "Harness Malfunction"
+msgstr "하네스 오작동"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:851
+#, fuzzy
+msgid "Check Hardware"
+msgstr "장치를 점검하세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:857
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:866
+msgid "openpilot Canceled"
+msgstr "오픈파일럿 시작불가"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:858
+msgid "No close lead car"
+msgstr "선행차량이 없습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:861
+msgid "No Close Lead Car"
+msgstr "선행차량이 없습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:867
+msgid "Speed too low"
+msgstr "선행차량이 없습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:875
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:880
+msgid "Speed Too High"
+msgstr "속도가 너무 높습니다"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:876
+msgid "Model uncertain at this speed"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:881
+msgid "Slow down to engage"
+msgstr "시작을 위해 차량의 속도를 낮추세요"
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:902
+msgid "STEERING REQUIRED: Lane Keeping OFF"
+msgstr ""
+
+#: /home/openpilot/dp-devel/selfdrive/controls/lib/events.py:910
+msgid "STEERING REQUIRED: Blinkers ON"
+msgstr ""
+
+#~ msgid "Unsupported Giraffe Configuration"
+#~ msgstr "지원되지 않는 지라프 설정"
+
+#~ msgid "Visit comma.ai/tg"
+#~ msgstr "comma.ai/tg 방문하세요"
+
+#~ msgid "White Panda Is No Longer Supported"
+#~ msgstr "화이트판다는 더 이상 지원되지 않습니다"
+
+#~ msgid "Upgrade to comma two or black panda"
+#~ msgstr "콤마2나 블랙판다로 업그레이드 하세요"
+
+#~ msgid "White panda is no longer supported"
+#~ msgstr "화이트판다는 더 이상 지원되지 않습니다"
+
+#~ msgid "Community Feature Detected"
+#~ msgstr "커뮤니티 기능 감지됨"
+
+#~ msgid "Stock FCW: Risk of Collision"
+#~ msgstr "순정 FCW: 충돌 위험"
+
+#~ msgid "Driver Appears Distracted"
+#~ msgstr "전방주시 필요"
+
+#~ msgid "Driver Was Unresponsive"
+#~ msgstr "운전자 모니터링 없음"
+
+#~ msgid "CHECK DRIVER FACE VISIBILITY"
+#~ msgstr "운전자 얼굴 확인 중"
+
+#~ msgid "Driver Monitor Model Output Uncertain"
+#~ msgstr "운전자 얼굴 인식이 어렵습니다"
+
+#~ msgid "Attempting Refocus: Camera Focus Invalid"
+#~ msgstr "카메라 포커스 조정중: 카메라 포커스 부정확"
+
+#~ msgid "NEOS Update Required"
+#~ msgstr "NEOS 업데이트 필요"
+
+#~ msgid "Please Wait for Update"
+#~ msgstr "업데이트를 위해 기다리세요"
+
+#~ msgid "System overheated"
+#~ msgstr "시스템이 과열되었습니다"
+
+#~ msgid "Door open"
+#~ msgstr "도어가 열려있습니다"
+
+#~ msgid "Seatbelt unlatched"
+#~ msgstr "안전벨트를 체결하세요"
+
+#~ msgid "Radar Communication Issue"
+#~ msgstr "레이더 오류: 차량을 재시작하세요"
+
+#~ msgid "RAM Critically Low"
+#~ msgstr "메모리 부족 심각"
+
+#~ msgid "Controls Failed"
+#~ msgstr "차량제어 불가"
+
+#~ msgid "Gas Fault: Restart the Car"
+#~ msgstr "가속페달 오류: 차량을 재시작하세요"
+
+#~ msgid "Gas Error: Restart the Car"
+#~ msgstr "가속페달 오류: 차량을 재시작하세요"
+
+#~ msgid "Slow down to resume operation"
+#~ msgstr "재 작동을 위해 차량의 속도를 낮추세요"
+
+#~ msgid "Please connect to Internet"
+#~ msgstr "인터넷에 연결하세요"
+
+#~ msgid "An Update Check Is Required to Engage"
+#~ msgstr "시작을 위해 업데이트를 확인해야 합니다"
+
+#~ msgid "Please Connect to Internet"
+#~ msgstr "인터넷에 연결하세요"
