@@ -83,3 +83,5 @@ models/*.thneed
 build/
 
 !**/.gitkeep
+
+!third_party/mapbox-gl-native-qt/aarch64/*.so
