@@ -67,7 +67,7 @@ InputDialog::InputDialog(const QString &title, QWidget *parent, const QString &s
     vlayout->addWidget(sublabel, 1, Qt::AlignTop | Qt::AlignLeft);
   }
 
-  QPushButton* cancel_btn = new QPushButton("Cancel");
+  QPushButton* cancel_btn = new QPushButton(InputDialog::tr("Cancel"));
   cancel_btn->setFixedSize(386, 125);
   cancel_btn->setStyleSheet(R"(
     font-size: 48px;
@@ -164,7 +164,7 @@ void InputDialog::handleEnter() {
     done(QDialog::Accepted);
     emitText(line->text());
   } else {
-    setMessage("Need at least "+QString::number(minLength)+" characters!", false);
+    setMessage(InputDialog::tr("Need at least ")+QString::number(minLength)+InputDialog::tr(" characters!"), false);
   }
 }
 
@@ -254,6 +254,6 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
 }
 
 bool RichTextDialog::alert(const QString &prompt_text, QWidget *parent) {
-  auto d = RichTextDialog(prompt_text, "Ok", parent);
+  auto d = RichTextDialog(prompt_text, RichTextDialog::tr("Ok"), parent);
   return d.exec();
 }

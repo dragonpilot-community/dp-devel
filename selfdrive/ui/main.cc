@@ -21,6 +21,15 @@ int main(int argc, char *argv[]) {
   }
 
   QApplication a(argc, argv);
+  QString locale = "en-US";
+  locale = QString::fromStdString(Params().get("dp_locale"));
+  QTranslator translator;
+  // fall back to English
+  if (!translator.load(locale, "translations")) {
+    translator.load("en-US", "translations");
+  }
+  a.installTranslator(&translator);  // needs to be before setting main window
+
   MainWindow w;
   setMainWindow(&w);
   a.installEventFilter(&w);

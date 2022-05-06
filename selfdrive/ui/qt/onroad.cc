@@ -179,7 +179,7 @@ void NvgWindow::updateState(const UIState &s) {
   if (cruise_set && !s.scene.is_metric) {
     maxspeed *= KM_TO_MILE;
   }
-  QString maxspeed_str = cruise_set ? QString::number(std::nearbyint(maxspeed)) : "N/A";
+  QString maxspeed_str = cruise_set ? QString::number(std::nearbyint(maxspeed)) : NvgWindow::tr("N/A");
   float cur_speed = std::max(0.0, sm["carState"].getCarState().getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH));
 
   setProperty("is_cruise_set", cruise_set);
@@ -213,7 +213,7 @@ void NvgWindow::drawHud(QPainter &p) {
   p.setPen(Qt::NoPen);
 
   configFont(p, "Open Sans", 48, "Regular");
-  drawText(p, rc.center().x(), 118, "MAX", is_cruise_set ? 200 : 100);
+  drawText(p, rc.center().x(), 118, NvgWindow::tr("MAX"), is_cruise_set ? 200 : 100);
   if (is_cruise_set) {
     configFont(p, "Open Sans", 88, "Bold");
     drawText(p, rc.center().x(), 212, maxSpeed, 255);
