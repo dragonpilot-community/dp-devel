@@ -38,6 +38,7 @@ from selfdrive.loggerd.xattr_cache import getxattr, setxattr
 from selfdrive.statsd import STATS_DIR
 from selfdrive.swaglog import SWAGLOG_DIR, cloudlog
 from selfdrive.version import get_commit, get_origin, get_short_branch, get_version
+from common.api import API_HOST
 
 ATHENA_HOST = os.getenv('ATHENA_HOST', 'wss://athena.comma.ai')
 HANDLER_THREADS = int(os.getenv('HANDLER_THREADS', "4"))
@@ -739,7 +740,7 @@ def main():
       params.delete("LastAthenaPingTime")
     except socket.timeout:
       try:
-        r = requests.get("http://api.commadotai.com/v1/me", allow_redirects=False,
+        r = requests.get(API_HOST + "/v1/me", allow_redirects=False,
                          headers={"User-Agent": f"openpilot-{get_version()}"}, timeout=15.0)
         if r.status_code == 302 and r.headers['Location'].startswith("http://u.web2go.com"):
           params.put_bool("PrimeRedirected", True)

@@ -31,6 +31,10 @@ void PairingQRWidget::refresh() {
   if (isVisible()) {
     QString pairToken = CommaApi::create_jwt({{"pair", true}});
     QString qrString = "https://connect.comma.ai/?pair=" + pairToken;
+    Params params;
+    if (params.getBool("dp_api_custom")) {
+      qrString = QString::fromStdString(params.get("IMEI")) + "--" + QString::fromStdString(params.get("HardwareSerial")) + "--" + pairToken;
+    }
     this->updateQrCode(qrString);
   }
 }
