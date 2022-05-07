@@ -102,7 +102,7 @@ def get_ip():
     # doesn't even have to be reachable
     s.connect(('10.255.255.255', 1))
     ip = s.getsockname()[0]
-  except:
+  except Exception:
     ip = 'N/A'
   finally:
     s.close()
