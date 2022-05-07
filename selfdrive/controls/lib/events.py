@@ -1,7 +1,12 @@
 # This Python file uses the following encoding: utf-8
 # -*- coding: utf-8 -*-
-from common.i18n import events
-_ = events()
+from common.travis_checker import travis
+
+if travis:
+  pass
+else:
+  from common.i18n import events
+  _ = events()
 
 import os
 from enum import IntEnum
