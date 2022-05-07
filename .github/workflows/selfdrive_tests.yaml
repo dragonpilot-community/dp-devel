@@ -139,28 +139,28 @@ jobs:
   #      done
   #      comm -13 <(echo "$EXISTING_CELLAR") <(echo "$new_cellar") | tee ~/github_brew_cache_entries.txt
 
-  build_webcam:
-    name: build webcam
-    runs-on: ubuntu-20.04
-    timeout-minutes: 90
-    env:
-      IMAGE_NAME: openpilotwebcamci
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Build Docker image
-      run: |
-        eval "$BUILD"
-        docker pull $DOCKER_REGISTRY/$IMAGE_NAME:latest || true
-        docker build --cache-from $DOCKER_REGISTRY/$IMAGE_NAME:latest -t $DOCKER_REGISTRY/$IMAGE_NAME:latest -f tools/webcam/Dockerfile .
-    - name: Build openpilot
-      run: docker run --shm-size 1G --rm -v $PWD:/tmp/openpilot -e PYTHONPATH=/tmp/openpilot $DOCKER_REGISTRY/$IMAGE_NAME /bin/sh -c "cd /tmp/openpilot && USE_WEBCAM=1 scons -j$(nproc)"
-    - name: Push to container registry
-      if: github.ref == 'refs/heads/master' && github.repository == 'commaai/openpilot'
-      run: |
-        $DOCKER_LOGIN
-        docker push $DOCKER_REGISTRY/$IMAGE_NAME:latest
+  #build_webcam:
+  #  name: build webcam
+  #  runs-on: ubuntu-20.04
+  #  timeout-minutes: 90
+  #  env:
+  #    IMAGE_NAME: openpilotwebcamci
+  #  steps:
+  #  - uses: actions/checkout@v2
+  #    with:
+  #      submodules: true
+  #  - name: Build Docker image
+  #    run: |
+  #      eval "$BUILD"
+  #      docker pull $DOCKER_REGISTRY/$IMAGE_NAME:latest || true
+  #      docker build --cache-from $DOCKER_REGISTRY/$IMAGE_NAME:latest -t $DOCKER_REGISTRY/$IMAGE_NAME:latest -f tools/webcam/Dockerfile .
+  #  - name: Build openpilot
+  #    run: docker run --shm-size 1G --rm -v $PWD:/tmp/openpilot -e PYTHONPATH=/tmp/openpilot $DOCKER_REGISTRY/$IMAGE_NAME /bin/sh -c "cd /tmp/openpilot && USE_WEBCAM=1 scons -j$(nproc)"
+  #  - name: Push to container registry
+  #    if: github.ref == 'refs/heads/master' && github.repository == 'commaai/openpilot'
+  #    run: |
+  #      $DOCKER_LOGIN
+  #      docker push $DOCKER_REGISTRY/$IMAGE_NAME:latest
 
   docker_push:
     name: docker push
@@ -425,21 +425,21 @@ jobs:
     - name: "Upload coverage to Codecov"
       uses: codecov/codecov-action@v2
 
-  docs:
-    name: build docs
-    runs-on: ubuntu-20.04
-    timeout-minutes: 50
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Build docker container
-      run: |
-        docker pull $DOCKER_REGISTRY/$BASE_IMAGE:latest || true
-        docker pull $DOCKER_REGISTRY/openpilot-docs:latest || true
-        DOCKER_BUILDKIT=1 docker build --cache-from $DOCKER_REGISTRY/openpilot-docs:latest -t $DOCKER_REGISTRY/openpilot-docs:latest -f docs/docker/Dockerfile .
-    - name: Push docker container
-      if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'commaai/openpilot'
-      run: |
-        $DOCKER_LOGIN
-        docker push $DOCKER_REGISTRY/openpilot-docs:latest
+  #docs:
+  #  name: build docs
+  #  runs-on: ubuntu-20.04
+  #  timeout-minutes: 50
+  #  steps:
+  #  - uses: actions/checkout@v2
+  #    with:
+  #      submodules: true
+  #  - name: Build docker container
+  #    run: |
+  #      docker pull $DOCKER_REGISTRY/$BASE_IMAGE:latest || true
+  #      docker pull $DOCKER_REGISTRY/openpilot-docs:latest || true
+  #      DOCKER_BUILDKIT=1 docker build --cache-from $DOCKER_REGISTRY/openpilot-docs:latest -t $DOCKER_REGISTRY/openpilot-docs:latest -f docs/docker/Dockerfile .
+  #  - name: Push docker container
+  #    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'commaai/openpilot'
+  #    run: |
+  #      $DOCKER_LOGIN
+  #      docker push $DOCKER_REGISTRY/openpilot-docs:latest
