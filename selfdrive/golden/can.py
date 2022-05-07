@@ -2,7 +2,7 @@
 import cereal.messaging as messaging
 from opendbc.can.packer import CANPacker
 from selfdrive.boardd.boardd_api_impl import can_list_to_can_capnp  # pylint: disable=no-name-in-module,import-error
-from selfdrive.car.honda.values import CAR
+#from selfdrive.car.honda.values import CAR
 from selfdrive.car import crc8_pedal
 import math
 from opendbc.can.parser import CANParser
@@ -79,7 +79,7 @@ def can_function(pm, speed, angle, idx, cruise_button=0, is_engaged=0):
       msg.append(rpacker.make_can_msg("TRACK_%d" % i, 1, {"LONG_DIST": 255.5}, -1))
 
   # fill in the rest for fingerprint
-  done = set([x[0] for x in msg])
+  #done = set([x[0] for x in msg])
   #for k, v in FINGERPRINTS[CAR.CIVIC][0].items():
     #if k not in done and k not in [0xE4, 0x194]:
       #msg.append([k, 0, b'\x00'*v, 0])
