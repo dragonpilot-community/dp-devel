@@ -6,7 +6,7 @@ if travis:
   pass
 else:
   from common.i18n import events
-  _ = events()
+_ = events()
 
 import os
 from enum import IntEnum
