@@ -28,6 +28,7 @@ common/logging_extra.py
 common/numpy_fast.py
 common/markdown.py
 common/params.py
+common/i18n.py
 common/params_pyx.pyx
 common/xattr.py
 common/profiler.py
@@ -37,6 +38,7 @@ common/filter_simple.py
 common/stat_live.py
 common/spinner.py
 common/text_window.py
+common/travis_checker.py
 common/SConscript
 
 common/kalman/.gitignore
