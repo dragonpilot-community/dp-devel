@@ -373,7 +373,7 @@ def fetch_update(wait_helper: WaitTimeHelper) -> bool:
       ]
       cloudlog.info("git reset success: %s", '\n'.join(r))
 
-      if EON:
+      if EON and not os.path.isfile("/ONEPLUS"):
         handle_neos_update(wait_helper)
       elif TICI:
         handle_agnos_update(wait_helper)

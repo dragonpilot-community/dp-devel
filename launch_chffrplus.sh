@@ -222,12 +222,12 @@ function launch {
   # start manager
   cd selfdrive/manager
   if [ -f /EON ]; then
-    if [ ! -f "/system/comma/usr/lib/libgfortran.so.5.0.0" && -f "/data/openpilot/selfdrive/mapd/assets/libgfortran.tar.gz" ]; then
+    if [ ! -f "/system/comma/usr/lib/libgfortran.so.5.0.0" ] && [ -f "/data/openpilot/selfdrive/mapd/assets/libgfortran.tar.gz" ]; then
       mount -o remount,rw /system
       tar -zxvf /data/openpilot/selfdrive/mapd/assets/libgfortran.tar.gz -C /system/comma/usr/lib/
       mount -o remount,r /system
     fi
-    if [ ! -d "/system/comma/usr/lib/python3.8/site-packages/opspline" && -f "/data/openpilot/selfdrive/mapd/assets/opspline.tar.gz" ]; then
+    if [ ! -d "/system/comma/usr/lib/python3.8/site-packages/opspline" ] && [ -f "/data/openpilot/selfdrive/mapd/assets/opspline.tar.gz" ]; then
       mount -o remount,rw /system
       tar -zxvf /data/openpilot/selfdrive/mapd/assets/opspline.tar.gz -C /system/comma/usr/lib/python3.8/site-packages/
       mount -o remount,r /system
