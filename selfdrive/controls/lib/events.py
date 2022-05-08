@@ -1,6 +1,5 @@
 # This Python file uses the following encoding: utf-8
 # -*- coding: utf-8 -*-
-from common.travis_checker import travis
 
 import os
 from enum import IntEnum
