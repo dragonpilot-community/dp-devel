@@ -1,7 +1,5 @@
 # This Python file uses the following encoding: utf-8
 # -*- coding: utf-8 -*-
-from common.i18n import events
-_ = events()
 
 import os
 from enum import IntEnum
@@ -13,6 +11,8 @@ from common.conversions import Conversions as CV
 from common.realtime import DT_CTRL
 from selfdrive.locationd.calibrationd import MIN_SPEED_FILTER
 from selfdrive.version import get_short_branch
+from common.i18n import events
+_ = events()
 
 AlertSize = log.ControlsState.AlertSize
 AlertStatus = log.ControlsState.AlertStatus

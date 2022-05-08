@@ -11,7 +11,7 @@ import cereal.messaging as messaging
 #import argparse
 from common.params import Params
 from common.realtime import Ratekeeper
-from selfdrive.golden.can_toyota import can_function, sendcan_function
+from selfdrive.golden.can import can_function, sendcan_function
 from selfdrive.car.honda.values import CruiseButtons
 #import subprocess
 import sys
@@ -79,7 +79,7 @@ def main():
   t = threading.Thread(target=keyboard_poll_thread, args=[q])
   t.start()
 
-  pm = messaging.PubMaster(['can', 'pandaStates', 'peripheralState'])
+  pm = messaging.PubMaster(['can', 'pandaStates'])
 
   # can loop
   sendcan = messaging.sub_sock('sendcan')
@@ -143,17 +143,6 @@ def main():
         'safetyModel': "hondaNidec",
       }
       pm.send('pandaStates', dat)
-
-      dat = messaging.new_message('peripheralState')
-      dat.valid = True
-      # dat.peripheralState = {
-      #   'pandaType': "uno",
-      #   'voltage': 1.0,
-      #   'current': 1.0,
-      #   'fanSpeedRpm': 100,
-      #   'usbPowerMode': "client",
-      # }
-      pm.send('peripheralState', dat)
 
     frames += 1
 
