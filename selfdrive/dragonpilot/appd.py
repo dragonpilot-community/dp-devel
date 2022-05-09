@@ -70,12 +70,12 @@ class Appd():
       result = subprocess.check_output(["dumpsys", "package", app_name, "|", "grep", "versionName"], encoding='utf8')
       if len(result) > 12:
         return True
-    except:
+    except Exception:
       pass
     return False
 
   def system(self, cmd):
     try:
       subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
-    except:
+    except Exception:
       pass

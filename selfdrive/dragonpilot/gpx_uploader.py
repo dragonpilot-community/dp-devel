@@ -65,7 +65,7 @@ class GpxUploader():
       r = requests.get(VERSION_URL, headers=API_HEADER)
       _debug("is_online? status_code = %s" % r.status_code)
       return r.status_code >= 200
-    except:
+    except Exception:
       return False
 
   def _get_is_uploaded(self, filename):
@@ -100,7 +100,7 @@ class GpxUploader():
       r = requests.post(UPLOAD_URL, files=files, data=data, headers=API_HEADER)
       _debug("do_upload - %s - %s" % (filename, r.status_code))
       return r.status_code == 200
-    except:
+    except Exception:
       return False
 
   def run(self):

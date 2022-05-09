@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#pylint: disable=W0105
 # The MIT License
 #
 # Copyright (c) 2019-, Rick Lan, dragonpilot community, and a number of other of contributors.
@@ -103,7 +104,7 @@ def confd_thread():
         last_modified = modified
     '''
     ===================================================
-    conditionally set update_params to true 
+    conditionally set update_params to true
     ===================================================
     '''
     # force updating param when `started` changed
@@ -229,13 +230,13 @@ def update_custom_logic(msg):
 
 
 def update_ip(msg):
-  val = 'N/A'
+  #val = 'N/A'
   s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
   try:
     # doesn't even have to be reachable
     s.connect(('10.255.255.255', 1))
     IP = s.getsockname()[0]
-  except:
+  except Exception:
     IP = 'N/A'
   finally:
     s.close()

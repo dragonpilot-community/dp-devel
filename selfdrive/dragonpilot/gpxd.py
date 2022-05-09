@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#pylint: skip-file
 # The MIT License
 #
 # Copyright (c) 2019-, Rick Lan, dragonpilot community, and a number of other of contributors.
@@ -115,7 +116,7 @@ class GpxD():
         f = open('%s%sZ.gpx' % (GPX_LOG_PATH, filename), 'w')
         f.write(str)
         f.close()
-      except:
+      except Exception:
         pass
 
   def _trkpt_template(self, lat, lon, ele, time):
