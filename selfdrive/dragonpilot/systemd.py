@@ -40,12 +40,13 @@ import socket
 from common.realtime import Ratekeeper
 import threading
 from selfdrive.dragonpilot.gpx_uploader import gpx_uploader_thread
+from typing import Dict, Any
 
 PARAM_PATH = params.get_params_path() + '/d/'
 
 HERTZ = 1
 
-last_modified_confs = {}
+last_modified_confs: Dict[str, Any] = {}
 
 def confd_thread():
   sm = messaging.SubMaster(['deviceState'])

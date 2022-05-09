@@ -53,27 +53,27 @@ def get_last_modified(delay, old_check, old_modified):
   else:
     return old_check, old_modified
 
-def param_get_if_updated(param, type, old_val, old_modified):
+def param_get_if_updated(param, type_of, old_val, old_modified):
   try:
     modified = os.stat(PARAM_PATH + param).st_mtime
   except OSError:
     return old_val, old_modified
   if old_modified != modified:
-    new_val = param_get(param, type, old_val)
+    new_val = param_get(param, type_of, old_val)
     new_modified = modified
   else:
     new_val = old_val
     new_modified = old_modified
   return new_val, new_modified
 
-def param_get(param_name, type, default):
+def param_get(param_name, type_of, default):
   try:
     val = params.get(param_name, encoding='utf8').rstrip('\x00')
-    if type == 'bool':
+    if type_of == 'bool':
       val = val == '1'
-    elif type == 'int':
+    elif type_of == 'int':
       val = int(val)
-    elif type == 'float':
+    elif type_of == 'float':
       val = float(val)
   except (TypeError, ValueError):
     val = default

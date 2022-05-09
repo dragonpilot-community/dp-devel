@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.8
+#pylint: skip-file
 # The MIT License
 #
 # Copyright (c) 2019-, Rick Lan, dragonpilot community, and a number of other of contributors.
