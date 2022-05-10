@@ -41,6 +41,8 @@ public:
     return put(key.c_str(), val ? "1" : "0", 1);
   }
 
+  std::string get_params_path();
+
 private:
   std::string params_path;
 };
