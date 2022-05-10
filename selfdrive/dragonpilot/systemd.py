@@ -150,10 +150,8 @@ def confd_thread():
     PowerMonitor in thermald turns back on every mins
     so lets turn it off more frequent
     ===================================================
-    '''
     # if frame % (HERTZ * 30) == 0:
     #   last_charging_ctrl = process_charging_ctrl(msg, last_charging_ctrl, battery_percent)
-    '''
     ===================================================
     dashcam
     ===================================================
