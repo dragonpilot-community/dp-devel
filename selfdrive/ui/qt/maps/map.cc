@@ -145,14 +145,14 @@ void MapWindow::timerUpdate() {
 
   loaded_once = loaded_once || m_map->isFullyLoaded();
   if (!loaded_once) {
-    map_instructions->showError("Map Loading");
+    map_instructions->showError(MapWindow::tr("Map Loading"));
     return;
   }
 
   initLayers();
 
   if (!localizer_valid) {
-    map_instructions->showError("Waiting for GPS");
+    map_instructions->showError(MapWindow::tr("Waiting for GPS"));
   } else {
     map_instructions->noError();
 
@@ -595,11 +595,11 @@ void MapETA::updateETA(float s, float s_typical, float d) {
   // Remaining time
   if (s < 3600) {
     time->setText(QString::number(int(s / 60)));
-    time_unit->setText("min");
+    time_unit->setText(MapETA::tr("min"));
   } else {
     int hours = int(s) / 3600;
     time->setText(QString::number(hours) + ":" + QString::number(int((s - hours * 3600) / 60)).rightJustified(2, '0'));
-    time_unit->setText("hr");
+    time_unit->setText(MapETA::tr("hr"));
   }
 
   QString color;
@@ -619,10 +619,10 @@ void MapETA::updateETA(float s, float s_typical, float d) {
   float num = 0;
   if (uiState()->scene.is_metric) {
     num = d / 1000.0;
-    distance_unit->setText("km");
+    distance_unit->setText(MapETA::tr("km"));
   } else {
     num = d * METER_TO_MILE;
-    distance_unit->setText("mi");
+    distance_unit->setText(MapETA::tr("mi"));
   }
 
   distance_str.setNum(num, 'f', num < 100 ? 1 : 0);

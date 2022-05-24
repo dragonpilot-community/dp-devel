@@ -84,3 +84,5 @@ selfdrive/modeld/models/*.thneed
 build/
 
 !**/.gitkeep
+
+*.po~

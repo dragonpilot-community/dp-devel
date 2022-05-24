@@ -45,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   });
 
   // load fonts
+  QFontDatabase::addApplicationFont("../assets/fonts/NotoSansCJKtc-Regular.otf");
+  QFontDatabase::addApplicationFont("../assets/fonts/NotoSansCJKtc-Medium.otf");
+  QFontDatabase::addApplicationFont("../assets/fonts/NotoSansCJKtc-Bold.otf");
   QFontDatabase::addApplicationFont("../assets/fonts/opensans_regular.ttf");
   QFontDatabase::addApplicationFont("../assets/fonts/opensans_bold.ttf");
   QFontDatabase::addApplicationFont("../assets/fonts/opensans_semibold.ttf");

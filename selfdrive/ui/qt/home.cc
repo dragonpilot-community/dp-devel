@@ -9,6 +9,7 @@
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/widgets/drive_stats.h"
 #include "selfdrive/ui/qt/widgets/prime.h"
+#include <QLocale>
 
 // HomeWindow: the container for the offroad and onroad UIs
 
@@ -98,6 +99,7 @@ void HomeWindow::mouseDoubleClickEvent(QMouseEvent* e) {
 // OffroadHome: the offroad home page
 
 OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
+  locale = QString::fromStdString(Params().get("dp_locale"));
   QVBoxLayout* main_layout = new QVBoxLayout(this);
   main_layout->setContentsMargins(40, 40, 40, 45);
 
@@ -109,7 +111,7 @@ OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
   date = new QLabel();
   header_layout->addWidget(date, 1, Qt::AlignHCenter | Qt::AlignLeft);
 
-  update_notif = new QPushButton("UPDATE");
+  update_notif = new QPushButton(OffroadHome::tr("UPDATE"));
   update_notif->setVisible(false);
   update_notif->setStyleSheet("background-color: #364DEF;");
   QObject::connect(update_notif, &QPushButton::clicked, [=]() { center_layout->setCurrentIndex(1); });
@@ -181,7 +183,8 @@ void OffroadHome::hideEvent(QHideEvent *event) {
 }
 
 void OffroadHome::refresh() {
-  date->setText(QDateTime::currentDateTime().toString("dddd, MMMM d"));
+  QLocale ql = locale == "zh-TW"? QLocale("zh_Hant") : QLocale::English;
+  date->setText(ql.toString(QDateTime::currentDateTime(), QLocale::ShortFormat) + " " + ql.toString(QDateTime::currentDateTime(), "dddd"));
 
   bool updateAvailable = update_widget->refresh();
   int alerts = alerts_widget->refresh();

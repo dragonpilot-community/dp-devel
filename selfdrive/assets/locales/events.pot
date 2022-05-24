@@ -1,0 +1,541 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-26 22:56+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../selfdrive/controls/lib/events.py:151
+msgid "openpilot Unavailable"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:160
+#: ../selfdrive/controls/lib/events.py:175
+msgid "TAKE CONTROL IMMEDIATELY"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:170
+msgid "openpilot will disengage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:197
+msgid "Always keep hands on wheel and eyes on road"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:234
+msgid "WARNING: This branch is not tested"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:242
+#, python-format
+msgid "Steer Unavailable Below %s"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:250
+#, python-format
+msgid "Calibration in Progress: %d%%"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:251
+#, python-format
+msgid "Drive Above %s"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:259
+msgid "Poor GPS reception"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:260
+msgid "Hardware malfunctioning if sky is visible"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:260
+msgid "Check GPS antenna placement"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:268
+#: ../selfdrive/controls/lib/events.py:655
+msgid "Out of Storage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:268
+#, python-format
+msgid "%s%% full"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:275
+#: ../selfdrive/controls/lib/events.py:776
+msgid "Posenet Speed Invalid"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:281
+#: ../selfdrive/controls/lib/events.py:753
+msgid "Process Not Running"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:287
+msgid "Communication Issue Between Processes"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:293
+#: ../selfdrive/controls/lib/events.py:566
+msgid "Camera Malfunction"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:301
+msgid "Calibration Invalid"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:308
+#: ../selfdrive/controls/lib/events.py:686
+#: ../selfdrive/controls/lib/events.py:687
+msgid "System Overheated"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:312
+msgid "Low Memory"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:317
+msgid "High CPU Usage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:317
+#, python-format
+msgid "%s%% used"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:321
+#: ../selfdrive/controls/lib/events.py:765
+#: ../selfdrive/controls/lib/events.py:766
+msgid "Driving Model Lagging"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:325
+msgid "Cruise Mode Disabled"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:327
+msgid "Main Switch Off"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:335
+#: ../selfdrive/controls/lib/events.py:348
+msgid "Joystick Mode"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:352
+msgid "System Initializing"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:356
+msgid "Be ready to take over at any time"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:365
+msgid "Dashcam mode"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:370
+msgid "Dashcam mode for unsupported car"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:374
+#: ../selfdrive/controls/lib/events.py:398
+msgid "Car Unrecognized"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:375
+msgid "Check comma power connections"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:380
+#: ../selfdrive/controls/lib/events.py:397
+msgid "Dashcam Mode"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:385
+msgid "Stock LKAS is on"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:386
+msgid "Turn off stock LKAS to engage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:404
+#: ../selfdrive/controls/lib/events.py:413
+msgid "BRAKE!"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:405
+#: ../selfdrive/controls/lib/events.py:408
+msgid "Stock AEB: Risk of Collision"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:414
+msgid "Risk of Collision"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:421
+msgid "Lane Departure Detected"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:438
+#: ../selfdrive/controls/lib/events.py:439
+msgid "Vehicle Parameter Identification Failed"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:444
+#: ../selfdrive/controls/lib/events.py:649
+#: ../selfdrive/controls/lib/events.py:650
+msgid "Steering Temporarily Unavailable"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:452
+#: ../selfdrive/controls/lib/events.py:460
+msgid "Pay Attention"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:461
+#: ../selfdrive/controls/lib/events.py:469
+msgid "Driver Distracted"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:468
+#: ../selfdrive/controls/lib/events.py:492
+msgid "DISENGAGE IMMEDIATELY"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:476
+msgid "Touch Steering Wheel: No Face Detected"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:484
+msgid "Touch Steering Wheel"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:485
+#: ../selfdrive/controls/lib/events.py:493
+msgid "Driver Unresponsive"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:500
+msgid "TAKE CONTROL"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:501
+msgid "Resume Driving Manually"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:508
+msgid "STOPPED"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:509
+msgid "Press Resume to Go"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:520
+msgid "Steer Left to Start Lane Change Once Safe"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:528
+msgid "Steer Right to Start Lane Change Once Safe"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:536
+msgid "Car Detected in Blindspot"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:544
+msgid "Changing Lanes"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:552
+msgid "Take Control"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:553
+msgid "Turn Exceeds Steering Limit"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:560
+msgid "Fan Malfunction"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:560
+#: ../selfdrive/controls/lib/events.py:578
+msgid "Likely Hardware Issue"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:567
+msgid "Camera Malfunction: Reboot Your Device"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:571
+#: ../selfdrive/controls/lib/events.py:572
+msgid "Camera Frame Rate Low"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:571
+#: ../selfdrive/controls/lib/events.py:665
+#: ../selfdrive/controls/lib/events.py:676
+msgid "Reboot your Device"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:573
+msgid "Camera Frame Rate Low: Reboot Your Device"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:578
+msgid "GPS Malfunction"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:608
+msgid "Brake Hold Active"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:613
+msgid "Parking Brake Engaged"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:618
+msgid "Pedal Pressed"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:624
+msgid "Release Pedal to Engage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:645
+msgid "Adaptive Cruise Disabled"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:664
+#: ../selfdrive/controls/lib/events.py:668
+msgid "No Data from Device Sensors"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:676
+#: ../selfdrive/controls/lib/events.py:677
+msgid "Speaker not found"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:681
+msgid "Distraction Level Too High"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:691
+#: ../selfdrive/controls/lib/events.py:692
+msgid "Gear not D"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:702
+#: ../selfdrive/controls/lib/events.py:703
+msgid "Calibration Invalid: Remount Device & Recalibrate"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:708
+#: ../selfdrive/controls/lib/events.py:709
+msgid "Calibration in Progress"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:713
+#: ../selfdrive/controls/lib/events.py:714
+msgid "Door Open"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:718
+#: ../selfdrive/controls/lib/events.py:719
+msgid "Seatbelt Unlatched"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:723
+#: ../selfdrive/controls/lib/events.py:724
+msgid "ESP Off"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:728
+#: ../selfdrive/controls/lib/events.py:729
+msgid "Low Battery"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:737
+msgid "Communication Issue between Processes"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:741
+#: ../selfdrive/controls/lib/events.py:742
+msgid "Low Communication Rate between Processes"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:746
+msgid "Controls Lagging"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:747
+msgid "Controls Process Lagging: Reboot Your Device"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:757
+#: ../selfdrive/controls/lib/events.py:758
+msgid "Radar Error: Restart the Car"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:783
+#: ../selfdrive/controls/lib/events.py:784
+msgid "Device Fell Off Mount"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:788
+#: ../selfdrive/controls/lib/events.py:790
+msgid "Low Memory: Reboot Your Device"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:800
+#: ../selfdrive/controls/lib/events.py:801
+#: ../selfdrive/controls/lib/events.py:802
+msgid "Cruise Faulted"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:806
+#: ../selfdrive/controls/lib/events.py:807
+msgid "Controls Mismatch"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:811
+msgid "Camera CRC Error - Road"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:817
+msgid "Camera CRC Error - Road Fisheye"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:823
+msgid "Camera CRC Error - Driver"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:831
+#: ../selfdrive/controls/lib/events.py:832
+#: ../selfdrive/controls/lib/events.py:833
+msgid "USB Error: Reboot Your Device"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:841
+msgid "CAN Error"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:843
+#: ../selfdrive/controls/lib/events.py:847
+msgid "CAN Error: Check Connections"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:851
+msgid "CAN Bus Disconnected"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:853
+msgid "CAN Bus Disconnected: Likely Faulty Cable"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:857
+msgid "CAN Bus Disconnected: Check Connections"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:861
+#: ../selfdrive/controls/lib/events.py:863
+msgid "LKAS Fault: Restart the Car"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:862
+msgid "LKAS Fault: Restart the car to engage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:867
+#: ../selfdrive/controls/lib/events.py:869
+#: ../selfdrive/controls/lib/events.py:935
+msgid "Cruise Fault: Restart the Car"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:868
+#: ../selfdrive/controls/lib/events.py:934
+msgid "Cruise Fault: Restart the car to engage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:874
+msgid ""
+"Reverse\n"
+"Gear"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:879
+msgid "Reverse Gear"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:885
+msgid "Cruise Is Off"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:892
+#: ../selfdrive/controls/lib/events.py:893
+msgid "Planner Solution Error"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:901
+#: ../selfdrive/controls/lib/events.py:902
+#: ../selfdrive/controls/lib/events.py:903
+msgid "Harness Relay Malfunction"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:902
+msgid "Check Hardware"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:908
+#: ../selfdrive/controls/lib/events.py:917
+msgid "openpilot Canceled"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:909
+msgid "No close lead car"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:912
+msgid "No Close Lead Car"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:918
+msgid "Speed too low"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:926
+msgid "Speed Too High"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:927
+msgid "Model uncertain at this speed"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:930
+msgid "Slow down to engage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:939
+msgid "LKAS Disabled: Enable LKAS to engage"
+msgstr ""
+
+#: ../selfdrive/controls/lib/events.py:940
+msgid "LKAS Disabled"
+msgstr ""
