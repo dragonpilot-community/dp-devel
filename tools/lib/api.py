@@ -1,6 +1,7 @@
 import os
 import requests
-API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com')
+from common.params import Params
+API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com') if not Params().get_bool("dp_api_custom") else Params().get("dp_api_custom_url", encoding='utf-8')
 
 class CommaApi():
   def __init__(self, token=None):

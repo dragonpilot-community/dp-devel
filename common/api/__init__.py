@@ -5,10 +5,13 @@ from datetime import datetime, timedelta
 from common.basedir import PERSIST
 from selfdrive.version import get_version
 
-API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com')
+from common.params import Params
+API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com') if not Params().get_bool("dp_api_custom") else Params().get("dp_api_custom_url", encoding='utf-8')
 
 class Api():
   def __init__(self, dongle_id):
+    if "commadotai" in API_HOST and (Params().get_bool("dp_jetson") or Params().get_bool("dp_atl")):
+      raise RuntimeError("API access is disabled because you are not using custom server and you have jetson enabled.")
     self.dongle_id = dongle_id
     with open(PERSIST+'/comma/id_rsa') as f:
       self.private_key = f.read()
