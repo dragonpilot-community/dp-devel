@@ -11,6 +11,7 @@ from common.conversions import Conversions as CV
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX
 from selfdrive.controls.lib.events import Events
 from selfdrive.controls.lib.vehicle_model import VehicleModel
+from common.params import Params
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -50,7 +51,7 @@ class CarInterfaceBase(ABC):
       self.CC = CarController(self.cp.dbc_name, CP, self.VM)
 
     # dp
-    self.dp_atl = 0
+    self.dp_atl = int(Params().get('dp_atl', encoding='utf8'))
     self.dp_last_cruise_actual_enabled = False
 
   @staticmethod

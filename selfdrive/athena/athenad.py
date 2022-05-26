@@ -528,7 +528,8 @@ def get_logs_to_send_sorted():
 
 
 def log_handler(end_event):
-  if PC:
+  # dont upload any logs for now
+  if True:
     return
 
   log_files = []

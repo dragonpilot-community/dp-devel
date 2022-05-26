@@ -10,8 +10,6 @@ API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com') if not Params().g
 
 class Api():
   def __init__(self, dongle_id):
-    if "commadotai" in API_HOST and (Params().get_bool("dp_jetson") or Params().get_bool("dp_atl")):
-      raise RuntimeError("API access is disabled because you are not using custom server and you have jetson enabled.")
     self.dongle_id = dongle_id
     with open(PERSIST+'/comma/id_rsa') as f:
       self.private_key = f.read()
@@ -45,5 +43,8 @@ def api_get(endpoint, method='GET', timeout=None, access_token=None, **params):
     headers['Authorization'] = "JWT " + access_token
 
   headers['User-Agent'] = "openpilot-" + get_version()
-
-  return requests.request(method, API_HOST + "/" + endpoint, timeout=timeout, headers=headers, params=params)
+  request_url = API_HOST + "/" + endpoint
+  if "upload_url" in request_url and "commadotai" in request_url and method == 'POST' and \
+    (Params().get_bool("dp_jetson") or int(Params().get("dp_atl").decode('utf-8')) > 0):
+    raise RuntimeError("API upload is disabled because you are not using custom server and you have jetson enabled.")
+  return requests.request(method, request_url, timeout=timeout, headers=headers, params=params)

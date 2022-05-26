@@ -174,7 +174,7 @@ class Controls:
     self.desired_curvature_rate = 0.0
 
     # dp
-    self.dp_atl = 0
+    self.dp_atl = int(Params().get('dp_atl', encoding='utf8'))
 
     # TODO: no longer necessary, aside from process replay
     self.sm['liveParameters'].valid = True
@@ -215,8 +215,8 @@ class Controls:
       return
 
     # Disable on rising edge of accelerator or brake. Also disable on brake when speed > 0
-    if self.dp_atl == 0 and (CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
-      (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill)):
+    if self.dp_atl == 0 and ((CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
+      (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill))):
       self.events.add(EventName.pedalPressed)
 
     if CS.gasPressed:
@@ -389,7 +389,7 @@ class Controls:
         self.events.add(EventName.localizerMalfunction)
 
     # Only allow engagement with brake pressed when stopped behind another stopped car
-    if self.dp_atl != 1:
+    if self.dp_atl == 0:
       speeds = self.sm['longitudinalPlan'].speeds
       if len(speeds) > 1:
         v_future = speeds[-1]
@@ -562,7 +562,7 @@ class Controls:
                      CS.vEgo > self.CP.minSteerSpeed and not CS.standstill
     CC.longActive = self.active and not self.events.any(ET.OVERRIDE) and self.CP.openpilotLongitudinalControl
 
-    if self.dp_atl == 2 and not CS.cruiseActualEnable:
+    if self.dp_atl == 2 and not CS.cruiseActualEnabled:
       CC.longActive = False
 
     actuators = CC.actuators

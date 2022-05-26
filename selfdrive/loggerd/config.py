@@ -9,7 +9,7 @@ elif PC:
   ROOT = os.path.join(str(Path.home()), ".comma", "media", "0", "realdata")
 else:
   params = Params()
-  if params.get_bool('dp_atl') or params.get_bool('dp_jetson') or params.get_bool('dp_api_custom'):
+  if int(params.get('dp_atl', encoding='utf8')) > 0 or params.get_bool('dp_jetson') or params.get_bool('dp_api_custom'):
     ROOT = '/data/media/0/fakedata/'
   else:
     ROOT = '/data/media/0/realdata/'
