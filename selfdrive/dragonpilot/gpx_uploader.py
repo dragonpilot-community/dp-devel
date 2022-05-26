@@ -30,6 +30,7 @@ from selfdrive.version import get_version
 from selfdrive.loggerd.xattr_cache import getxattr, setxattr
 import glob
 import requests
+import json
 
 # customisable values
 GPX_LOG_PATH = '/data/media/0/gpx_logs/'
@@ -55,7 +56,12 @@ def _debug(msg):
 class GpxUploader():
   def __init__(self):
     self._delete_after_upload = not Params().get_bool('dp_gpxd')
-    self._car_model = Params().get("dp_last_candidate", encoding='utf8')
+    self._car_model = "Unknown Model"
+    # read model from LiveParameters
+    params = Params().get("LiveParameters")
+    if params is not None:
+      params = json.loads(params)
+      self._car_model = params.get('carFingerprint', self._car_model)
     self._dp_version = get_version()
     _debug("GpxUploader init - _delete_after_upload = %s" % self._delete_after_upload)
     _debug("GpxUploader init - _car_model = %s" % self._car_model)

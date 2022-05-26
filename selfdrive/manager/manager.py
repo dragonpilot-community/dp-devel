@@ -21,6 +21,7 @@ from selfdrive.athena.registration import register, UNREGISTERED_DONGLE_ID
 from selfdrive.swaglog import cloudlog, add_file_handler
 from selfdrive.version import is_dirty, get_commit, get_version, get_origin, get_short_branch, \
                               terms_version, training_version
+from common.dp_conf import init_params_vals
 
 
 sys.path.append(os.path.join(BASEDIR, "pyextra"))
@@ -55,6 +56,9 @@ def manager_init() -> None:
   for k, v in default_params:
     if params.get(k) is None:
       params.put(k, v)
+
+  # dp init params
+  init_params_vals(params)
 
   # is this dashcam?
   if os.getenv("PASSIVE") is not None:

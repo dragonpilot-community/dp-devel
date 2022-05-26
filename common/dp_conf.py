@@ -4,7 +4,7 @@ import sys
 import json
 import time
 from math import floor
-from selfdrive.hardware import EON, TICI
+# from selfdrive.hardware import EON, TICI
 
 '''
 * type: Bool, Int8, UInt8, UInt16, Float32
@@ -41,6 +41,8 @@ confs = [
   # assign car via param
   # echo -n TOYOTA C-HR 2021 > /data/params/d/dp_car_assigned
   {'name': 'dp_car_assigned', 'default': '', 'type': 'Text', 'conf_type': ['param']},
+
+  {'name': 'dp_last_modified', 'default': str(floor(time.time())), 'type': 'Text', 'conf_type': ['param']},
 
   # # dashcam related
   # {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
@@ -229,7 +231,6 @@ function to init param value.
 should add this into manager.py
 '''
 def init_params_vals(params):
-  migrate_nav_params()
   for conf in confs:
     if 'param' in conf['conf_type']:
       if conf['name'] == 'dp_car_list':

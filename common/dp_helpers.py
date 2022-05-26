@@ -5,8 +5,7 @@ from common.params import Params
 from common.realtime import sec_since_boot
 import os
 params = Params()
-PARAM_PATH = params.get_param_path() + '/d/'
-LAST_MODIFIED = PARAM_PATH + "dp_last_modified"
+LAST_MODIFIED = params.get_param_path() + "/dp_last_modified"
 
 # delay of reading last modified
 # LAST_MODIFIED_TIMER_THERMALD = 10.
@@ -28,7 +27,7 @@ LAST_MODIFIED_TIMER_SYSTEMD = 1.
 #
 def get_last_modified(delay, old_check, old_modified):
   new_check = sec_since_boot()
-  if os.path.isfile(LAST_MODIFIED) and old_check is None or new_check - old_check >= delay:
+  if os.path.isfile(LAST_MODIFIED) and (old_check is None or new_check - old_check >= delay):
     return new_check, os.stat(LAST_MODIFIED).st_mtime
   else:
     return old_check, old_modified

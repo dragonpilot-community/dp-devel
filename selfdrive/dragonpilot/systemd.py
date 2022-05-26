@@ -37,7 +37,7 @@ from common.realtime import Ratekeeper
 import threading
 from selfdrive.dragonpilot.gpx_uploader import gpx_uploader_thread
 
-PARAM_PATH = params.get_param_path() + '/d/'
+PARAM_PATH = params.get_param_path() + "/"
 
 HERTZ = 1
 
@@ -203,7 +203,8 @@ def update_conf_all(confs, msg, first_run = False):
 #       HARDWARE.set_battery_charging(True)
 #   return charging_ctrl
 
-# def update_custom_logic(msg):
+def update_custom_logic(msg):
+  return msg
 #   if msg.dragonConf.dpAtl:
 #     msg.dragonConf.dpAllowGas = True
 #     msg.dragonConf.dpGearCheck = False
