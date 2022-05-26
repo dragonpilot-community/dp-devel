@@ -183,9 +183,9 @@ std::unordered_map<std::string, uint32_t> keys = {
 //    {"TurnSpeedControl", PERSISTENT},
 //    {"TurnVisionControl", PERSISTENT},
     // dp
-    {"dp_atl", PERSISTENT},
     {"dp_api_custom", PERSISTENT},
     {"dp_api_custom_url", PERSISTENT},
+    {"dp_atl", PERSISTENT},
     {"dp_locale", PERSISTENT},
     {"dp_jetson", PERSISTENT},
 

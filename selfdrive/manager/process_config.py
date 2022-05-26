@@ -58,6 +58,7 @@ procs = [
   PythonProcess("rawgpsd", "selfdrive.sensord.rawgps.rawgpsd", enabled=os.path.isfile("/persist/comma/use-quectel-rawgps")),
 
   # dp
+  PythonProcess("systemd", "selfdrive.dragonpilot.systemd", offroad=True),
   PythonProcess("gpxd", "selfdrive.dragonpilot.gpxd"),
   PythonProcess("otisserv", "selfdrive.dragonpilot.otisserv", offroad=True),
 ]
