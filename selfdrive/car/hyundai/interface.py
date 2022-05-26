@@ -7,6 +7,7 @@ from selfdrive.car.hyundai.radar_interface import RADAR_START_ADDR
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
 from selfdrive.car.interfaces import CarInterfaceBase
 from selfdrive.car.disable_ecu import disable_ecu
+from common.params import Params
 
 ButtonType = car.CarState.ButtonEvent.Type
 EventName = car.CarEvent.EventName
@@ -318,6 +319,9 @@ class CarInterface(CarInterfaceBase):
 
     ret.enableBsm = 0x58b in fingerprint[0]
 
+    if int(Params().get("dp_atl").decode('utf-8')) == 1:
+      ret.openpilotLongitudinalControl = False
+
     if ret.openpilotLongitudinalControl:
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_LONG
 
@@ -330,6 +334,7 @@ class CarInterface(CarInterfaceBase):
 
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
+    ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 
     # On some newer model years, the CANCEL button acts as a pause/resume button based on the PCM state
@@ -338,6 +343,7 @@ class CarInterface(CarInterfaceBase):
     allow_enable = any(btn in ENABLE_BUTTONS for btn in self.CS.cruise_buttons) or any(self.CS.main_buttons)
     allow_enable = allow_enable or self.CP.carFingerprint in HDA2_CAR
     events = self.create_common_events(ret, pcm_enable=self.CS.CP.pcmCruise, allow_enable=allow_enable or True)
+    events = self.dp_atl_warning(ret, events)
 
     if self.CS.brake_error:
       events.add(EventName.brakeUnavailable)

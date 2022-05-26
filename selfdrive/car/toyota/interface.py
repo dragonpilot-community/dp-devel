@@ -6,6 +6,7 @@ from selfdrive.car.toyota.tunes import LatTunes, LongTunes, set_long_tune, set_l
 from selfdrive.car.toyota.values import Ecu, CAR, ToyotaFlags, TSS2_CAR, RADAR_ACC_CAR, NO_DSU_CAR, MIN_ACC_SPEED, EPS_SCALE, EV_HYBRID_CAR, CarControllerParams
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
 from selfdrive.car.interfaces import CarInterfaceBase
+from common.params import Params
 
 EventName = car.CarEvent.EventName
 
@@ -223,6 +224,9 @@ class CarInterface(CarInterfaceBase):
     # if the smartDSU is detected, openpilot can send ACC_CMD (and the smartDSU will block it from the DSU) or not (the DSU is "connected")
     ret.openpilotLongitudinalControl = smartDsu or ret.enableDsu or candidate in (TSS2_CAR - RADAR_ACC_CAR)
 
+    if int(Params().get("dp_atl").decode('utf-8')) == 1:
+      ret.openpilotLongitudinalControl = False
+
     if not ret.openpilotLongitudinalControl:
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_TOYOTA_STOCK_LONGITUDINAL
 
@@ -248,11 +252,13 @@ class CarInterface(CarInterfaceBase):
   # returns a car.CarState
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
+    ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 
     # events
     events = self.create_common_events(ret)
+    events = self.dp_atl_warning(ret, events)
 
     if self.CS.low_speed_lockout and self.CP.openpilotLongitudinalControl:
       events.add(EventName.lowSpeedLockout)

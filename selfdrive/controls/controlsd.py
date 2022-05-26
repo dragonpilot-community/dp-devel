@@ -173,6 +173,9 @@ class Controls:
     self.desired_curvature = 0.0
     self.desired_curvature_rate = 0.0
 
+    # dp
+    self.dp_atl = 0
+
     # TODO: no longer necessary, aside from process replay
     self.sm['liveParameters'].valid = True
 
@@ -212,7 +215,7 @@ class Controls:
       return
 
     # Disable on rising edge of accelerator or brake. Also disable on brake when speed > 0
-    if (CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
+    if self.dp_atl == 0 and (CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
       (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill)):
       self.events.add(EventName.pedalPressed)
 
@@ -386,14 +389,15 @@ class Controls:
         self.events.add(EventName.localizerMalfunction)
 
     # Only allow engagement with brake pressed when stopped behind another stopped car
-    speeds = self.sm['longitudinalPlan'].speeds
-    if len(speeds) > 1:
-      v_future = speeds[-1]
-    else:
-      v_future = 100.0
-    if CS.brakePressed and v_future >= self.CP.vEgoStarting \
-      and self.CP.openpilotLongitudinalControl and CS.vEgo < 0.3:
-      self.events.add(EventName.noTarget)
+    if self.dp_atl != 1:
+      speeds = self.sm['longitudinalPlan'].speeds
+      if len(speeds) > 1:
+        v_future = speeds[-1]
+      else:
+        v_future = 100.0
+      if CS.brakePressed and v_future >= self.CP.vEgoStarting \
+        and self.CP.openpilotLongitudinalControl and CS.vEgo < 0.3:
+        self.events.add(EventName.noTarget)
 
   def data_sample(self):
     """Receive data from sockets and update carState"""
@@ -557,6 +561,9 @@ class Controls:
     CC.latActive = self.active and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
                      CS.vEgo > self.CP.minSteerSpeed and not CS.standstill
     CC.longActive = self.active and not self.events.any(ET.OVERRIDE) and self.CP.openpilotLongitudinalControl
+
+    if self.dp_atl == 2 and not CS.cruiseActualEnable:
+      CC.longActive = False
 
     actuators = CC.actuators
     actuators.longControlState = self.LoC.long_control_state

@@ -49,6 +49,10 @@ class CarInterfaceBase(ABC):
     if CarController is not None:
       self.CC = CarController(self.cp.dbc_name, CP, self.VM)
 
+    # dp
+    self.dp_atl = 0
+    self.dp_last_cruise_actual_enabled = False
+
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     return ACCEL_MIN, ACCEL_MAX
@@ -138,12 +142,12 @@ class CarInterfaceBase(ABC):
       events.add(EventName.doorOpen)
     if cs_out.seatbeltUnlatched:
       events.add(EventName.seatbeltNotLatched)
-    if cs_out.gearShifter != GearShifter.drive and (extra_gears is None or
+    if self.dp_atl == 0 and cs_out.gearShifter != GearShifter.drive and (extra_gears is None or
        cs_out.gearShifter not in extra_gears):
       events.add(EventName.wrongGear)
     if cs_out.gearShifter == GearShifter.reverse:
       events.add(EventName.reverseGear)
-    if not cs_out.cruiseState.available:
+    if self.dp_atl == 0 and not cs_out.cruiseState.available:
       events.add(EventName.wrongCarMode)
     if cs_out.espDisabled:
       events.add(EventName.espDisabled)
@@ -153,13 +157,13 @@ class CarInterfaceBase(ABC):
       events.add(EventName.stockAeb)
     if cs_out.vEgo > MAX_CTRL_SPEED:
       events.add(EventName.speedTooHigh)
-    if cs_out.cruiseState.nonAdaptive:
+    if self.dp_atl == 0 and cs_out.cruiseState.nonAdaptive:
       events.add(EventName.wrongCruiseMode)
-    if cs_out.brakeHoldActive and self.CP.openpilotLongitudinalControl:
+    if self.dp_atl == 0 and cs_out.brakeHoldActive and self.CP.openpilotLongitudinalControl:
       events.add(EventName.brakeHold)
-    if cs_out.parkingBrake:
+    if self.dp_atl == 0 and cs_out.parkingBrake:
       events.add(EventName.parkBrake)
-    if cs_out.accFaulted:
+    if self.dp_atl == 0 and cs_out.accFaulted:
       events.add(EventName.accFaulted)
 
     # Handle permanent and temporary steering faults
@@ -185,6 +189,28 @@ class CarInterfaceBase(ABC):
         events.add(EventName.pcmDisable)
 
     return events
+
+  def dp_atl_warning(self, ret, events):
+    if self.dp_atl > 0:
+      if self.dp_last_cruise_actual_enabled and not ret.cruiseActualEnabled:
+        events.add(EventName.communityFeatureDisallowedDEPRECATED)
+      elif ret.cruiseState.enabled != ret.cruiseActualEnabled:
+        events.add(EventName.gasPressedOverride)
+      self.dp_last_cruise_actual_enabled = ret.cruiseActualEnabled
+    return events
+
+  def dp_atl_mode(self, ret):
+    enable = ret.cruiseState.enabled
+    available = ret.cruiseState.available
+    if self.dp_atl > 0 and available:
+      enable = True
+      if ret.gearShifter in [car.CarState.GearShifter.reverse, car.CarState.GearShifter.park]:
+        enable = False
+        available = False
+      if ret.seatbeltUnlatched or ret.doorOpen:
+        enable = False
+        available = False
+    return enable, available
 
 
 class RadarInterfaceBase(ABC):

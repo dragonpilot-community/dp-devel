@@ -110,10 +110,14 @@ class CarInterface(CarInterfaceBase):
   def _update(self, c):
 
     ret = self.CS.update(self.cp, self.cp_cam)
+    ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 
-    ret.events = self.create_common_events(ret).to_msg()
+    events = self.create_common_events(ret)
+    events = self.dp_atl_warning(ret, events)
+
+    ret.events = events.to_msg()
 
     return ret
 

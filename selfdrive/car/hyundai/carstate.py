@@ -171,6 +171,7 @@ class CarState(CarStateBase):
 
     self.buttons_counter = cp.vl["CRUISE_BUTTONS"]["_COUNTER"]
 
+    ret.cruiseActualEnabled = ret.cruiseState.enabled
     return ret
 
   @staticmethod

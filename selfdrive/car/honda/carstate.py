@@ -308,6 +308,7 @@ class CarState(CarStateBase):
       ret.leftBlindspot = cp_body.vl["BSM_STATUS_LEFT"]["BSM_ALERT"] == 1
       ret.rightBlindspot = cp_body.vl["BSM_STATUS_RIGHT"]["BSM_ALERT"] == 1
 
+    ret.cruiseActualEnabled = ret.cruiseState.enabled
     return ret
 
   def get_can_parser(self, CP):

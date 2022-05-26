@@ -138,6 +138,7 @@ class CarState(CarStateBase):
     # Additional safety checks performed in CarInterface.
     ret.espDisabled = pt_cp.vl["ESP_21"]["ESP_Tastung_passiv"] != 0
 
+    ret.cruiseActualEnabled = ret.cruiseState.enabled
     return ret
 
   @staticmethod

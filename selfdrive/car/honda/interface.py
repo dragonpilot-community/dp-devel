@@ -7,6 +7,7 @@ from selfdrive.car.honda.values import CarControllerParams, CruiseButtons, Honda
 from selfdrive.car import STD_CARGO_KG, CivicParams, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
 from selfdrive.car.interfaces import CarInterfaceBase
 from selfdrive.car.disable_ecu import disable_ecu
+from common.params import Params
 
 
 ButtonType = car.CarState.ButtonEvent.Type
@@ -291,6 +292,9 @@ class CarInterface(CarInterfaceBase):
     else:
       raise ValueError(f"unsupported car {candidate}")
 
+    if int(Params().get("dp_atl").decode('utf-8')) == 1:
+      ret.openpilotLongitudinalControl = False
+
     # These cars use alternate user brake msg (0x1BE)
     if candidate in HONDA_BOSCH_ALT_BRAKE_SIGNAL:
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HONDA_ALT_BRAKE
@@ -330,6 +334,7 @@ class CarInterface(CarInterfaceBase):
   # returns a car.CarState
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam, self.cp_body)
+    ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
     buttonEvents = []
 
@@ -369,6 +374,7 @@ class CarInterface(CarInterfaceBase):
 
     # events
     events = self.create_common_events(ret, pcm_enable=False)
+    events = self.dp_atl_warning(ret, events)
     if self.CS.brake_error:
       events.add(EventName.brakeUnavailable)
 

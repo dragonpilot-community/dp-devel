@@ -164,6 +164,7 @@ class CarInterface(CarInterfaceBase):
     buttonEvents = []
 
     ret = self.CS.update(self.cp, self.cp_cam, self.cp_ext, self.CP.transmissionType)
+    ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 
     # Check for and process state-change events (button press or release) from
@@ -176,6 +177,7 @@ class CarInterface(CarInterfaceBase):
         buttonEvents.append(be)
 
     events = self.create_common_events(ret, extra_gears=[GearShifter.eco, GearShifter.sport, GearShifter.manumatic])
+    events = self.dp_atl_warning(ret, events)
 
     # Low speed steer alert hysteresis logic
     if self.CP.minSteerSpeed > 0. and ret.vEgo < (self.CP.minSteerSpeed + 1.):
