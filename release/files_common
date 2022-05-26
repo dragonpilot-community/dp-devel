@@ -413,6 +413,7 @@ cereal/__init__.py
 cereal/car.capnp
 cereal/legacy.capnp
 cereal/log.capnp
+cereal/dp.capnp
 cereal/services.py
 cereal/SConscript
 cereal/include/**
