@@ -202,6 +202,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_nav_style_night", PERSISTENT},
     {"dp_gpxd", PERSISTENT},
 
+    {"dp_car_assigned", PERSISTENT},
+
 //    {"dp_atl_op_long", PERSISTENT},
 //    {"dp_dashcamd", PERSISTENT},
 //    {"dp_auto_shutdown", PERSISTENT},
@@ -263,7 +265,6 @@ std::unordered_map<std::string, uint32_t> keys = {
 //    {"dp_sr_stock", PERSISTENT},
 //    {"dp_lqr", PERSISTENT},
 //    {"dp_reset_live_param_on_start", PERSISTENT},
-//    {"dp_car_assigned", PERSISTENT},
 //    {"dp_car_list", PERSISTENT},
 //    {"dp_no_batt", PERSISTENT},
 //    {"dp_last_candidate", PERSISTENT},
