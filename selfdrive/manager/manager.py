@@ -122,6 +122,15 @@ def manager_thread() -> None:
   params = Params()
 
   ignore: List[str] = []
+
+  # dp
+  dp_otisserv = params.get_bool('dp_otisserv')
+  if not dp_otisserv:
+    ignore += ['otisserv']
+
+  if not dp_otisserv and not params.get_bool('dp_gpxd'):
+    ignore += ['gpxd']
+
   if params.get("DongleId", encoding='utf8') in (None, UNREGISTERED_DONGLE_ID):
     ignore += ["manage_athenad", "uploader"]
   if os.getenv("NOBOARD") is not None:
