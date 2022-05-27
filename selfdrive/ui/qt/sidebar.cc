@@ -57,7 +57,7 @@ void Sidebar::updateState(const UIState &s) {
   ItemStatus connectStatus;
   auto last_ping = deviceState.getLastAthenaPingTime();
   if (last_ping == 0) {
-    connectStatus = params.getBool("PrimeRedirected") ? ItemStatus{Sidebar::tr("NO\nPRIME"), danger_color} : ItemStatus{Sidebar::tr("CONNECT\nOFFLINE"), warning_color};
+    connectStatus = ItemStatus{Sidebar::tr("CONNECT\nOFFLINE"), warning_color};
   } else {
     connectStatus = nanos_since_boot() - last_ping < 80e9 ? ItemStatus{Sidebar::tr("CONNECT\nONLINE"), good_color} : ItemStatus{Sidebar::tr("CONNECT\nERROR"), danger_color};
   }
