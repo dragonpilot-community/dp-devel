@@ -2,6 +2,7 @@
 
 #include "selfdrive/hardware/base.h"
 #include "common/util.h"
+#include "common/params.h"
 
 #if QCOM2
 #include "selfdrive/hardware/tici/hardware.h"
