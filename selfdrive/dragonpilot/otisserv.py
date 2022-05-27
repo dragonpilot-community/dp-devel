@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.8
+#pylint: skip-file
 # The MIT License
 #
 # Copyright (c) 2019-, Rick Lan, dragonpilot community, and a number of other of contributors.
@@ -22,7 +23,7 @@
 # THE SOFTWARE.
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from cgi import parse_header, parse_multipart
+#from cgi import parse_header, parse_multipart
 from urllib.parse import parse_qs, unquote
 import json
 import requests

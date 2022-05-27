@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.7
+#pylint: skip-file
 import os
 import sys
 import json

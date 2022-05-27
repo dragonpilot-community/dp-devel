@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#pylint: disable=W0105
 # The MIT License
 #
 # Copyright (c) 2019-, Rick Lan, dragonpilot community, and a number of other of contributors.
@@ -29,19 +30,20 @@ import cereal.messaging as messaging
 from common.dp_conf import confs, get_struct_name, to_struct_val
 from common.params import Params
 import os
-from selfdrive.hardware import HARDWARE
+#from selfdrive.hardware import HARDWARE
 params = Params()
 from common.dp_helpers import get_last_modified, LAST_MODIFIED_TIMER_SYSTEMD
-import socket
+#import socket
 from common.realtime import Ratekeeper
 import threading
 from selfdrive.dragonpilot.gpx_uploader import gpx_uploader_thread
+from typing import Dict, Any
 
 PARAM_PATH = params.get_param_path() + "/"
 
 HERTZ = 1
 
-last_modified_confs = {}
+last_modified_confs: Dict[str, Any] = {}
 
 def confd_thread():
   sm = messaging.SubMaster(['deviceState'])
