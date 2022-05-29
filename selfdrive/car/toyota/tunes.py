@@ -25,6 +25,7 @@ class LatTunes(Enum):
   PID_M = 14
   PID_N = 15
   TORQUE = 16
+  INDI_PRIUS_TSS2 = 17
 
 
 ###### LONG ######
@@ -63,6 +64,16 @@ def set_lat_tune(tune, name, MAX_LAT_ACCEL=2.5, FRICTION=.1):
     tune.indi.timeConstantV = [1.0]
     tune.indi.actuatorEffectivenessBP = [0.]
     tune.indi.actuatorEffectivenessV = [1.0]
+  elif name == LatTunes.INDI_PRIUS_TSS2:
+    tune.init('indi')
+    tune.indi.innerLoopGainBP = [20, 24, 30]
+    tune.indi.innerLoopGainV = [7.25, 7.5, 9]
+    tune.indi.outerLoopGainBP = [20, 24, 30]
+    tune.indi.outerLoopGainV = [6, 7.25, 6]
+    tune.indi.timeConstantBP = [20, 24]
+    tune.indi.timeConstantV = [2.0, 2.2]
+    tune.indi.actuatorEffectivenessBP = [20, 24]
+    tune.indi.actuatorEffectivenessV = [2, 3]
   elif 'PID' in str(name):
     tune.init('pid')
     tune.pid.kiBP = [0.0]
