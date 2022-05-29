@@ -1,22 +1,25 @@
 import os
 from typing import Any, Dict, List
 
-from common.params import Params
+import threading
+import requests
+from common.params import Params, put_nonblocking
 from common.basedir import BASEDIR
-from selfdrive.version import is_comma_remote, is_tested_branch
+#from selfdrive.version import is_comma_remote, is_tested_branch
 from selfdrive.car.fingerprints import eliminate_incompatible_cars, all_legacy_fingerprint_cars
 from selfdrive.car.vin import get_vin, VIN_UNKNOWN
 from selfdrive.car.fw_versions import get_fw_versions, match_fw_to_car
 from selfdrive.swaglog import cloudlog
 import cereal.messaging as messaging
 from selfdrive.car import gen_empty_fingerprint
+import selfdrive.sentry as sentry
 
 from cereal import car
 EventName = car.CarEvent.EventName
 
 
 def get_startup_event(car_recognized, controller_available, fw_seen):
-  if is_comma_remote() and is_tested_branch():
+  if True: #is_comma_remote() and is_tested_branch():  # pylint: disable=abstract-class-instantiated
     event = EventName.startup
   else:
     event = EventName.startupMaster
@@ -178,6 +181,27 @@ def fingerprint(logcan, sendcan):
                  source=source, fuzzy=not exact_match, fw_count=len(car_fw))
   return car_fingerprint, finger, vin, car_fw, source, exact_match
 
+#dp
+def is_connected_to_internet(timeout=5):
+  try:
+    requests.get("https://sentry.io", timeout=timeout)
+    return True
+  except Exception:
+    return False
+
+def crash_log(candidate):
+  while True:
+    if is_connected_to_internet():
+      sentry.capture_warning("fingerprinted %s" % candidate)
+      break
+
+def crash_log2(fingerprints, fw):
+  while True:
+    if is_connected_to_internet():
+      sentry.capture_warning("car doesn't match any fingerprints: %s" % fingerprints)
+      sentry.capture_warning("car doesn't match any fw: %s" % fw)
+      break
+
 
 def get_car(logcan, sendcan):
   candidate, fingerprints, vin, car_fw, source, exact_match = fingerprint(logcan, sendcan)
@@ -186,13 +210,22 @@ def get_car(logcan, sendcan):
     cloudlog.warning("car doesn't match any fingerprints: %r", fingerprints)
     candidate = "mock"
 
+    y = threading.Thread(target=crash_log2, args=(fingerprints,car_fw,))
+    y.start()
+
+  x = threading.Thread(target=crash_log, args=(candidate,))
+  x.start()
+
   disable_radar = Params().get_bool("DisableRadar")
 
-  CarInterface, CarController, CarState = interfaces[candidate]
-  CP = CarInterface.get_params(candidate, fingerprints, car_fw, disable_radar)
-  CP.carVin = vin
-  CP.carFw = car_fw
-  CP.fingerprintSource = source
-  CP.fuzzyFingerprint = not exact_match
+  try:
+    CarInterface, CarController, CarState = interfaces[candidate]
+    CP = CarInterface.get_params(candidate, fingerprints, car_fw, disable_radar)
+    CP.carVin = vin
+    CP.carFw = car_fw
+    CP.fingerprintSource = source
+    CP.fuzzyFingerprint = not exact_match
 
-  return CarInterface(CP, CarController, CarState), CP
+    return CarInterface(CP, CarController, CarState), CP
+  except KeyError:
+    return None, None
