@@ -129,11 +129,10 @@ def manager_thread() -> None:
 
   # dp
   dp_otisserv = params.get_bool('dp_otisserv')
-  if not dp_otisserv:
-    ignore += ['otisserv']
-
-  if not dp_otisserv and not params.get_bool('dp_gpxd'):
-    ignore += ['gpxd']
+  ignore += ['dmonitoringmodeld', 'dmonitoringd'] if params.get_bool('dp_jetson') else []
+  ignore += ['otisserv'] if not dp_otisserv else []
+  ignore += ['gpxd'] if not dp_otisserv and not params.get_bool('dp_gpxd') else []
+  ignore += ['uploader'] if not params.get_bool('dp_api_custom') and (int(params.get('dp_atl', encoding='utf8')) > 0 or params.get_bool('dp_jetson')) else []
 
   if params.get("DongleId", encoding='utf8') in (None, UNREGISTERED_DONGLE_ID):
     ignore += ["manage_athenad", "uploader"]
