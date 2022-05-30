@@ -195,6 +195,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_gpxd", PERSISTENT},
     {"dp_car_assigned", PERSISTENT},
     {"dp_last_modified", PERSISTENT},
+    {"dp_quiet_drive", PERSISTENT},
 };
 
 } // namespace

@@ -8,6 +8,7 @@
 
 #include "cereal/messaging/messaging.h"
 #include "common/util.h"
+#include "common/params.h"
 
 // TODO: detect when we can't play sounds
 // TODO: detect when we can't display the UI
@@ -72,10 +73,16 @@ void Sound::setAlert(const Alert &alert) {
     }
 
     // play sound
-    if (alert.sound != AudibleAlert::NONE) {
+    if (shouldPlaySound(alert)) {
       auto &[s, loops] = sounds[alert.sound];
       s->setLoopCount(loops);
       s->play();
     }
   }
+}
+
+bool Sound::shouldPlaySound(const Alert &alert) {
+  bool isQuietDrive = Params().getBool("dp_quiet_drive");
+    return (alert.sound == AudibleAlert::WARNING_SOFT || alert.sound == AudibleAlert::WARNING_IMMEDIATE) ||
+      (!isQuietDrive && alert.sound != AudibleAlert::NONE);
 }
