@@ -73,7 +73,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 4481. * CV.LB_TO_KG + STD_CARGO_KG  # mean between min and max
       set_lat_tune(ret.lateralTuning, LatTunes.PID_C)
 
-    elif candidate in (CAR.CHR, CAR.CHRH):
+    elif candidate in (CAR.CHR, CAR.CHRH, CAR.CHR_TSS2):
       stop_and_go = True
       ret.wheelbase = 2.63906
       ret.steerRatio = 13.6
@@ -231,6 +231,11 @@ class CarInterface(CarInterfaceBase):
 
     if int(Params().get("dp_atl").decode('utf-8')) == 1:
       ret.openpilotLongitudinalControl = False
+
+    if candidate == CAR.CHR_TSS2:
+      ret.enableBsm = True
+      if smartDsu and int(Params().get("dp_atl").decode('utf-8')) == 2:
+        ret.openpilotLongitudinalControl = True
 
     if not ret.openpilotLongitudinalControl:
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_TOYOTA_STOCK_LONGITUDINAL
