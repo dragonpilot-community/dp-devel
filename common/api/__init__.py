@@ -43,8 +43,5 @@ def api_get(endpoint, method='GET', timeout=None, access_token=None, **params):
     headers['Authorization'] = "JWT " + access_token
 
   headers['User-Agent'] = "openpilot-" + get_version()
-  request_url = API_HOST + "/" + endpoint
-  if "upload_url" in request_url and "commadotai" in request_url and method == 'POST' and \
-    (Params().get_bool("dp_jetson") or int(Params().get("dp_atl").decode('utf-8')) > 0):
-    raise RuntimeError("API upload is disabled because you are not using custom server and you have jetson enabled.")
-  return requests.request(method, request_url, timeout=timeout, headers=headers, params=params)
+
+  return requests.request(method, API_HOST + "/" + endpoint, timeout=timeout, headers=headers, params=params)
