@@ -195,6 +195,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_gpxd", PERSISTENT},
     {"dp_car_assigned", PERSISTENT},
     {"dp_last_modified", PERSISTENT},
+    {"dp_lateral_mode", PERSISTENT},
+    {"dp_lc_min_mph", PERSISTENT},
+    {"dp_lc_auto_min_mph", PERSISTENT},
+    {"dp_lc_auto_delay", PERSISTENT},
     {"dp_quiet_drive", PERSISTENT},
 };
 

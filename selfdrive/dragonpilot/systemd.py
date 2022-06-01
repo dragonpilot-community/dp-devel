@@ -33,7 +33,7 @@ import os
 #from selfdrive.hardware import HARDWARE
 params = Params()
 from common.dp_helpers import get_last_modified, LAST_MODIFIED_TIMER_SYSTEMD
-#import socket
+import socket
 from common.realtime import Ratekeeper
 import threading
 from selfdrive.dragonpilot.gpx_uploader import gpx_uploader_thread
@@ -131,8 +131,8 @@ def confd_thread():
     push ip addr every 10 secs
     ===================================================
     '''
-    # if frame % (HERTZ * 10) == 0:
-    #   msg = update_ip(msg)
+    if frame % (HERTZ * 10) == 0:
+      msg = update_ip(msg)
     '''
     ===================================================
     update msg based on some custom logic
@@ -219,19 +219,19 @@ def update_custom_logic(msg):
 #   return msg
 
 
-# def update_ip(msg):
-#   val = 'N/A'
-#   s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#   try:
-#     # doesn't even have to be reachable
-#     s.connect(('10.255.255.255', 1))
-#     IP = s.getsockname()[0]
-#   except:
-#     IP = 'N/A'
-#   finally:
-#     s.close()
-#   setattr(msg.dragonConf, get_struct_name('dp_ip_addr'), IP)
-#   return msg
+def update_ip(msg):
+  val = 'N/A'
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  try:
+    # doesn't even have to be reachable
+    s.connect(('10.255.255.255', 1))
+    IP = s.getsockname()[0]
+  except:
+    IP = 'N/A'
+  finally:
+    s.close()
+  setattr(msg.dragonConf, get_struct_name('dp_ip_addr'), IP)
+  return msg
 
 
 def set_message(msg, conf):

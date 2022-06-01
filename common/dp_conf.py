@@ -52,6 +52,9 @@ confs = [
   {'name': 'dp_lc_auto_min_mph', 'default': 40, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_lc_auto_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
 
+  {'name': 'dp_ip_addr', 'default': '', 'type': 'Text', 'conf_type': ['struct']},
+  {'name': 'dp_quiet_drive', 'default': False, 'type': 'Boolean', 'conf_type': ['param']},
+
   # # dashcam related
   # {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # # auto shutdown
