@@ -45,6 +45,13 @@ confs = [
 
   {'name': 'dp_last_modified', 'default': str(floor(time.time())), 'type': 'Text', 'conf_type': ['param']},
 
+  # lateral - alc
+  {'name': 'dp_lateral_mode', 'default': 1, 'type': 'UInt8', 'min': 0, 'max': 2, 'conf_type': ['param', 'struct']},
+  # {'name': 'dp_signal_off_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [0]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lc_min_mph', 'default': 30, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [1, 2]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lc_auto_min_mph', 'default': 40, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lc_auto_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
+
   # # dashcam related
   # {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # # auto shutdown
@@ -58,12 +65,6 @@ confs = [
   # # {'name': 'dp_gpxd', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_hotspot_on_boot', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # lat ctrl
-  # {'name': 'dp_lateral_mode', 'default': 1, 'type': 'UInt8', 'min': 0, 'max': 2, 'conf_type': ['param', 'struct']},
-  # {'name': 'dp_signal_off_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [0]}], 'conf_type': ['param', 'struct']},
-  # {'name': 'dp_lc_min_mph', 'default': 45, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [1,2]}], 'conf_type': ['param', 'struct']},
-  # # {'name': 'dp_lc_auto_cont', 'default': False, 'type': 'Bool', 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
-  # {'name': 'dp_lc_auto_min_mph', 'default': 60, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
-  # {'name': 'dp_lc_auto_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
   # {'name': 'dp_lane_less_mode_ctrl', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_lane_less_mode', 'default': 2, 'type': 'UInt8', 'min': 0, 'max': 2, 'depends': [{'name': 'dp_lane_less_mode_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   # # long ctrl

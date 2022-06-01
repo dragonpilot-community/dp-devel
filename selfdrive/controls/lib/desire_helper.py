@@ -41,17 +41,23 @@ class DesireHelper:
     self.desire = log.LateralPlan.Desire.none
 
     # dp
-    self.dp_lateral_mode = 1 # 0 = blinker mode (should we remove?), 1 = assist lane change, 2 = auto lane change
     self.dp_lc_auto_done = False
+    self.dp_lc_auto_delay_start_sec = None
+    self.dp_lateral_mode = 1 # 0 = blinker mode (should we remove?), 1 = assist lane change, 2 = auto lane change
     self.dp_lc_min_mph = LANE_CHANGE_SPEED_MIN
     self.dp_lc_auto_min_mph = LANE_CHANGE_SPEED_MIN + 10
     self.dp_lc_auto_delay = 3 # secs
-    self.dp_lc_auto_delay_start_sec = None
 
-  def update(self, carstate, active, lane_change_prob):
+  def update(self, carstate, active, lane_change_prob, dragonconf):
+    # dp - sync with dragonConf
+    self.dp_lateral_mode = dragonconf.dpLateralMode
+    self.dp_lc_min_mph = dragonconf.dpLcMinMph
+    self.dp_lc_auto_min_mph = dragonconf.dpLcAutoMinMph
+    self.dp_lc_auto_min_mph = self.dp_lc_min_mph if self.dp_lc_auto_min_mph < self.dp_lc_min_mph else self.dp_lc_auto_min_mph
+    self.dp_lc_auto_delay = dragonconf.dpLcAutoDelay
+
     v_ego = carstate.vEgo
     one_blinker = carstate.leftBlinker != carstate.rightBlinker
-    self.dp_lc_auto_min_mph = self.dp_lc_min_mph if self.dp_lc_auto_min_mph < self.dp_lc_min_mph else self.dp_lc_auto_min_mph
     below_lane_change_speed = v_ego < self.dp_lc_min_mph
     below_alc_speed = v_ego < self.dp_lc_auto_min_mph
 
