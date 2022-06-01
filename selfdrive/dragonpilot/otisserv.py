@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
-#from cgi import parse_header, parse_multipart
+from cgi import parse_header, parse_multipart
 from urllib.parse import parse_qs, unquote
 import json
 import requests
