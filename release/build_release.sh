@@ -9,13 +9,9 @@ cd $DIR
 BUILD_DIR=/data/openpilot
 SOURCE_DIR="$(git rev-parse --show-toplevel)"
 
-if [ -f /TICI ]; then
-  FILES_SRC="release/files_tici"
-  RELEASE_BRANCH=release3-staging
-  DASHCAM_BRANCH=dashcam3-staging
-else
-  exit 0
-fi
+FILES_SRC="release/files_tici"
+RELEASE_BRANCH="release3"
+DEVEL_BRANCH="devel"
 
 # set git identity
 source $DIR/identity.sh
@@ -26,9 +22,11 @@ rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 git init
-git remote add origin git@github.com:commaai/openpilot.git
+git remote add origin https://github.com/dragonpilot-community/dragonpilot.git
+git remote add devel https://github.com/efinilan/dp-devel.git
 git fetch origin $RELEASE_BRANCH
-git checkout --orphan $RELEASE_BRANCH
+git fetch devel $DEVEL_BRANCH
+git checkout --orphan $DEVEL_BRANCH
 
 # do the files copy
 echo "[-] copying files T=$SECONDS"
@@ -41,12 +39,12 @@ cd $BUILD_DIR
 
 rm -f panda/board/obj/panda.bin.signed
 
-VERSION=$(cat common/version.h | awk -F[\"-]  '{print $2}')
-echo "#define COMMA_VERSION \"$VERSION-release\"" > common/version.h
+VERSION=$(date '+%Y.%m.%d')
+echo "#define COMMA_VERSION \"$VERSION\"" > selfdrive/common/version.h
 
 echo "[-] committing version $VERSION T=$SECONDS"
 git add -f .
-git commit -a -m "openpilot v$VERSION release"
+git commit -a -m "dragonpilot v$VERSION release"
 git branch --set-upstream-to=origin/$RELEASE_BRANCH
 
 # Build panda firmware
@@ -73,10 +71,13 @@ find . -name '*.o' -delete
 find . -name '*.os' -delete
 find . -name '*.pyc' -delete
 find . -name 'moc_*' -delete
+find . -name '*.dbc' -delete
+find . -name '*.cc' -delete
 find . -name '__pycache__' -delete
 rm -rf panda/board panda/certs panda/crypto
 rm -rf .sconsign.dblite Jenkinsfile release/
 rm selfdrive/modeld/models/supercombo.dlc
+rm models/supercombo_badweights.thneed
 
 # Move back signed panda fw
 mkdir -p panda/board/obj
@@ -85,31 +86,36 @@ mv /tmp/panda.bin.signed panda/board/obj/panda.bin.signed
 # Restore third_party
 git checkout third_party/
 
+# dp clean up
+rm -fr selfdrive/car/chrysler/
+rm -fr selfdrive/car/gm/
+rm -fr selfdrive/car/mazda/
+rm -fr selfdrive/car/nissan/
+rm -fr selfdrive/car/tesla/
+rm -fr selfdrive/car/tests/
+rm -fr selfdrive/car/ford/
+rm -fr selfdrive/car/body/
+
 # Mark as prebuilt release
 touch prebuilt
 
 # Add built files to git
 git add -f .
-git commit --amend -m "openpilot v$VERSION"
+git commit --amend -m "dragonpilot v$VERSION"
 
 # Run tests
-TEST_FILES="tools/"
-cd $SOURCE_DIR
-cp -pR -n --parents $TEST_FILES $BUILD_DIR/
-cd $BUILD_DIR
-RELEASE=1 selfdrive/test/test_onroad.py
-#selfdrive/manager/test/test_manager.py
-selfdrive/car/tests/test_car_interfaces.py
-rm -rf $TEST_FILES
+#TEST_FILES="tools/"
+#cd $SOURCE_DIR
+#cp -pR -n --parents $TEST_FILES $BUILD_DIR/
+#cd $BUILD_DIR
+#RELEASE=1 selfdrive/test/test_onroad.py
+##selfdrive/manager/test/test_manager.py
+#selfdrive/car/tests/test_car_interfaces.py
+#rm -rf $TEST_FILES
 
 if [ ! -z "$PUSH" ]; then
   echo "[-] pushing T=$SECONDS"
   git push -f origin $RELEASE_BRANCH
-
-  # Create dashcam
-  git rm selfdrive/car/*/carcontroller.py
-  git commit -m "create dashcam release from release"
-  git push -f origin $RELEASE_BRANCH:$DASHCAM_BRANCH
 fi
 
 echo "[-] done T=$SECONDS"

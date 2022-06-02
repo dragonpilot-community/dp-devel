@@ -521,3 +521,17 @@ opendbc/vw_mqb_2010.dbc
 opendbc/tesla_can.dbc
 opendbc/tesla_radar.dbc
 opendbc/tesla_powertrain.dbc
+
+cereal/dp.capnp
+common/dp_conf.py
+common/dp_helpers.py
+common/i18n.py
+selfdrive/assets/fonts/NotoSansCJKtc-Bold.otf
+selfdrive/assets/fonts/NotoSansCJKtc-Medium.otf
+selfdrive/assets/fonts/NotoSansCJKtc-Regular.otf
+selfdrive/assets/locales/ja-JP/LC_MESSAGES/events.mo
+selfdrive/assets/locales/ko-KR/LC_MESSAGES/events.mo
+selfdrive/assets/locales/zh-CN/LC_MESSAGES/events.mo
+selfdrive/assets/locales/zh-TW/LC_MESSAGES/events.mo
+selfdrive/dragonpilot/*
+selfdrive/ui/translations/*.qm
