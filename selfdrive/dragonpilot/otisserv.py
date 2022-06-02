@@ -248,7 +248,11 @@ class OtisServ(BaseHTTPRequestHandler):
     if last_pos is not None and last_pos != "":
       l = json.loads(last_pos)
       return l["longitude"], l["latitude"]
-    return "", ""
+    else:
+      locale = params.get("dp_locale", encoding='utf8')
+      if locale == "zh-TW":
+        return "121.3149803", "24.996256935"
+    return "-117.1662042", "32.7207742"
 
   def display_page_gmap_key(self):
     self.wfile.write(bytes(self.get_parsed_template("body", {"{{content}}": self.get_parsed_template("gmap/key_input")}), "utf-8"))
