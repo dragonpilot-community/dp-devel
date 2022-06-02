@@ -51,8 +51,8 @@ class DesireHelper:
   def update(self, carstate, active, lane_change_prob, dragonconf):
     # dp - sync with dragonConf
     self.dp_lateral_mode = dragonconf.dpLateralMode
-    self.dp_lc_min_mph = dragonconf.dpLcMinMph
-    self.dp_lc_auto_min_mph = dragonconf.dpLcAutoMinMph
+    self.dp_lc_min_mph = dragonconf.dpLcMinMph * CV.MPH_TO_MS
+    self.dp_lc_auto_min_mph = dragonconf.dpLcAutoMinMph * CV.MPH_TO_MS
     self.dp_lc_auto_min_mph = self.dp_lc_min_mph if self.dp_lc_auto_min_mph < self.dp_lc_min_mph else self.dp_lc_auto_min_mph
     self.dp_lc_auto_delay = dragonconf.dpLcAutoDelay
 
