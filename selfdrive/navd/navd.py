@@ -43,6 +43,9 @@ class RouteEngine:
 
     self.ui_pid = None
 
+    if self.params.get_bool("dp_otisserv"):
+      self.mapbox_token = self.params.get("dp_nav_mapbox_token_sk", encoding='utf8')
+      self.mapbox_host = "https://api.mapbox.com"
     if "MAPBOX_TOKEN" in os.environ:
       self.mapbox_token = os.environ["MAPBOX_TOKEN"]
       self.mapbox_host = "https://api.mapbox.com"
