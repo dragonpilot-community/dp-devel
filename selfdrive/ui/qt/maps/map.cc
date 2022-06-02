@@ -379,10 +379,10 @@ void MapInstructions::updateDistance(float d) {
   if (uiState()->scene.is_metric) {
     if (d > 500) {
       distance_str.setNum(d / 1000, 'f', 1);
-      distance_str += " km";
+      distance_str += MapInstructions::tr(" km");
     } else {
       distance_str.setNum(50 * int(d / 50));
-      distance_str += " m";
+      distance_str += MapInstructions::tr(" m");
     }
   } else {
     float miles = d * METER_TO_MILE;
@@ -390,10 +390,10 @@ void MapInstructions::updateDistance(float d) {
 
     if (feet > 500) {
       distance_str.setNum(miles, 'f', 1);
-      distance_str += " mi";
+      distance_str += MapInstructions::tr(" mi");
     } else {
       distance_str.setNum(50 * int(feet / 50));
-      distance_str += " ft";
+      distance_str += MapInstructions::tr(" ft");
     }
   }
 
