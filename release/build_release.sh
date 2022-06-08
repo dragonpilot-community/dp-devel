@@ -22,6 +22,8 @@ rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 git init
+# set git username/password
+source /data/identity.sh
 git remote add origin https://github.com/dragonpilot-community/dragonpilot.git
 git remote add devel https://github.com/efinilan/dp-devel.git
 git fetch origin $RELEASE_BRANCH
@@ -40,7 +42,7 @@ cd $BUILD_DIR
 rm -f panda/board/obj/panda.bin.signed
 
 VERSION=$(date '+%Y.%m.%d')
-echo "#define COMMA_VERSION \"$VERSION\"" > selfdrive/common/version.h
+echo "#define COMMA_VERSION \"$VERSION\"" > common/version.h
 
 echo "[-] committing version $VERSION T=$SECONDS"
 git add -f .
@@ -49,7 +51,7 @@ git branch --set-upstream-to=origin/$RELEASE_BRANCH
 
 # Build panda firmware
 pushd panda/
-CERT=/data/pandaextra/certs/release RELEASE=1 scons -u .
+scons -u .
 mv board/obj/panda.bin.signed /tmp/panda.bin.signed
 popd
 
@@ -71,14 +73,14 @@ find . -name '*.o' -delete
 find . -name '*.os' -delete
 find . -name '*.pyc' -delete
 find . -name 'moc_*' -delete
-find . -name '*.dbc' -delete
 find . -name '*.cc' -delete
 find . -name '__pycache__' -delete
+find selfdrive/ui/ -name '*.h' -delete
 rm -rf panda/board panda/certs panda/crypto
 rm -rf .sconsign.dblite Jenkinsfile release/
 rm selfdrive/modeld/models/supercombo.dlc
-rm models/supercombo_badweights.thneed
-
+#rm models/supercombo_badweights.thneed
+rm -fr selfdrive/ui/replay/
 # Move back signed panda fw
 mkdir -p panda/board/obj
 mv /tmp/panda.bin.signed panda/board/obj/panda.bin.signed
