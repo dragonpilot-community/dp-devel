@@ -27,7 +27,7 @@ from selfdrive.controls.lib.events import Events, ET
 from selfdrive.controls.lib.alertmanager import AlertManager, set_offroad_alert
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 from selfdrive.locationd.calibrationd import Calibration
-from selfdrive.hardware import HARDWARE, TICI
+from selfdrive.hardware import HARDWARE
 from selfdrive.manager.process_config import managed_processes
 
 SOFT_DISABLE_TIME = 3  # seconds
@@ -72,19 +72,16 @@ class Controls:
       self.pm = messaging.PubMaster(['sendcan', 'controlsState', 'carState',
                                      'carControl', 'carEvents', 'carParams'])
 
-    self.camera_packets = ["roadCameraState", "driverCameraState"]
+    self.camera_packets = ["roadCameraState", "driverCameraState", "wideRoadCameraState"]
     if self.dp_jetson:
-      self.camera_packets = ["roadCameraState"]
-    if TICI:
-      self.camera_packets.append("wideRoadCameraState")
+      self.camera_packets = ["roadCameraState", "wideRoadCameraState"]
 
     self.can_sock = can_sock
     if can_sock is None:
       can_timeout = None if os.environ.get('NO_CAN_TIMEOUT', False) else 20
       self.can_sock = messaging.sub_sock('can', timeout=can_timeout)
 
-    if TICI:
-      self.log_sock = messaging.sub_sock('androidLog')
+    self.log_sock = messaging.sub_sock('androidLog')
 
     if CI is None:
       # wait for one pandaState and one CAN packet
@@ -221,7 +218,7 @@ class Controls:
       (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill))):
       self.events.add(EventName.pedalPressed)
 
-    if CS.gasPressed:
+    if self.dp_atl == 0 and CS.gasPressed:
       self.events.add(EventName.pedalPressedPreEnable if self.disengage_on_accelerator else
                       EventName.gasPressedOverride)
 
@@ -366,17 +363,16 @@ class Controls:
     if planner_fcw or model_fcw:
       self.events.add(EventName.fcw)
 
-    if TICI:
-      for m in messaging.drain_sock(self.log_sock, wait_for_one=False):
-        try:
-          msg = m.androidLog.message
-          if any(err in msg for err in ("ERROR_CRC", "ERROR_ECC", "ERROR_STREAM_UNDERFLOW", "APPLY FAILED")):
-            csid = msg.split("CSID:")[-1].split(" ")[0]
-            evt = CSID_MAP.get(csid, None)
-            if evt is not None:
-              self.events.add(evt)
-        except UnicodeDecodeError:
-          pass
+    for m in messaging.drain_sock(self.log_sock, wait_for_one=False):
+      try:
+        msg = m.androidLog.message
+        if any(err in msg for err in ("ERROR_CRC", "ERROR_ECC", "ERROR_STREAM_UNDERFLOW", "APPLY FAILED")):
+          csid = msg.split("CSID:")[-1].split(" ")[0]
+          evt = CSID_MAP.get(csid, None)
+          if evt is not None:
+            self.events.add(evt)
+      except UnicodeDecodeError:
+        pass
 
     # TODO: fix simulator
     if not SIMULATION:
