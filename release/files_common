@@ -517,6 +517,7 @@ opendbc/tesla_can.dbc
 opendbc/tesla_radar.dbc
 opendbc/tesla_powertrain.dbc
 
+CHANGELOGS.md
 cereal/dp.capnp
 common/dp_conf.py
 common/dp_helpers.py
