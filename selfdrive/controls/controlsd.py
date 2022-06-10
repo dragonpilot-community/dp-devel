@@ -108,6 +108,8 @@ class Controls:
 
     # set alternative experiences from parameters
     self.disengage_on_accelerator = params.get_bool("DisengageOnAccelerator")
+    if self.dp_atl > 0:
+      self.disengage_on_accelerator = False
     self.CP.alternativeExperience = 0
     if not self.disengage_on_accelerator:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
@@ -218,7 +220,7 @@ class Controls:
       (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill))):
       self.events.add(EventName.pedalPressed)
 
-    if self.dp_atl == 0 and CS.gasPressed:
+    if CS.gasPressed:
       self.events.add(EventName.pedalPressedPreEnable if self.disengage_on_accelerator else
                       EventName.gasPressedOverride)
 
