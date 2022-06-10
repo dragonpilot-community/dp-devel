@@ -99,6 +99,8 @@ rm -fr selfdrive/car/body/
 # Mark as prebuilt release
 touch prebuilt
 
+sed -i -e "s#//[latest]#$VERSION;#g" CHANGELOGS.md
+
 # Add built files to git
 git add -f .
 git commit --amend -m "dragonpilot v$VERSION"
