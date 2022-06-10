@@ -27,8 +27,6 @@ source /data/identity.sh
 git remote add origin https://github.com/dragonpilot-community/dragonpilot.git
 git remote add devel https://github.com/efinilan/dp-devel.git
 git fetch origin $RELEASE_BRANCH
-git fetch devel $DEVEL_BRANCH
-git checkout --orphan $DEVEL_BRANCH
 
 # do the files copy
 echo "[-] copying files T=$SECONDS"
