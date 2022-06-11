@@ -42,6 +42,7 @@ confs = [
   # assign car via param
   # echo -n TOYOTA C-HR 2021 > /data/params/d/dp_car_assigned
   {'name': 'dp_car_assigned', 'default': '', 'type': 'Text', 'conf_type': ['param']},
+  {'name': 'dp_car_list', 'default': '', 'type': 'Text', 'conf_type': ['param']},
 
   {'name': 'dp_last_modified', 'default': str(floor(time.time())), 'type': 'Text', 'conf_type': ['param']},
 
@@ -130,7 +131,6 @@ confs = [
   # {'name': 'dp_reset_live_param_on_start', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   #
   # {'name': 'dp_car_assigned', 'default': '', 'type': 'Text', 'conf_type': ['param']},
-  # {'name': 'dp_car_list', 'default': '', 'type': 'Text', 'conf_type': ['param']},
   # {'name': 'dp_no_batt', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_last_candidate', 'default': '', 'type': 'Text', 'conf_type': ['param']},
   # {'name': 'dp_prebuilt', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
