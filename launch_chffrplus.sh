@@ -76,6 +76,11 @@ function launch {
   ln -sfn $(pwd) /data/pythonpath
   export PYTHONPATH="$PWD:$PWD/pyextra"
 
+  # dp - apply custom patch
+  if [ -f "/data/media/0/dp_patcher.py" ]; then
+    python /data/media/0/dp_patcher.py
+  fi
+
   # hardware specific init
   agnos_init
 
