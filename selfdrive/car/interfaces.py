@@ -12,7 +12,6 @@ from selfdrive.car import gen_empty_fingerprint
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX
 from selfdrive.controls.lib.events import Events
 from selfdrive.controls.lib.vehicle_model import VehicleModel
-from common.params import Params
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -51,8 +50,8 @@ class CarInterfaceBase(ABC):
       self.CC = CarController(self.cp.dbc_name, CP, self.VM)
 
     # dp
-    self.dp_atl = int(Params().get('dp_atl', encoding='utf8'))
     self.dp_last_cruise_actual_enabled = False
+    self.dragonconf = None
 
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
@@ -114,7 +113,8 @@ class CarInterfaceBase(ABC):
   def _update(self, c: car.CarControl) -> car.CarState:
     pass
 
-  def update(self, c: car.CarControl, can_strings: List[bytes]) -> car.CarState:
+  def update(self, c: car.CarControl, can_strings: List[bytes], dragonconf) -> car.CarState:
+    self.dragonconf = dragonconf
     # parse can
     for cp in self.can_parsers:
       if cp is not None:
@@ -144,12 +144,12 @@ class CarInterfaceBase(ABC):
       events.add(EventName.doorOpen)
     if cs_out.seatbeltUnlatched:
       events.add(EventName.seatbeltNotLatched)
-    if self.dp_atl == 0 and cs_out.gearShifter != GearShifter.drive and (extra_gears is None or
+    if self.dragonconf.dpAtl != 1 and cs_out.gearShifter != GearShifter.drive and (extra_gears is None or
        cs_out.gearShifter not in extra_gears):
       events.add(EventName.wrongGear)
     if cs_out.gearShifter == GearShifter.reverse:
       events.add(EventName.reverseGear)
-    if self.dp_atl == 0 and not cs_out.cruiseState.available:
+    if self.dragonconf.dpAtl == 0 and not cs_out.cruiseState.available:
       events.add(EventName.wrongCarMode)
     if cs_out.espDisabled:
       events.add(EventName.espDisabled)
@@ -159,13 +159,13 @@ class CarInterfaceBase(ABC):
       events.add(EventName.stockAeb)
     if cs_out.vEgo > MAX_CTRL_SPEED:
       events.add(EventName.speedTooHigh)
-    if self.dp_atl == 0 and cs_out.cruiseState.nonAdaptive:
+    if self.dragonconf.dpAtl != 1 and cs_out.cruiseState.nonAdaptive:
       events.add(EventName.wrongCruiseMode)
-    if self.dp_atl == 0 and cs_out.brakeHoldActive and self.CP.openpilotLongitudinalControl:
+    if self.dragonconf.dpAtl != 1 and cs_out.brakeHoldActive and self.CP.openpilotLongitudinalControl:
       events.add(EventName.brakeHold)
-    if self.dp_atl == 0 and cs_out.parkingBrake:
+    if self.dragonconf.dpAtl != 1 and cs_out.parkingBrake:
       events.add(EventName.parkBrake)
-    if self.dp_atl == 0 and cs_out.accFaulted:
+    if self.dragonconf.dpAtl != 1 and cs_out.accFaulted:
       events.add(EventName.accFaulted)
 
     # Handle permanent and temporary steering faults
@@ -193,7 +193,7 @@ class CarInterfaceBase(ABC):
     return events
 
   def dp_atl_warning(self, ret, events):
-    if self.dp_atl > 0:
+    if self.dragonconf.dpAtl > 0:
       if self.dp_last_cruise_actual_enabled and not ret.cruiseActualEnabled:
         events.add(EventName.communityFeatureDisallowedDEPRECATED)
       elif ret.cruiseState.enabled != ret.cruiseActualEnabled:
@@ -204,7 +204,7 @@ class CarInterfaceBase(ABC):
   def dp_atl_mode(self, ret):
     enable = ret.cruiseState.enabled
     available = ret.cruiseState.available
-    if self.dp_atl > 0 and available:
+    if self.dragonconf.dpAtl > 0 and available:
       enable = True
       if ret.gearShifter in [car.CarState.GearShifter.reverse, car.CarState.GearShifter.park]:
         enable = False

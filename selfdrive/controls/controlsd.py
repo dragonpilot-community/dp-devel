@@ -63,7 +63,6 @@ class Controls:
     config_realtime_process(4, Priority.CTRL_HIGH)
 
     # dp
-    self.dp_atl = int(Params().get('dp_atl', encoding='utf8'))
     self.dp_jetson = Params().get_bool('dp_jetson')
 
     # Setup sockets
@@ -103,12 +102,15 @@ class Controls:
       ignore += ['driverCameraState', 'managerState'] if SIMULATION else []
       self.sm = messaging.SubMaster(['deviceState', 'pandaStates', 'peripheralState', 'modelV2', 'liveCalibration',
                                      'driverMonitoringState', 'longitudinalPlan', 'lateralPlan', 'liveLocationKalman',
-                                     'managerState', 'liveParameters', 'radarState'] + self.camera_packets + joystick_packet,
-                                    ignore_alive=ignore, ignore_avg_freq=['radarState', 'longitudinalPlan'])
+                                     'managerState', 'liveParameters', 'radarState', 'dragonConf'] + self.camera_packets + joystick_packet,
+                                    ignore_alive=ignore, ignore_avg_freq=['radarState', 'longitudinalPlan', 'dragonConf'])
+
+    # dp
+    self.sm['dragonConf'].dpAtl = int(Params().get('dp_atl', encoding='utf8'))
 
     # set alternative experiences from parameters
     self.disengage_on_accelerator = params.get_bool("DisengageOnAccelerator")
-    if self.dp_atl > 0:
+    if self.sm['dragonConf'].dpAtl > 0:
       self.disengage_on_accelerator = False
     self.CP.alternativeExperience = 0
     if not self.disengage_on_accelerator:
@@ -216,7 +218,7 @@ class Controls:
       return
 
     # Disable on rising edge of accelerator or brake. Also disable on brake when speed > 0
-    if self.dp_atl == 0 and ((CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
+    if self.sm['dragonConf'].dpAtl == 0 and ((CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
       (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill))):
       self.events.add(EventName.pedalPressed)
 
@@ -389,7 +391,7 @@ class Controls:
         self.events.add(EventName.localizerMalfunction)
 
     # Only allow engagement with brake pressed when stopped behind another stopped car
-    if self.dp_atl == 0:
+    if self.sm['dragonConf'].dpAtl == 0:
       speeds = self.sm['longitudinalPlan'].speeds
       if len(speeds) > 1:
         v_future = speeds[-1]
@@ -404,7 +406,7 @@ class Controls:
 
     # Update carState from CAN
     can_strs = messaging.drain_sock_raw(self.can_sock, wait_for_one=True)
-    CS = self.CI.update(self.CC, can_strs)
+    CS = self.CI.update(self.CC, can_strs, self.sm['dragonConf'])
 
     self.sm.update(0)
 
@@ -562,7 +564,7 @@ class Controls:
                      CS.vEgo > self.CP.minSteerSpeed and not CS.standstill
     CC.longActive = self.active and not self.events.any(ET.OVERRIDE) and self.CP.openpilotLongitudinalControl
 
-    if self.dp_atl == 2 and not CS.cruiseActualEnabled:
+    if self.sm['dragonConf'].dpAtl == 2 and not CS.cruiseActualEnabled:
       CC.longActive = False
 
     actuators = CC.actuators
