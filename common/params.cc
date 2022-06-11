@@ -199,6 +199,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_lc_auto_min_mph", PERSISTENT},
     {"dp_lc_auto_delay", PERSISTENT},
     {"dp_quiet_drive", PERSISTENT},
+    {"dp_toyota_sng", PERSISTENT},
 };
 
 } // namespace

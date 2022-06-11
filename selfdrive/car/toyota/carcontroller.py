@@ -31,7 +31,12 @@ class CarController:
     self.gas = 0
     self.accel = 0
 
-  def update(self, CC, CS):
+    # dp
+    self.dp_toyota_sng = False
+
+  def update(self, CC, CS, dragonconf):
+    if dragonconf is not None:
+      self.dp_toyota_sng = dragonconf.dpToyotaSng
     actuators = CC.actuators
     hud_control = CC.hudControl
     pcm_cancel_cmd = CC.cruiseControl.cancel
@@ -87,6 +92,7 @@ class CarController:
     if CS.pcm_acc_status != 8:
       # pcm entered standstill or it's disabled
       self.standstill_req = False
+    self.standstill_req = False if self.dp_toyota_sng else self.standstill_req
 
     self.last_steer = apply_steer
     self.last_standstill = CS.out.standstill

@@ -1,5 +1,10 @@
 dragonpilot [latest]
 ========================
+* Added back Toyota SnG hack.
+* Synced up with openpilot master 2022.06.11 commits
+
+dragonpilot 2022.06.11
+========================
 * Based on openpilot master branch on 2022.06.07
 * Migrating more features soon, stay tuned!
 
