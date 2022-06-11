@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 from cereal import car
 from panda import Panda
 from common.conversions import Conversions as CV
@@ -38,7 +39,9 @@ class CarInterface(CarInterfaceBase):
     # These cars have been put into dashcam only due to both a lack of users and test coverage.
     # These cars likely still work fine. Once a user confirms each car works and a test route is
     # added to selfdrive/car/tests/routes.py, we can remove it from this list.
-    ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, CAR.ELANTRA_GT_I30} or candidate in HDA2_CAR
+    ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, CAR.ELANTRA_GT_I30}
+    if candidate in HDA2_CAR:
+      ret.dashcamOnly = not os.path.exists('/data/enable-ev6')
 
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerRateCost = 0.5
@@ -61,7 +64,6 @@ class CarInterface(CarInterfaceBase):
       # Values from optimizer
       ret.steerRatio = 16.55  # 13.8 is spec end-to-end
       tire_stiffness_factor = 0.82
-      ret.maxLateralAccel = 3.2
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.2, 0.35], [0.05, 0.09]]
     elif candidate in (CAR.SONATA, CAR.SONATA_HYBRID):
@@ -70,7 +72,6 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.84
       ret.steerRatio = 13.27 * 1.15   # 15% higher at the center seems reasonable
       tire_stiffness_factor = 0.65
-      ret.maxLateralAccel = 2.5
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
     elif candidate == CAR.SONATA_LF:
@@ -78,7 +79,6 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 4497. * CV.LB_TO_KG
       ret.wheelbase = 2.804
       ret.steerRatio = 13.27 * 1.15   # 15% higher at the center seems reasonable
-      ret.maxLateralAccel = 1.8
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
     elif candidate == CAR.PALISADE:
@@ -87,7 +87,6 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.90
       ret.steerRatio = 15.6 * 1.15
       tire_stiffness_factor = 0.63
-      ret.maxLateralAccel = 2.5
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.3], [0.05]]
     elif candidate in (CAR.ELANTRA, CAR.ELANTRA_GT_I30):
@@ -144,7 +143,6 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.7
       ret.steerRatio = 13.73  # Spec
       tire_stiffness_factor = 0.385
-      ret.maxLateralAccel = 3.0
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
       if candidate not in (CAR.IONIQ_EV_2020, CAR.IONIQ_PHEV, CAR.IONIQ_HEV_2022):
@@ -171,9 +169,9 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.5
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
-    elif candidate == CAR.TUCSON_DIESEL_2019:
+    elif candidate == CAR.TUCSON:
       ret.lateralTuning.pid.kf = 0.00005
-      ret.mass = 3633. * CV.LB_TO_KG
+      ret.mass = 3520. * CV.LB_TO_KG
       ret.wheelbase = 2.67
       ret.steerRatio = 14.00 * 1.15
       tire_stiffness_factor = 0.385
@@ -194,7 +192,6 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.7
       ret.steerRatio = 13.9 if CAR.KIA_NIRO_HEV_2021 else 13.73  # Spec
       tire_stiffness_factor = 0.385
-      ret.maxLateralAccel = 2.9
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
       if candidate == CAR.KIA_NIRO_HEV:
@@ -226,7 +223,6 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1825. + STD_CARGO_KG
       ret.wheelbase = 2.78
       ret.steerRatio = 14.4 * 1.15   # 15% higher at the center seems reasonable
-      ret.maxLateralAccel = 2.4
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
     elif candidate == CAR.KIA_FORTE:
@@ -252,7 +248,6 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.85
       ret.steerRatio = 13.27  # 2021 Kia K5 Steering Ratio (all trims)
       tire_stiffness_factor = 0.5
-      ret.maxLateralAccel = 2.1
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
     elif candidate == CAR.KIA_EV6:
