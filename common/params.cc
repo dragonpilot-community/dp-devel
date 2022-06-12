@@ -193,6 +193,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_nav_style_night", PERSISTENT},
     {"dp_gpxd", PERSISTENT},
     {"dp_car_assigned", PERSISTENT},
+    {"dp_car_list", PERSISTENT},
     {"dp_last_modified", PERSISTENT},
     {"dp_lateral_mode", PERSISTENT},
     {"dp_lc_min_mph", PERSISTENT},
@@ -200,7 +201,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_lc_auto_delay", PERSISTENT},
     {"dp_quiet_drive", PERSISTENT},
     {"dp_toyota_sng", PERSISTENT},
-    {"dp_car_list", PERSISTENT},
+    {"dp_accel_profile_ctrl", PERSISTENT},
+    {"dp_accel_profile", PERSISTENT},
 };
 
 } // namespace
