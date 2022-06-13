@@ -111,7 +111,7 @@ msgstr "記愔體過低"
 
 #: ../selfdrive/controls/lib/events.py:317
 msgid "High CPU Usage"
-msgstr ""
+msgstr "CPU 使用量偏高"
 
 #: ../selfdrive/controls/lib/events.py:317
 #, python-format
@@ -229,7 +229,7 @@ msgstr "請觸碰方向盤：未偵測到駕駛面容"
 
 #: ../selfdrive/controls/lib/events.py:484
 msgid "Touch Steering Wheel"
-msgstr ""
+msgstr "請觸碰方向盤"
 
 #: ../selfdrive/controls/lib/events.py:485
 #: ../selfdrive/controls/lib/events.py:493
@@ -294,7 +294,7 @@ msgstr "系統錯誤：請重啟您的裝置"
 #: ../selfdrive/controls/lib/events.py:571
 #: ../selfdrive/controls/lib/events.py:572
 msgid "Camera Frame Rate Low"
-msgstr ""
+msgstr "相機幀率偏低"
 
 #: ../selfdrive/controls/lib/events.py:571
 #: ../selfdrive/controls/lib/events.py:665

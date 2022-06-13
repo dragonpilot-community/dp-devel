@@ -876,15 +876,15 @@ op控製縱向車型三角形顯示為實心。</translation>
     <name>DeclinePage</name>
     <message>
         <source>You must accept the Terms and Conditions in order to use openpilot.</source>
-        <translation type="unfinished"></translation>
+        <translation>您必須先接受條款和條件才能使用 openpilot。</translation>
     </message>
     <message>
         <source>Back</source>
-        <translation type="unfinished">上一頁</translation>
+        <translation>上一頁</translation>
     </message>
     <message>
         <source>Decline, uninstall %1</source>
-        <translation type="unfinished"></translation>
+        <translation>拒絕並卸載 %1</translation>
     </message>
 </context>
 <context>
@@ -1061,6 +1061,25 @@ op控製縱向車型三角形顯示為實心。</translation>
     <message>
         <source>mi</source>
         <translation>英里</translation>
+    </message>
+</context>
+<context>
+    <name>MapInstructions</name>
+    <message>
+        <source> km</source>
+        <translation> 公里</translation>
+    </message>
+    <message>
+        <source> m</source>
+        <translation> 公尺</translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation> 英里</translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation> 英尺</translation>
     </message>
 </context>
 <context>
@@ -1269,7 +1288,7 @@ prime subscription. Sign up now: https://connect.comma.ai</source>
     <name>PairingPopup</name>
     <message>
         <source>Pair your device to your comma account</source>
-        <translation type="unfinished"></translation>
+        <translation>將設備與您的 comma 帳號配對</translation>
     </message>
 </context>
 <context>
@@ -1292,7 +1311,7 @@ prime subscription. Sign up now: https://connect.comma.ai</source>
     </message>
     <message>
         <source>14 days of storage</source>
-        <translation>14 天的雲端行車記錄</translation>
+        <translation type="vanished">14 天的雲端行車記錄</translation>
     </message>
     <message>
         <source>Developer perks</source>
@@ -1306,6 +1325,10 @@ prime subscription. Sign up now: https://connect.comma.ai</source>
         <source>Your trial is limited to 10 mins.
 </source>
         <translation type="vanished">您可試用的時間為 10 分鐘。</translation>
+    </message>
+    <message>
+        <source>1 year of storage</source>
+        <translation>一年的雲端行車記錄</translation>
     </message>
 </context>
 <context>
@@ -2067,7 +2090,7 @@ OFFLINE</source>
     <message>
         <source>NO
 PRIME</source>
-        <translation>沒有
+        <translation type="vanished">沒有
 高級會員</translation>
     </message>
     <message>
@@ -2161,7 +2184,8 @@ OK</source>
     <message>
         <source>GPS
 SEARCH</source>
-        <translation type="unfinished"></translation>
+        <translation>GPS 訊號
+定位中</translation>
     </message>
 </context>
 <context>
@@ -2293,11 +2317,11 @@ SEARCH</source>
     <name>TermsPage</name>
     <message>
         <source>Terms &amp; Conditions</source>
-        <translation type="unfinished"></translation>
+        <translation>條款和條件</translation>
     </message>
     <message>
         <source>Decline</source>
-        <translation type="unfinished"></translation>
+        <translation>拒絕</translation>
     </message>
     <message>
         <source>Scroll to accept</source>
@@ -2360,7 +2384,7 @@ SEARCH</source>
     </message>
     <message>
         <source>塞 Disable use of lanelines (Alpha) 塞</source>
-        <translation>停用車道線判斷 (測試)</translation>
+        <translation type="vanished">停用車道線判斷 (測試)</translation>
     </message>
     <message>
         <source>In this mode openpilot will ignore lanelines and just drive how it thinks a human would.</source>
@@ -2432,6 +2456,10 @@ SEARCH</source>
     </message>
     <message>
         <source>When enabled, pressing the accelerator pedal will disengage openpilot.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable use of lanelines</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
