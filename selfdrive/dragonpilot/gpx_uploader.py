@@ -24,7 +24,7 @@
 import os
 import time
 from common.params import Params
-from selfdrive.version import get_version
+from system.version import get_version
 
 # for uploader
 from selfdrive.loggerd.xattr_cache import getxattr, setxattr
