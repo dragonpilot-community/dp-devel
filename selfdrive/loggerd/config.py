@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from selfdrive.hardware import PC
+from system.hardware import PC
 from common.params import Params
 
 if os.environ.get('LOG_ROOT', False):
