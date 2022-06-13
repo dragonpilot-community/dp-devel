@@ -24,6 +24,39 @@ A_CRUISE_MAX_BP = [0., 15., 25., 40.]
 _A_TOTAL_MAX_V = [1.7, 3.2]
 _A_TOTAL_MAX_BP = [20., 40.]
 
+#DP_FOLLOWING_DIST = {
+#  0: 1.0,
+#  1: 1.2,
+#  2: 1.4,
+#  3: 1.8,
+#}
+
+DP_ACCEL_ECO = 0
+DP_ACCEL_NORMAL = 1
+DP_ACCEL_SPORT = 2
+
+# accel profile by @arne182 modified by cgw
+_DP_CRUISE_MIN_V = [-0.05, -0.1, -0.3, -0.4, -0.4, -0.23, -0.1]
+_DP_CRUISE_MIN_V_ECO = [-0.01, -0.1, -0.2, -0.3 -0.4, -0.2, -0.09]
+_DP_CRUISE_MIN_V_SPORT = [-0.1, -0.2, -0.4, -0.5, -0.5, -0.25, -0.1]
+_DP_CRUISE_MIN_BP = [0.0, 3.0, 5.0, 20.0, 33.3, 40.0, 55.0]
+
+_DP_CRUISE_MAX_V = [3.5, 1.7, 1.31, 0.95, 0.77, 0.67, 0.55, 0.47, 0.31, 0.13]
+_DP_CRUISE_MAX_V_ECO = [3.5, 1.65, 1.25, 0.85, 0.65, 0.55, 0.45, 0.42, 0.24, 0.09]
+_DP_CRUISE_MAX_V_SPORT = [3.5, 3.5, 2.5, 1.5, 2.0, 2.0, 2.0, 1.5, 1.0, 0.5]
+_DP_CRUISE_MAX_BP = [0., 3, 6., 8., 11., 15., 20., 25., 30., 55.]
+
+def dp_calc_cruise_accel_limits(v_ego, dp_profile):
+  if dp_profile == DP_ACCEL_ECO:
+    a_cruise_min = interp(v_ego, _DP_CRUISE_MIN_BP, _DP_CRUISE_MIN_V_ECO)
+    a_cruise_max = interp(v_ego, _DP_CRUISE_MAX_BP, _DP_CRUISE_MAX_V_ECO)
+  elif dp_profile == DP_ACCEL_SPORT:
+    a_cruise_min = interp(v_ego, _DP_CRUISE_MIN_BP, _DP_CRUISE_MIN_V_SPORT)
+    a_cruise_max = interp(v_ego, _DP_CRUISE_MAX_BP, _DP_CRUISE_MAX_V_SPORT)
+  else:
+    a_cruise_min = interp(v_ego, _DP_CRUISE_MIN_BP, _DP_CRUISE_MIN_V)
+    a_cruise_max = interp(v_ego, _DP_CRUISE_MAX_BP, _DP_CRUISE_MAX_V)
+  return a_cruise_min, a_cruise_max
 
 def get_max_accel(v_ego):
   return interp(v_ego, A_CRUISE_MAX_BP, A_CRUISE_MAX_VALS)
@@ -59,8 +92,16 @@ class Planner:
     self.j_desired_trajectory = np.zeros(CONTROL_N)
     self.solverExecutionTime = 0.0
 
+    # dp
+    self.dp_accel_profile_ctrl = False
+    self.dp_accel_profile = DP_ACCEL_ECO
+
   def update(self, sm):
     v_ego = sm['carState'].vEgo
+
+    # dp
+    self.dp_accel_profile_ctrl = sm['dragonConf'].dpAccelProfileCtrl
+    self.dp_accel_profile = sm['dragonConf'].dpAccelProfile
 
     v_cruise_kph = sm['controlsState'].vCruise
     v_cruise_kph = min(v_cruise_kph, V_CRUISE_MAX)
@@ -82,7 +123,10 @@ class Planner:
     # Prevent divergence, smooth in current v_ego
     self.v_desired_filter.x = max(0.0, self.v_desired_filter.update(v_ego))
 
-    accel_limits = [A_CRUISE_MIN, get_max_accel(v_ego)]
+    if not self.dp_accel_profile_ctrl:
+      accel_limits = [A_CRUISE_MIN, get_max_accel(v_ego)]
+    else:
+      accel_limits = dp_calc_cruise_accel_limits(v_ego, self.dp_accel_profile)
     accel_limits_turns = limit_accel_in_turns(v_ego, sm['carState'].steeringAngleDeg, accel_limits, self.CP)
     if force_slow_decel:
       # if required so, force a smooth deceleration

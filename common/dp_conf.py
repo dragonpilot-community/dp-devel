@@ -56,7 +56,10 @@ confs = [
   {'name': 'dp_ip_addr', 'default': '', 'type': 'Text', 'conf_type': ['struct']},
   {'name': 'dp_quiet_drive', 'default': False, 'type': 'Boolean', 'conf_type': ['param']},
 
+  #toyota
   {'name': 'dp_toyota_sng', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_accel_profile_ctrl', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_accel_profile', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 2, 'depends': [{'name': 'dp_accel_profile_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
 
   # # dashcam related
   # {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
