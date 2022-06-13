@@ -7,7 +7,14 @@ from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import CarStateBase
 from selfdrive.car.toyota.values import ToyotaFlags, CAR, DBC, STEER_THRESHOLD, NO_STOP_TIMER_CAR, TSS2_CAR, RADAR_ACC_CAR, EPS_SCALE
+from common.params import Params, put_nonblocking
+import time
+from math import floor
 
+# dp
+DP_ACCEL_ECO = 0
+DP_ACCEL_NORMAL = 1
+DP_ACCEL_SPORT = 2
 
 class CarState(CarStateBase):
   def __init__(self, CP):
@@ -25,6 +32,12 @@ class CarState(CarStateBase):
     self.low_speed_lockout = False
     self.acc_type = 1
 
+    #dp
+    self.dp_accel_profile = None
+    self.dp_accel_profile_prev = None
+    self.dp_accel_profile_init = False
+    self.dp_toyota_ap_btn_link = Params().get_bool('dp_toyota_ap_btn_link')
+
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
 
@@ -35,6 +48,7 @@ class CarState(CarStateBase):
 
     ret.brakePressed = cp.vl["BRAKE_MODULE"]["BRAKE_PRESSED"] != 0
     ret.brakeHoldActive = cp.vl["ESP_CONTROL"]["BRAKE_HOLD_ACTIVE"] == 1
+    ret.brakeLightsDEPRECATED = bool(cp.vl["ESP_CONTROL"]['BRAKE_LIGHTS_ACC'] or cp.vl["BRAKE_MODULE"]["BRAKE_PRESSED"] != 0)
     if self.CP.enableGasInterceptor:
       ret.gas = (cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS"] + cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS2"]) // 2
       ret.gasPressed = ret.gas > 805
@@ -75,6 +89,41 @@ class CarState(CarStateBase):
 
     can_gear = int(cp.vl["GEAR_PACKET"]["GEAR"])
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
+
+    #dp: Thank you Arne (acceleration)
+    if self.dp_toyota_ap_btn_link:
+      if self.CP.carFingerprint in TSS2_CAR:
+        sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
+        econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
+      else:
+        try:
+          econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
+        except KeyError:
+          econ_on = 0
+        if self.CP.carFingerprint == CAR.RAV4_TSS2:
+          sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON_2']
+        else:
+          try:
+            sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
+          except KeyError:
+            sport_on = 0
+      if sport_on == 0 and econ_on == 0:
+        self.dp_accel_profile = DP_ACCEL_NORMAL
+      elif sport_on == 1:
+        self.dp_accel_profile = DP_ACCEL_SPORT
+      elif econ_on == 1:
+        self.dp_accel_profile = DP_ACCEL_ECO
+
+      # if init is false, we sync profile with whatever mode we have on car
+      if not self.dp_accel_profile_init or self.dp_accel_profile != self.dp_accel_profile_prev:
+        put_nonblocking('dp_accel_profile', str(self.dp_accel_profile))
+        put_nonblocking('dp_last_modified',str(floor(time.time())))
+        self.dp_accel_profile_init = True
+      self.dp_accel_profile_prev = self.dp_accel_profile
+
+    #dp
+    ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
+
     ret.leftBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 1
     ret.rightBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 2
 
@@ -162,6 +211,11 @@ class CarState(CarStateBase):
       ("TURN_SIGNALS", "BLINKERS_STATE"),
       ("LKA_STATE", "EPS_STATUS"),
       ("AUTO_HIGH_BEAM", "LIGHT_STALK"),
+      #dp
+      ("SPORT_ON", "GEAR_PACKET"),
+      ("ECON_ON", "GEAR_PACKET"),
+      ("RPM", "ENGINE_RPM"),
+      ("BRAKE_LIGHTS_ACC", "ESP_CONTROL"),
     ]
 
     checks = [
@@ -176,6 +230,8 @@ class CarState(CarStateBase):
       ("STEER_ANGLE_SENSOR", 80),
       ("PCM_CRUISE", 33),
       ("STEER_TORQUE_SENSOR", 50),
+      #dp
+      ("ENGINE_RPM", 100),
     ]
 
     if CP.flags & ToyotaFlags.HYBRID:
@@ -184,6 +240,14 @@ class CarState(CarStateBase):
     else:
       signals.append(("GAS_PEDAL", "GAS_PEDAL"))
       checks.append(("GAS_PEDAL", 33))
+
+    #dp acceleration
+    if CP.carFingerprint == CAR.RAV4_TSS2:
+      signals.append(("SPORT_ON_2", "GEAR_PACKET"))
+
+    if CP.carFingerprint in (CAR.LEXUS_ESH_TSS2, CAR.RAV4H_TSS2, CAR.CHRH, CAR.PRIUS_TSS2, CAR.HIGHLANDERH_TSS2):
+      signals.append(("SPORT_ON", "GEAR_PACKET"))
+      signals.append(("ECON_ON", "GEAR_PACKET"))
 
     if CP.carFingerprint in (CAR.LEXUS_IS, CAR.LEXUS_RC):
       signals.append(("MAIN_ON", "DSU_CRUISE"))
