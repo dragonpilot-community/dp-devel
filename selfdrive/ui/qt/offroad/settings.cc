@@ -58,12 +58,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "../assets/offroad/icon_monitoring.png",
     },
     {
-      "EndToEndToggle",
-      TogglesPanel::tr("Disable use of lanelines"),
-      TogglesPanel::tr("In this mode openpilot will ignore lanelines and just drive how it thinks a human would."),
-      "../assets/offroad/icon_road.png",
-    },
-    {
       "DisengageOnAccelerator",
       TogglesPanel::tr("Disengage On Accelerator Pedal"),
       TogglesPanel::tr("When enabled, pressing the accelerator pedal will disengage openpilot."),

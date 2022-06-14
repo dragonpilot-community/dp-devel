@@ -29,6 +29,8 @@ class LateralPlanner:
     self.lat_mpc = LateralMpc()
     self.reset_mpc(np.zeros(4))
 
+    self.dp_dlp_lanelines = True
+
   def reset_mpc(self, x0=np.zeros(4)):
     self.x0 = x0
     self.lat_mpc.reset(x0=self.x0)
@@ -56,6 +58,13 @@ class LateralPlanner:
       self.LP.lll_prob *= self.DH.lane_change_ll_prob
       self.LP.rll_prob *= self.DH.lane_change_ll_prob
 
+    if sm.updated['dragonConf'] and sm['dragonConf'].dpUseLanelines:
+      if self.LP.lll_prob < 0.3 and self.LP.rll_prob < 0.3:
+        self.dp_dlp_lanelines = False
+      elif self.LP.lll_prob > 0.5 and self.LP.rll_prob > 0.5:
+        self.dp_dlp_lanelines = True
+      self.use_lanelines = self.dp_dlp_lanelines
+
     # Calculate final driving path and set MPC costs
     if self.use_lanelines:
       d_path_xyz = self.LP.get_d_path(v_ego, self.t_idxs, self.path_xyz)
@@ -79,7 +88,7 @@ class LateralPlanner:
                      y_pts,
                      heading_pts)
     # init state for next
-    # mpc.u_sol is the desired curvature rate given x0 curv state. 
+    # mpc.u_sol is the desired curvature rate given x0 curv state.
     # with x0[3] = measured_curvature, this would be the actual desired rate.
     # instead, interpolate x_sol so that x0[3] is the desired curvature for lat_control.
     self.x0[3] = interp(DT_MDL, self.t_idxs[:LAT_MPC_N + 1], self.lat_mpc.x_sol[:, 3])
