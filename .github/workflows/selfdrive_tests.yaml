@@ -304,6 +304,7 @@ jobs:
                         $UNIT_TEST selfdrive/thermald && \
                         $UNIT_TEST selfdrive/hardware/tici && \
                         $UNIT_TEST selfdrive/modeld && \
+                        $UNIT_TEST selfdrive/mapd && \
                         $UNIT_TEST tools/lib/tests && \
                         ./common/tests/test_util && \
                         ./common/tests/test_swaglog && \
