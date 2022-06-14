@@ -109,6 +109,7 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   auto dcamBtn = new ButtonControl(DevicePanel::tr("Driver Camera"), DevicePanel::tr("PREVIEW"),
                                    DevicePanel::tr("Preview the driver facing camera to help optimize device mounting position for best driver monitoring experience. (vehicle must be off)"));
   connect(dcamBtn, &ButtonControl::clicked, [=]() { emit showDriverView(); });
+  connect(uiState(), &UIState::offroadTransition, dcamBtn, &QPushButton::setEnabled);
   addItem(dcamBtn);
 
   auto resetCalibBtn = new ButtonControl(DevicePanel::tr("Reset Calibration"), DevicePanel::tr("RESET"), " ");
@@ -139,11 +140,11 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
     addItem(regulatoryBtn);
   }
 
-  QObject::connect(uiState(), &UIState::offroadTransition, [=](bool offroad) {
-    for (auto btn : findChildren<ButtonControl *>()) {
-      btn->setEnabled(offroad);
-    }
-  });
+//  QObject::connect(uiState(), &UIState::offroadTransition, [=](bool offroad) {
+//    for (auto btn : findChildren<ButtonControl *>()) {
+//      btn->setEnabled(offroad);
+//    }
+//  });
 
   // power buttons
   QHBoxLayout *power_layout = new QHBoxLayout();
@@ -159,9 +160,9 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   power_layout->addWidget(poweroff_btn);
   QObject::connect(poweroff_btn, &QPushButton::clicked, this, &DevicePanel::poweroff);
 
-  if (!Hardware::PC()) {
-    connect(uiState(), &UIState::offroadTransition, poweroff_btn, &QPushButton::setVisible);
-  }
+//  if (!Hardware::PC()) {
+//    connect(uiState(), &UIState::offroadTransition, poweroff_btn, &QPushButton::setVisible);
+//  }
 
   setStyleSheet(R"(
     #reboot_btn { height: 120px; border-radius: 15px; background-color: #393939; }
@@ -246,7 +247,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
       params.putBool("DoUninstall", true);
     }
   });
-  connect(uiState(), &UIState::offroadTransition, uninstallBtn, &QPushButton::setEnabled);
+//  connect(uiState(), &UIState::offroadTransition, uninstallBtn, &QPushButton::setEnabled);
 
   QWidget *widgets[] = {versionLbl, lastUpdateLbl, updateBtn, gitBranchLbl, gitCommitLbl, osVersionLbl, uninstallBtn};
   for (QWidget* w : widgets) {
