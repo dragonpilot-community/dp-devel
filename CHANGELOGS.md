@@ -1,6 +1,6 @@
 dragonpilot [latest]
 ========================
-* Synced up with openpilot master 2022.06.13 commits
+* Synced up with openpilot master 2022.06.14 commits
 * ADDED: Toyota SnG hack.
 * ADDED: Accel Profile.
 * FIXED: Car Selection.
