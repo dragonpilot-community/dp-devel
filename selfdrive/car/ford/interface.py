@@ -59,6 +59,7 @@ class CarInterface(CarInterfaceBase):
     # LCA can steer down to zero
     ret.minSteerSpeed = 0.
 
+    ret.steerRateCost = 1.0
     ret.centerToFront = ret.wheelbase * 0.44
 
     ret.rotationalInertia = scale_rot_inertia(ret.mass, ret.wheelbase)
