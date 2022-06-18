@@ -202,6 +202,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_lc_auto_delay", PERSISTENT},
     {"dp_quiet_drive", PERSISTENT},
     {"dp_ui_side", PERSISTENT},
+    {"dp_ui_volume", PERSISTENT},
+    {"dp_ui_brightness", PERSISTENT},
     {"dp_toyota_sng", PERSISTENT},
     {"dp_accel_profile_ctrl", PERSISTENT},
     {"dp_accel_profile", PERSISTENT},
