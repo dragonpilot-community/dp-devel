@@ -60,6 +60,7 @@ confs = [
   {'name': 'dp_ui_side', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_volume', 'default': -5, 'type': 'Int8', 'min': -5, 'max': 100, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_brightness', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 100, 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_display_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 1, 'conf_type': ['param', 'struct']},
 
   #toyota
   {'name': 'dp_toyota_sng', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
@@ -95,7 +96,7 @@ confs = [
   # {'name': 'dp_speed_check', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_temp_monitor', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
   # # UIs
-  # {'name': 'dp_ui_display_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 2, 'conf_type': ['param', 'struct']},
+  # {'name': 'dp_ui_display_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 1, 'conf_type': ['param', 'struct']},
   # {'name': 'dp_ui_speed', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_ui_event', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_ui_max_speed', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},

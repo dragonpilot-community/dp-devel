@@ -205,6 +205,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_ui_side", PERSISTENT},
     {"dp_ui_volume", PERSISTENT},
     {"dp_ui_brightness", PERSISTENT},
+    {"dp_ui_display_mode", PERSISTENT},
     {"dp_toyota_sng", PERSISTENT},
     {"dp_accel_profile_ctrl", PERSISTENT},
     {"dp_accel_profile", PERSISTENT},
