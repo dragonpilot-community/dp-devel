@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 import json
 import time
+from collections import defaultdict
 from concurrent.futures import Future, ProcessPoolExecutor
+from enum import IntEnum
 from typing import List, Optional
 
 import numpy as np
-from collections import defaultdict
-
-import sympy
-from numpy.linalg import linalg
 
 from cereal import log, messaging
 from common.params import Params, put_nonblocking
 from laika import AstroDog
-from laika.constants import EARTH_ROTATION_RATE, SECS_IN_HR, SECS_IN_MIN, SPEED_OF_LIGHT
+from laika.constants import SECS_IN_HR, SECS_IN_MIN
 from laika.ephemeris import Ephemeris, EphemerisType, convert_ublox_ephem
 from laika.gps_time import GPSTime
 from laika.helpers import ConstellationId
 from laika.raw_gnss import GNSSMeasurement, correct_measurements, process_measurements, read_raw_ublox
+from selfdrive.locationd.laikad_helpers import calc_pos_fix_gauss_newton, get_posfix_sympy_fun
 from selfdrive.locationd.models.constants import GENERATED_DIR, ObservationKind
 from selfdrive.locationd.models.gnss_kf import GNSSKalman
 from selfdrive.locationd.models.gnss_kf import States as GStates
@@ -30,7 +29,7 @@ CACHE_VERSION = 0.1
 
 class Laikad:
   def __init__(self, valid_const=("GPS", "GLONASS"), auto_update=False, valid_ephem_types=(EphemerisType.ULTRA_RAPID_ORBIT, EphemerisType.NAV),
-               save_ephemeris=False):
+               save_ephemeris=False, last_known_position=None):
     self.astro_dog = AstroDog(valid_const=valid_const, auto_update=auto_update, valid_ephem_types=valid_ephem_types, clear_old_ephemeris=True)
     self.gnss_kf = GNSSKalman(GENERATED_DIR)
     self.orbit_fetch_executor = ProcessPoolExecutor()
@@ -40,6 +39,9 @@ class Laikad:
     self.save_ephemeris = save_ephemeris
     self.load_cache()
     self.posfix_functions = {constellation: get_posfix_sympy_fun(constellation) for constellation in (ConstellationId.GPS, ConstellationId.GLONASS)}
+    self.last_pos_fix = last_known_position if last_known_position is not None else []
+    self.last_pos_residual = []
+    self.last_pos_fix_t = None
 
   def load_cache(self):
     cache = Params().get(EPHEMERIS_CACHE)
@@ -62,35 +64,27 @@ class Laikad:
 
   def process_ublox_msg(self, ublox_msg, ublox_mono_time: int, block=False):
     if ublox_msg.which == 'measurementReport':
+      t = ublox_mono_time * 1e-9
       report = ublox_msg.measurementReport
       if report.gpsWeek > 0:
         latest_msg_t = GPSTime(report.gpsWeek, report.rcvTow)
         self.fetch_orbits(latest_msg_t + SECS_IN_MIN, block)
+
       new_meas = read_raw_ublox(report)
       processed_measurements = process_measurements(new_meas, self.astro_dog)
 
-      min_measurements = 5 if any(p.constellation_id == ConstellationId.GLONASS for p in processed_measurements) else 4
-      pos_fix = calc_pos_fix_gauss_newton(processed_measurements, self.posfix_functions, min_measurements=min_measurements)
+      if self.last_pos_fix_t is None or abs(self.last_pos_fix_t - t) >= 2:
+        min_measurements = 5 if any(p.constellation_id == ConstellationId.GLONASS for p in processed_measurements) else 4
+        pos_fix, pos_fix_residual = calc_pos_fix_gauss_newton(processed_measurements, self.posfix_functions, min_measurements=min_measurements)
+        if len(pos_fix) > 0:
+          self.last_pos_fix = pos_fix[:3]
+          self.last_pos_residual = pos_fix_residual
+          self.last_pos_fix_t = t
 
-      t = ublox_mono_time * 1e-9
-      kf_pos_std = None
-      if all(self.kf_valid(t)):
-        self.gnss_kf.predict(t)
-        kf_pos_std = np.sqrt(abs(self.gnss_kf.P[GStates.ECEF_POS].diagonal()))
-      # If localizer is valid use its position to correct measurements
-      if kf_pos_std is not None and linalg.norm(kf_pos_std) < 100:
-        est_pos = self.gnss_kf.x[GStates.ECEF_POS]
-      elif len(pos_fix) > 0 and abs(np.array(pos_fix[1])).mean() < 1000:
-        est_pos = pos_fix[0][:3]
-      else:
-        est_pos = None
-      corrected_measurements = []
-      if est_pos is not None:
-        corrected_measurements = correct_measurements(processed_measurements, est_pos, self.astro_dog)
+      corrected_measurements = correct_measurements(processed_measurements, self.last_pos_fix, self.astro_dog) if self.last_pos_fix_t is not None else []
 
-      self.update_localizer(est_pos, t, corrected_measurements)
+      self.update_localizer(self.last_pos_fix, t, corrected_measurements)
       kf_valid = all(self.kf_valid(t))
-
       ecef_pos = self.gnss_kf.x[GStates.ECEF_POS].tolist()
       ecef_vel = self.gnss_kf.x[GStates.ECEF_VELOCITY].tolist()
 
@@ -101,8 +95,11 @@ class Laikad:
       dat = messaging.new_message("gnssMeasurements")
       measurement_msg = log.LiveLocationKalman.Measurement.new_message
       dat.gnssMeasurements = {
+        "gpsWeek": report.gpsWeek,
+        "gpsTimeOfWeek": report.rcvTow,
         "positionECEF": measurement_msg(value=ecef_pos, std=pos_std, valid=kf_valid),
         "velocityECEF": measurement_msg(value=ecef_vel, std=vel_std, valid=kf_valid),
+        "positionFixECEF": measurement_msg(value=self.last_pos_fix, std=self.last_pos_residual, valid=self.last_pos_fix_t == t),
         "ubloxMonoTime": ublox_mono_time,
         "correctedMeasurements": meas_msgs
       }
@@ -124,13 +121,12 @@ class Laikad:
         cloudlog.error("Time gap of over 10s detected, gnss kalman reset")
       elif not valid[2]:
         cloudlog.error("Gnss kalman filter state is nan")
+      if len(est_pos) > 0:
+        cloudlog.info(f"Reset kalman filter with {est_pos}")
+        self.init_gnss_localizer(est_pos)
       else:
-        cloudlog.error("Gnss kalman std too far")
-
-      if est_pos is None:
-        cloudlog.info("Position fix not available when resetting kalman filter")
+        cloudlog.info("Could not reset kalman filter")
         return
-      self.init_gnss_localizer(est_pos.tolist())
     if len(measurements) > 0:
       kf_add_observations(self.gnss_kf, t, measurements)
     else:
@@ -141,14 +137,12 @@ class Laikad:
     filter_time = self.gnss_kf.filter.filter_time
     return [filter_time is not None,
             filter_time is not None and abs(t - filter_time) < MAX_TIME_GAP,
-            all(np.isfinite(self.gnss_kf.x[GStates.ECEF_POS])),
-            linalg.norm(self.gnss_kf.P[GStates.ECEF_POS]) < 1e5]
+            all(np.isfinite(self.gnss_kf.x[GStates.ECEF_POS]))]
 
   def init_gnss_localizer(self, est_pos):
     x_initial, p_initial_diag = np.copy(GNSSKalman.x_initial), np.copy(np.diagonal(GNSSKalman.P_initial))
     x_initial[GStates.ECEF_POS] = est_pos
     p_initial_diag[GStates.ECEF_POS] = 1000 ** 2
-
     self.gnss_kf.init_state(x_initial, covs_diag=p_initial_diag)
 
   def fetch_orbits(self, t: GPSTime, block):
@@ -192,6 +186,27 @@ def create_measurement_msg(meas: GNSSMeasurement):
   c.pseudorangeRateStd = float(meas.observables_std['D1C'])
   c.satPos = meas.sat_pos_final.tolist()
   c.satVel = meas.sat_vel.tolist()
+  c.satVel = meas.sat_vel.tolist()
+  ephem = meas.sat_ephemeris
+  assert ephem is not None
+  if ephem.eph_type == EphemerisType.NAV:
+    source_type = EphemerisSourceType.nav
+    week, time_of_week = -1, -1
+  else:
+    assert ephem.file_epoch is not None
+    week = ephem.file_epoch.week
+    time_of_week = ephem.file_epoch.tow
+    file_src = ephem.file_source
+    if file_src == 'igu':  # example nasa: '2214/igu22144_00.sp3.Z'
+      source_type = EphemerisSourceType.nasaUltraRapid
+    elif file_src == 'Sta':  # example nasa: '22166/ultra/Stark_1D_22061518.sp3'
+      source_type = EphemerisSourceType.glonassIacUltraRapid
+    else:
+      raise Exception(f"Didn't expect file source {file_src}")
+
+  c.ephemerisSource.type = source_type.value
+  c.ephemerisSource.gpsWeek = week
+  c.ephemerisSource.gpsTimeOfWeek = int(time_of_week)
   return c
 
 
@@ -201,13 +216,13 @@ def kf_add_observations(gnss_kf: GNSSKalman, t: float, measurements: List[GNSSMe
     m_arr = m.as_array()
     if m.constellation_id == ConstellationId.GPS:
       ekf_data[ObservationKind.PSEUDORANGE_GPS].append(m_arr)
-      ekf_data[ObservationKind.PSEUDORANGE_RATE_GPS].append(m_arr)
     elif m.constellation_id == ConstellationId.GLONASS:
       ekf_data[ObservationKind.PSEUDORANGE_GLONASS].append(m_arr)
-      ekf_data[ObservationKind.PSEUDORANGE_RATE_GLONASS].append(m_arr)
-
+  ekf_data[ObservationKind.PSEUDORANGE_RATE_GPS] = ekf_data[ObservationKind.PSEUDORANGE_GPS]
+  ekf_data[ObservationKind.PSEUDORANGE_RATE_GLONASS] = ekf_data[ObservationKind.PSEUDORANGE_GLONASS]
   for kind, data in ekf_data.items():
-    gnss_kf.predict_and_observe(t, kind, data)
+    if len(data) >0:
+      gnss_kf.predict_and_observe(t, kind, data)
 
 
 class CacheSerializer(json.JSONEncoder):
@@ -230,94 +245,16 @@ def deserialize_hook(dct):
   return dct
 
 
-def calc_pos_fix_gauss_newton(measurements, posfix_functions, x0=None, signal='C1C', min_measurements=6):
-  '''
-  Calculates gps fix using gauss newton method
-  To solve the problem a minimal of 4 measurements are required.
-    If Glonass is included 5 are required to solve for the additional free variable.
-  returns:
-  0 -> list with positions
-  '''
-  if x0 is None:
-    x0 = [0, 0, 0, 0, 0]
-  n = len(measurements)
-  if n < min_measurements:
-    return []
-
-  Fx_pos = pr_residual(measurements, posfix_functions, signal=signal)
-  x = gauss_newton(Fx_pos, x0)
-  residual, _ = Fx_pos(x, weight=1.0)
-  return x, residual
-
-
-def pr_residual(measurements, posfix_functions, signal='C1C'):
-  def Fx_pos(inp, weight=None):
-    vals, gradients = [], []
-
-    for meas in measurements:
-      pr = meas.observables[signal]
-      pr += meas.sat_clock_err * SPEED_OF_LIGHT
-
-      w = (1 / meas.observables_std[signal]) if weight is None else weight
-
-      val, *gradient = posfix_functions[meas.constellation_id](*inp, pr, *meas.sat_pos, w)
-      vals.append(val)
-      gradients.append(gradient)
-    return np.asarray(vals), np.asarray(gradients)
-
-  return Fx_pos
-
-
-def gauss_newton(fun, b, xtol=1e-8, max_n=25):
-  for _ in range(max_n):
-    # Compute function and jacobian on current estimate
-    r, J = fun(b)
-
-    # Update estimate
-    delta = np.linalg.pinv(J) @ r
-    b -= delta
-
-    # Check step size for stopping condition
-    if np.linalg.norm(delta) < xtol:
-      break
-  return b
-
-
-def get_posfix_sympy_fun(constellation):
-  # Unknowns
-  x, y, z = sympy.Symbol('x'), sympy.Symbol('y'), sympy.Symbol('z')
-  bc = sympy.Symbol('bc')
-  bg = sympy.Symbol('bg')
-  var = [x, y, z, bc, bg]
-
-  # Knowns
-  pr = sympy.Symbol('pr')
-  sat_x, sat_y, sat_z = sympy.Symbol('sat_x'), sympy.Symbol('sat_y'), sympy.Symbol('sat_z')
-  weight = sympy.Symbol('weight')
-
-  theta = EARTH_ROTATION_RATE * (pr - bc) / SPEED_OF_LIGHT
-  val = sympy.sqrt(
-    (sat_x * sympy.cos(theta) + sat_y * sympy.sin(theta) - x) ** 2 +
-    (sat_y * sympy.cos(theta) - sat_x * sympy.sin(theta) - y) ** 2 +
-    (sat_z - z) ** 2
-  )
-
-  if constellation == ConstellationId.GLONASS:
-    res = weight * (val - (pr - bc - bg))
-  elif constellation == ConstellationId.GPS:
-    res = weight * (val - (pr - bc))
-  else:
-    raise NotImplementedError(f"Constellation {constellation} not supported")
-
-  res = [res] + [sympy.diff(res, v) for v in var]
-
-  return sympy.lambdify([x, y, z, bc, bg, pr, sat_x, sat_y, sat_z, weight], res)
+class EphemerisSourceType(IntEnum):
+  nav = 0
+  nasaUltraRapid = 1
+  glonassIacUltraRapid = 2
 
 
 def main():
   sm = messaging.SubMaster(['ubloxGnss'])
   pm = messaging.PubMaster(['gnssMeasurements'])
-
+  # todo get last_known_position
   laikad = Laikad(save_ephemeris=True)
   while True:
     sm.update()
