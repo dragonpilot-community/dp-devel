@@ -199,7 +199,7 @@ class CarInterface(CarInterfaceBase):
       # set_lat_tune(ret.lateralTuning, LatTunes.PID_N)
       set_lat_tune(ret.lateralTuning, LatTunes.INDI_PRIUS_TSS2)
       ret.steerActuatorDelay = 0.3
-      ret.steerRateCost = 1.25
+      #ret.steerRateCost = 1.25
       ret.steerLimitTimer = 0.5
 
     elif candidate == CAR.MIRAI:
