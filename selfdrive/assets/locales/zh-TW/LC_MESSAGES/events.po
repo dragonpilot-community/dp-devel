@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-26 22:56+0800\n"
+"POT-Creation-Date: 2022-06-21 10:23+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Rick Lan <ricklan@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,7 @@ msgstr ""
 #: ../selfdrive/controls/lib/events.py:281
 #: ../selfdrive/controls/lib/events.py:753
 msgid "Process Not Running"
-msgstr ""
+msgstr "行程未執行"
 
 #: ../selfdrive/controls/lib/events.py:287
 #, fuzzy
@@ -116,7 +116,7 @@ msgstr "CPU 使用量偏高"
 #: ../selfdrive/controls/lib/events.py:317
 #, python-format
 msgid "%s%% used"
-msgstr ""
+msgstr "已使用 %s%%"
 
 #: ../selfdrive/controls/lib/events.py:321
 #: ../selfdrive/controls/lib/events.py:765
@@ -284,7 +284,7 @@ msgstr "散熱風扇故障"
 #: ../selfdrive/controls/lib/events.py:560
 #: ../selfdrive/controls/lib/events.py:578
 msgid "Likely Hardware Issue"
-msgstr ""
+msgstr "硬體可能有問題"
 
 #: ../selfdrive/controls/lib/events.py:567
 #, fuzzy
@@ -348,7 +348,6 @@ msgstr "找不到音效裝置"
 msgid "Distraction Level Too High"
 msgstr "駕駛分心太多次"
 
-#: ../selfdrive/controls/lib/events.py:691
 #: ../selfdrive/controls/lib/events.py:692
 msgid "Gear not D"
 msgstr "不在 D 檔位"
@@ -432,15 +431,15 @@ msgstr "控制不匹配"
 #: ../selfdrive/controls/lib/events.py:811
 #, fuzzy
 msgid "Camera CRC Error - Road"
-msgstr "道路攝像頭錯誤"
+msgstr "攝像頭錯誤 - 道路"
 
 #: ../selfdrive/controls/lib/events.py:817
 msgid "Camera CRC Error - Road Fisheye"
-msgstr ""
+msgstr "攝像頭錯誤 - 道路魚眼"
 
 #: ../selfdrive/controls/lib/events.py:823
 msgid "Camera CRC Error - Driver"
-msgstr ""
+msgstr "攝像頭錯誤 - 駕駛"
 
 #: ../selfdrive/controls/lib/events.py:831
 #: ../selfdrive/controls/lib/events.py:832
@@ -450,7 +449,7 @@ msgstr "USB 錯誤：請重啟您的裝置"
 
 #: ../selfdrive/controls/lib/events.py:841
 msgid "CAN Error"
-msgstr ""
+msgstr "CAN 錯誤"
 
 #: ../selfdrive/controls/lib/events.py:843
 #: ../selfdrive/controls/lib/events.py:847
@@ -459,16 +458,16 @@ msgstr "CAN 訊號錯誤：請檢查線路"
 
 #: ../selfdrive/controls/lib/events.py:851
 msgid "CAN Bus Disconnected"
-msgstr ""
+msgstr "CAN 通訊已中斷"
 
 #: ../selfdrive/controls/lib/events.py:853
 msgid "CAN Bus Disconnected: Likely Faulty Cable"
-msgstr ""
+msgstr "CAN 通訊已中斷：線組可能出錯"
 
 #: ../selfdrive/controls/lib/events.py:857
 #, fuzzy
 msgid "CAN Bus Disconnected: Check Connections"
-msgstr "CAN 訊號錯誤：請檢查線路"
+msgstr "CAN 通訊已中斷：請檢查線路"
 
 #: ../selfdrive/controls/lib/events.py:861
 #: ../selfdrive/controls/lib/events.py:863
@@ -556,7 +555,7 @@ msgstr "LKAS 錯誤：請重新發動車輛"
 
 #: ../selfdrive/controls/lib/events.py:940
 msgid "LKAS Disabled"
-msgstr ""
+msgstr "LKAS 已關閉"
 
 #~ msgid "If sky is visible, contact support"
 #~ msgstr "如果您不在地下室/隧道，請聯系客服"

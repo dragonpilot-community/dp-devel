@@ -1181,7 +1181,7 @@ prime subscription. Sign up now: https://connect.comma.ai</source>
     </message>
     <message>
         <source>N/A</source>
-        <translation>無</translation>
+        <translation type="vanished">無</translation>
     </message>
     <message>
         <source>TTC</source>
@@ -2388,7 +2388,7 @@ SEARCH</source>
     </message>
     <message>
         <source>In this mode openpilot will ignore lanelines and just drive how it thinks a human would.</source>
-        <translation>在這種模式下，openpilot 將忽略車道線並按照人爲方式駕駛。</translation>
+        <translation type="vanished">在這種模式下，openpilot 將忽略車道線並按照人爲方式駕駛。</translation>
     </message>
     <message>
         <source>Show ETA in 24h format</source>
@@ -2452,15 +2452,11 @@ SEARCH</source>
     </message>
     <message>
         <source>Disengage On Accelerator Pedal</source>
-        <translation type="unfinished"></translation>
+        <translation>踩油門取消控制</translation>
     </message>
     <message>
         <source>When enabled, pressing the accelerator pedal will disengage openpilot.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disable use of lanelines</source>
-        <translation type="unfinished"></translation>
+        <translation>啟用這個選項後，踩踏油門時將取消 OP 控制。</translation>
     </message>
 </context>
 <context>
