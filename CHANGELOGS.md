@@ -2,6 +2,10 @@ dragonpilot [latest]
 ========================
 * Synced up with openpilot master 2022.06.21 commits.
 * Updated zh-TW translation.
+* ADDED: dp ui vol.
+* ADDED: dp ui brightness.
+* ADDED: dp ui top/side bar.
+* ADDED: dp display mode (0=off/normal, 1=turn off the screen when onroad).
 
 dragonpilot 2022.06.16
 ========================
