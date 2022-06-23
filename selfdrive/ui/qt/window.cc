@@ -48,9 +48,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   QFontDatabase::addApplicationFont("../assets/fonts/NotoSansCJKtc-Regular.otf");
   QFontDatabase::addApplicationFont("../assets/fonts/NotoSansCJKtc-Medium.otf");
   QFontDatabase::addApplicationFont("../assets/fonts/NotoSansCJKtc-Bold.otf");
-  QFontDatabase::addApplicationFont("../assets/fonts/opensans_regular.ttf");
-  QFontDatabase::addApplicationFont("../assets/fonts/opensans_bold.ttf");
-  QFontDatabase::addApplicationFont("../assets/fonts/opensans_semibold.ttf");
   QFontDatabase::addApplicationFont("../assets/fonts/Inter-Black.ttf");
   QFontDatabase::addApplicationFont("../assets/fonts/Inter-Bold.ttf");
   QFontDatabase::addApplicationFont("../assets/fonts/Inter-ExtraBold.ttf");
