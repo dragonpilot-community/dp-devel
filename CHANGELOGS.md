@@ -1,6 +1,6 @@
 dragonpilot [latest]
 ========================
-* Synced up with openpilot master 2022.06.21 commits.
+* Synced up with openpilot master 2022.06.25 commits.
 * Updated zh-TW translation.
 * ADDED: dp ui vol.
 * ADDED: dp ui brightness.
