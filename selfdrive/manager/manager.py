@@ -42,11 +42,11 @@ def manager_init() -> None:
     ("DisengageOnAccelerator", "1"),
     ("HasAcceptedTerms", "0"),
     ("OpenpilotEnabledToggle", "1"),
-    ("ShowDebugUI", "1"),
-    ("SpeedLimitControl", "1"),
-    ("SpeedLimitPercOffset", "1"),
-    ("TurnSpeedControl", "1"),
-    ("TurnVisionControl", "1"),
+    ("ShowDebugUI", "0"),
+    ("SpeedLimitControl", "0"),
+    ("SpeedLimitPercOffset", "0"),
+    ("TurnSpeedControl", "0"),
+    ("TurnVisionControl", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))
