@@ -252,9 +252,7 @@ void NvgWindow::updateState(const UIState &s) {
     setProperty("roadName", show_road_name ? QString::fromStdString(lmd.getCurrentRoadName()) : "");
 
     float speed_limit = lp.getSpeedLimit() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
-    const float speed_limit_offset = lp.getSpeedLimitOffset() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);\
-    const float speed_limit_value_offset = lp.getSpeedLimitValueOffset();
-    const bool speed_limit_perc_offset = lp.getSpeedLimitPercOffset();
+    const float speed_limit_offset = lp.getSpeedLimitOffset() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
     const auto slcState = lp.getSpeedLimitControlState();
     const bool sl_force_active = s.scene.speed_limit_control_enabled &&
                                  seconds_since_boot() < s.scene.last_speed_limit_sign_tap + 2.0;
@@ -264,10 +262,8 @@ void NvgWindow::updateState(const UIState &s) {
                                   slcState == cereal::LongitudinalPlan::SpeedLimitControlState::TEMP_INACTIVE);
     const int sl_distance = int(lp.getDistToSpeedLimit() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH) / 10.0) * 10;
     const QString sl_distance_str(QString::number(sl_distance) + (s.scene.is_metric ? "m" : "f"));
-    const QString sl_offset_str(speed_limit_perc_offset ? speed_limit_offset > 0.0 ?
-                                "+" + QString::number(std::nearbyint(speed_limit_offset)) : "" :
-                                speed_limit_value_offset > 0.0 ? "+" + QString::number(std::nearbyint(speed_limit_value_offset)) :
-                                speed_limit_value_offset < 0.0 ? "-" + QString::number(std::nearbyint(speed_limit_value_offset)) : "");
+    const QString sl_offset_str(speed_limit_offset > 0.0 ?
+                                "+" + QString::number(std::nearbyint(speed_limit_offset)) : "");
     const QString sl_inactive_str(sl_temp_inactive ? "TEMP" : "OFF");
     const QString sl_substring(sl_inactive || sl_temp_inactive ? sl_inactive_str :
                                sl_distance > 0 ? sl_distance_str : sl_offset_str);
@@ -502,9 +498,10 @@ void NvgWindow::drawHud(QPainter &p) {
   if (showDebugUI && !roadName.isEmpty()) {
     const int h = 60;
     QRect bar_rc(rect().left(), rect().bottom() - h, rect().width(), h);
+    p.setPen(Qt::NoPen);
     p.setBrush(QColor(0, 0, 0, 100));
     p.drawRect(bar_rc);
-    configFont(p, "Open Sans", 38, "Bold");
+    configFont(p, "Inter", 38, "Bold");
     drawCenteredText(p, bar_rc.center().x(), bar_rc.center().y(), roadName, QColor(255, 255, 255, 200));
   }
   p.restore();
@@ -544,7 +541,7 @@ void NvgWindow::drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, 
   p.drawRoundedRect(rvtc, 20, 20);
   p.setPen(Qt::NoPen);
 
-  configFont(p, "Open Sans", 56, "SemiBold");
+  configFont(p, "Inter", 56, "SemiBold");
   drawCenteredText(p, rvtc.center().x(), rvtc.center().y(), vision_speed, color);
 }
 
