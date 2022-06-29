@@ -46,6 +46,7 @@ class SpeedLimitResolver():
     none = 0
     car_state = 1
     map_data = 2
+    nav = 3
 
   class Policy(IntEnum):
     car_state_only = 0
@@ -53,8 +54,10 @@ class SpeedLimitResolver():
     car_state_priority = 2
     map_data_priority = 3
     combined = 4
+    nav_only = 5
+    nav_priority = 6
 
-  def __init__(self, policy=Policy.map_data_priority):
+  def __init__(self, policy=Policy.nav_priority):
     self._limit_solutions = {}  # Store for speed limit solutions from different sources
     self._distance_solutions = {}  # Store for distance to current speed limit start for different sources
     self._v_ego = 0.
@@ -71,6 +74,7 @@ class SpeedLimitResolver():
     self._sm = sm
 
     self._get_from_car_state()
+    self._get_from_nav()
     self._get_from_map_data()
     self._consolidate()
 
@@ -79,6 +83,10 @@ class SpeedLimitResolver():
   def _get_from_car_state(self):
     self._limit_solutions[SpeedLimitResolver.Source.car_state] = self._sm['carState'].cruiseState.speedLimit
     self._distance_solutions[SpeedLimitResolver.Source.car_state] = 0.
+
+  def _get_from_nav(self):
+    self._limit_solutions[SpeedLimitResolver.Source.nav] = self._sm['navInstruction'].speedLimit
+    self._distance_solutions[SpeedLimitResolver.Source.nav] = 0.
 
   def _get_from_map_data(self):
     # Ignore if no live map data
@@ -152,6 +160,13 @@ class SpeedLimitResolver():
       distances = np.append(distances, self._distance_solutions[SpeedLimitResolver.Source.car_state])
       sources = np.append(sources, SpeedLimitResolver.Source.car_state.value)
 
+    if self._policy == SpeedLimitResolver.Policy.nav_only or \
+       self._policy == SpeedLimitResolver.Policy.nav_priority or \
+       self._policy == SpeedLimitResolver.Policy.combined:
+      limits = np.append(limits, self._limit_solutions[SpeedLimitResolver.Source.nav])
+      distances = np.append(distances, self._distance_solutions[SpeedLimitResolver.Source.nav])
+      sources = np.append(sources, SpeedLimitResolver.Source.nav.value)
+
     if self._policy == SpeedLimitResolver.Policy.map_data_only or \
        self._policy == SpeedLimitResolver.Policy.map_data_priority or \
        self._policy == SpeedLimitResolver.Policy.combined:
@@ -169,6 +184,16 @@ class SpeedLimitResolver():
         limits = np.append(limits, self._limit_solutions[SpeedLimitResolver.Source.car_state])
         distances = np.append(distances, self._distance_solutions[SpeedLimitResolver.Source.car_state])
         sources = np.append(sources, SpeedLimitResolver.Source.car_state.value)
+
+      elif self._policy == SpeedLimitResolver.Policy.nav_priority:
+        limits = np.append(limits, self._limit_solutions[SpeedLimitResolver.Source.map_data])
+        distances = np.append(distances, self._distance_solutions[SpeedLimitResolver.Source.map_data])
+        sources = np.append(sources, SpeedLimitResolver.Source.map_data.value)
+
+        if np.amax(limits) == 0.:
+          limits = np.append(limits, self._limit_solutions[SpeedLimitResolver.Source.car_state])
+          distances = np.append(distances, self._distance_solutions[SpeedLimitResolver.Source.car_state])
+          sources = np.append(sources, SpeedLimitResolver.Source.car_state.value)
 
     # Get all non-zero values and set the minimum if any, otherwise 0.
     mask = limits > 0.
