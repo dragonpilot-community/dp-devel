@@ -211,10 +211,10 @@ void NvgWindow::updateState(const UIState &s) {
   cur_speed  *= s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH;
 
   auto speed_limit_sign = sm["navInstruction"].getNavInstruction().getSpeedLimitSign();
-  float speed_limit = nav_alive ? sm["navInstruction"].getNavInstruction().getSpeedLimit() : 0.0;
-  speed_limit *= (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+  float speed_limit_comma = nav_alive ? sm["navInstruction"].getNavInstruction().getSpeedLimit() : 0.0;
+  speed_limit_comma *= (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
 
-  setProperty("speedLimit", speed_limit);
+  setProperty("speedLimitComma", speed_limit_comma);
   setProperty("has_us_speed_limit", nav_alive && speed_limit_sign == cereal::NavInstruction::SpeedLimitSign::MUTCD);
   setProperty("has_eu_speed_limit", nav_alive && speed_limit_sign == cereal::NavInstruction::SpeedLimitSign::VIENNA);
 
@@ -251,8 +251,10 @@ void NvgWindow::updateState(const UIState &s) {
     const bool show_road_name = current_ts - lmd_fix_time < 10000; // hide if fix older than 10s
     setProperty("roadName", show_road_name ? QString::fromStdString(lmd.getCurrentRoadName()) : "");
 
-    const float speed_limit = lp.getSpeedLimit() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
-    const float speed_limit_offset = lp.getSpeedLimitOffset() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    float speed_limit = lp.getSpeedLimit() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    const float speed_limit_offset = lp.getSpeedLimitOffset() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);\
+    const float speed_limit_value_offset = lp.getSpeedLimitValueOffset();
+    const bool speed_limit_perc_offset = lp.getSpeedLimitPercOffset();
     const auto slcState = lp.getSpeedLimitControlState();
     const bool sl_force_active = s.scene.speed_limit_control_enabled &&
                                  seconds_since_boot() < s.scene.last_speed_limit_sign_tap + 2.0;
@@ -262,28 +264,30 @@ void NvgWindow::updateState(const UIState &s) {
                                   slcState == cereal::LongitudinalPlan::SpeedLimitControlState::TEMP_INACTIVE);
     const int sl_distance = int(lp.getDistToSpeedLimit() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH) / 10.0) * 10;
     const QString sl_distance_str(QString::number(sl_distance) + (s.scene.is_metric ? "m" : "f"));
-    const QString sl_offset_str(speed_limit_offset > 0.0 ?
-                                "+" + QString::number(std::nearbyint(speed_limit_offset)) : "");
-    const QString sl_inactive_str(sl_temp_inactive ? "TEMP" : "");
+    const QString sl_offset_str(speed_limit_perc_offset ? speed_limit_offset > 0.0 ?
+                                "+" + QString::number(std::nearbyint(speed_limit_offset)) : "" :
+                                speed_limit_value_offset > 0.0 ? "+" + QString::number(std::nearbyint(speed_limit_value_offset)) :
+                                speed_limit_value_offset < 0.0 ? "-" + QString::number(std::nearbyint(speed_limit_value_offset)) : "");
+    const QString sl_inactive_str(sl_temp_inactive ? "TEMP" : "OFF");
     const QString sl_substring(sl_inactive || sl_temp_inactive ? sl_inactive_str :
                                sl_distance > 0 ? sl_distance_str : sl_offset_str);
 
     setProperty("showSpeedLimit", speed_limit > 0.0);
-    setProperty("speedLimit", QString::number(std::nearbyint(speed_limit)));
+    setProperty("speedLimit", speed_limit);
     setProperty("slcSubText", sl_substring);
-    setProperty("slcSubTextSize", sl_inactive || sl_temp_inactive || sl_distance > 0 ? 22.2 : 37.0);
+    setProperty("slcSubTextSize", sl_inactive || sl_temp_inactive || sl_distance > 0 ? 25.0 : 27.0);
     setProperty("mapSourcedSpeedLimit", lp.getIsMapSpeedLimit());
     setProperty("slcActive", !sl_inactive && !sl_temp_inactive);
 
-    const float tsc_speed = lp.getTurnSpeed() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
-    const auto tscState = lp.getTurnSpeedControlState();
+    const float mtsc_speed = lp.getTurnSpeed() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    const auto mtscState = lp.getTurnSpeedControlState();
     const int t_distance = int(lp.getDistToTurn() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH) / 10.0) * 10;
     const QString t_distance_str(QString::number(t_distance) + (s.scene.is_metric ? "m" : "f"));
 
-    setProperty("showTurnSpeedLimit", tsc_speed > 0.0 && (tsc_speed < cur_speed || s.scene.show_debug_ui));
-    setProperty("turnSpeedLimit", QString::number(std::nearbyint(tsc_speed)));
-    setProperty("tscSubText", t_distance > 0 ? t_distance_str : QString(""));
-    setProperty("tscActive", tscState > cereal::LongitudinalPlan::SpeedLimitControlState::TEMP_INACTIVE);
+    setProperty("showTurnSpeedLimit", mtsc_speed > 0.0 && (mtsc_speed < cur_speed || s.scene.show_debug_ui));
+    setProperty("turnSpeedLimit", QString::number(std::nearbyint(mtsc_speed)));
+    setProperty("mtscSubText", t_distance > 0 ? t_distance_str : QString(""));
+    setProperty("mtscActive", mtscState > cereal::LongitudinalPlan::SpeedLimitControlState::TEMP_INACTIVE);
     setProperty("curveSign", lp.getTurnSign());
   }
 
@@ -303,7 +307,10 @@ void NvgWindow::drawHud(QPainter &p) {
   bg.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0));
   p.fillRect(0, 0, width(), header_h, bg);
 
-  QString speedLimitStr = (speedLimit > 1) ? QString::number(std::nearbyint(speedLimit)) : "–";
+	QRect rc(bdr_s * 2, bdr_s * 1.5, 184, 202);
+
+  QString speedLimitStr = (speedLimitComma > 1) ? QString::number(std::nearbyint(speedLimitComma)) : "–";
+  QString speedLimitStrSlc = showSpeedLimit ? QString::number(std::nearbyint(speedLimit)) : "–";
   QString speedStr = QString::number(std::nearbyint(speed));
   QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(setSpeed)) : "–";
 
@@ -311,18 +318,18 @@ void NvgWindow::drawHud(QPainter &p) {
   int default_rect_width = 172;
   int rect_width = default_rect_width;
   if (is_metric || has_eu_speed_limit) rect_width = 200;
-  if (has_us_speed_limit && speedLimitStr.size() >= 3) rect_width = 223;
+  if ((!roadName.isEmpty() && speedLimitStyle == 0 && speedLimitStrSlc.size() >= 3) || (has_us_speed_limit && speedLimitStr.size() >= 3)) rect_width = 223;
 
   int rect_height = 204;
-  if (has_us_speed_limit) rect_height = 402;
-  else if (has_eu_speed_limit) rect_height = 392;
+  if ((!roadName.isEmpty() && speedLimitStyle == 0) || has_us_speed_limit) rect_height = 432;
+  else if ((!roadName.isEmpty() && speedLimitStyle == 1) || has_eu_speed_limit) rect_height = 392;
 
   int top_radius = 32;
-  int bottom_radius = has_eu_speed_limit ? 100 : 32;
+  int bottom_radius = ((!roadName.isEmpty() && speedLimitStyle == 1) || has_eu_speed_limit) ? 100 : 32;
 
   QRect set_speed_rect(60 + default_rect_width / 2 - rect_width / 2, 45, rect_width, rect_height);
-  p.setPen(QPen(whiteColor(75), 6));
-  p.setBrush(blackColor(166));
+  p.setPen(QPen(QColor(255, 255, 255, 75), 6));
+  p.setBrush(QColor(0, 0, 0, 166));
   drawRoundedRect(p, set_speed_rect, top_radius, top_radius, bottom_radius, bottom_radius);
 
   // Draw MAX
@@ -335,6 +342,12 @@ void NvgWindow::drawHud(QPainter &p) {
       p.setPen(interpColor(
         setSpeed,
         {speedLimit + 5, speedLimit + 15, speedLimit + 25},
+        {QColor(0x80, 0xd8, 0xa6, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0xff, 0xbf, 0xbf, 0xff)}
+      ));
+    } else if (speedLimitComma > 0) {
+      p.setPen(interpColor(
+        setSpeed,
+        {speedLimitComma + 5, speedLimitComma + 15, speedLimitComma + 25},
         {QColor(0x80, 0xd8, 0xa6, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0xff, 0xbf, 0xbf, 0xff)}
       ));
     } else {
@@ -357,6 +370,12 @@ void NvgWindow::drawHud(QPainter &p) {
         {speedLimit + 5, speedLimit + 15, speedLimit + 25},
         {whiteColor(), QColor(0xff, 0x95, 0x00, 0xff), QColor(0xff, 0x00, 0x00, 0xff)}
       ));
+    } else if (speedLimitComma > 0 && status != STATUS_DISENGAGED && status != STATUS_OVERRIDE) {
+      p.setPen(interpColor(
+        setSpeed,
+        {speedLimitComma + 5, speedLimitComma + 15, speedLimitComma + 25},
+        {whiteColor(), QColor(0xff, 0x95, 0x00, 0xff), QColor(0xff, 0x00, 0x00, 0xff)}
+      ));
     } else {
       p.setPen(whiteColor());
     }
@@ -372,21 +391,21 @@ void NvgWindow::drawHud(QPainter &p) {
 
 
   // US/Canada (MUTCD style) sign
-  if (has_us_speed_limit) {
+  if ((!roadName.isEmpty() && speedLimitStyle == 0) || has_us_speed_limit) {
     const int border_width = 6;
-    const int sign_width = (speedLimitStr.size() >= 3) ? 199 : 148;
-    const int sign_height = 186;
+    const int sign_width = (speedLimitStrSlc.size() >= 3) ? 199 : 148;
+    const int sign_height = 216;
 
     // White outer square
     QRect sign_rect_outer(set_speed_rect.left() + 12, set_speed_rect.bottom() - 11 - sign_height, sign_width, sign_height);
     p.setPen(Qt::NoPen);
-    p.setBrush(whiteColor());
+    p.setBrush(QColor(255, 255, 255, 255));
     p.drawRoundedRect(sign_rect_outer, 24, 24);
 
     // Smaller white square with black border
     QRect sign_rect(sign_rect_outer.left() + 1.5 * border_width, sign_rect_outer.top() + 1.5 * border_width, sign_width - 3 * border_width, sign_height - 3 * border_width);
-    p.setPen(QPen(blackColor(), border_width));
-    p.setBrush(whiteColor());
+    p.setPen(QPen(QColor(0, 0, 0, 255), border_width));
+    p.setBrush(QColor(255, 255, 255, 255));
     p.drawRoundedRect(sign_rect, 16, 16);
 
     // "SPEED"
@@ -404,14 +423,21 @@ void NvgWindow::drawHud(QPainter &p) {
 
     // Speed limit value
     configFont(p, "Inter", 70, "Bold");
-    QRect speed_limit_rect = getTextRect(p, Qt::AlignCenter, speedLimitStr);
+    QRect speed_limit_rect = getTextRect(p, Qt::AlignCenter, speedLimitStrSlc);
     speed_limit_rect.moveCenter({sign_rect.center().x(), 0});
     speed_limit_rect.moveTop(sign_rect_outer.top() + 85);
-    p.drawText(speed_limit_rect, Qt::AlignCenter, speedLimitStr);
+    p.drawText(speed_limit_rect, Qt::AlignCenter, speedLimitStrSlc);
+
+    // Speed limit offset value
+    configFont(p, "Inter", 32, "Bold");
+    QRect speed_limit_offset_rect = getTextRect(p, Qt::AlignCenter, slcSubText);
+    speed_limit_offset_rect.moveCenter({sign_rect.center().x(), 0});
+    speed_limit_offset_rect.moveTop(sign_rect_outer.top() + 85 + 77);
+    p.drawText(speed_limit_offset_rect, Qt::AlignCenter, slcSubText);
   }
 
   // EU (Vienna style) sign
-  if (has_eu_speed_limit) {
+  if ((!roadName.isEmpty() && speedLimitStyle == 1) || has_eu_speed_limit) {
     int outer_radius = 176 / 2;
     int inner_radius_1 = outer_radius - 6; // White outer border
     int inner_radius_2 = inner_radius_1 - 20; // Red circle
@@ -419,20 +445,28 @@ void NvgWindow::drawHud(QPainter &p) {
     // Draw white circle with red border
     QPoint center(set_speed_rect.center().x() + 1, set_speed_rect.top() + 204 + outer_radius);
     p.setPen(Qt::NoPen);
-    p.setBrush(whiteColor());
+    p.setBrush(QColor(255, 255, 255, 255));
     p.drawEllipse(center, outer_radius, outer_radius);
     p.setBrush(QColor(255, 0, 0, 255));
     p.drawEllipse(center, inner_radius_1, inner_radius_1);
-    p.setBrush(whiteColor());
+    p.setBrush(QColor(255, 255, 255, 255));
     p.drawEllipse(center, inner_radius_2, inner_radius_2);
 
     // Speed limit value
     int font_size = (speedLimitStr.size() >= 3) ? 60 : 70;
     configFont(p, "Inter", font_size, "Bold");
-    QRect speed_limit_rect = getTextRect(p, Qt::AlignCenter, speedLimitStr);
+    QRect speed_limit_rect = getTextRect(p, Qt::AlignCenter, speedLimitStrSlc);
     speed_limit_rect.moveCenter(center);
-    p.setPen(blackColor());
-    p.drawText(speed_limit_rect, Qt::AlignCenter, speedLimitStr);
+    p.setPen(QColor(0, 0, 0, 255));
+    p.drawText(speed_limit_rect, Qt::AlignCenter, speedLimitStrSlc);
+
+    // Speed limit offset value
+    configFont(p, "Inter", slcSubTextSize, "Bold");
+    QRect speed_limit_offset_rect = getTextRect(p, Qt::AlignCenter, slcSubText);
+    speed_limit_offset_rect.moveCenter(center);
+    speed_limit_offset_rect.moveTop(center.y() + 27);
+    p.setPen(QColor(0, 0, 0, 255));
+    p.drawText(speed_limit_offset_rect, Qt::AlignCenter, slcSubText);
   }
 
   // current speed
@@ -451,15 +485,10 @@ void NvgWindow::drawHud(QPainter &p) {
                engage_img, bg_colors[status], 1.0);
     }
 
-    // Speed Limit Sign
-    if (showSpeedLimit) {
-      drawSpeedSign(p, speed_sgn_rc, speedLimit, slcSubText, slcSubTextSize, mapSourcedSpeedLimit, slcActive);
-    }
-
     // Turn Speed Sign
     if (showTurnSpeedLimit) {
       rc.moveTop(speed_sgn_rc.bottom() + bdr_s);
-      drawTrunSpeedSign(p, rc, turnSpeedLimit, tscSubText, curveSign, tscActive);
+      drawTurnSpeedSign(p, rc, turnSpeedLimit, mtscSubText, curveSign, mtscActive);
     }
   }
 
@@ -525,33 +554,7 @@ void NvgWindow::drawCircle(QPainter &p, int x, int y, int r, QBrush bg) {
   p.drawEllipse(x - r, y - r, 2 * r, 2 * r);
 }
 
-void NvgWindow::drawSpeedSign(QPainter &p, QRect rc, const QString &speed_limit, const QString &sub_text,
-                              int subtext_size, bool is_map_sourced, bool is_active) {
-  const QColor ring_color = is_active ? QColor(255, 0, 0, 255) : QColor(0, 0, 0, 50);
-  const QColor inner_color = QColor(255, 255, 255, is_active ? 255 : 85);
-  const QColor text_color = QColor(0, 0, 0, is_active ? 255 : 85);
-
-  const int x = rc.center().x();
-  const int y = rc.center().y();
-  const int r = rc.width() / 2.0f;
-
-  drawCircle(p, x, y, r, ring_color);
-  drawCircle(p, x, y, int(r * 0.8f), inner_color);
-
-  configFont(p, "Open Sans", 89, "Bold");
-  drawCenteredText(p, x, y, speed_limit, text_color);
-  configFont(p, "Open Sans", subtext_size, "Bold");
-  drawCenteredText(p, x, y + 55, sub_text, text_color);
-
-  if (is_map_sourced) {
-    p.setPen(Qt::NoPen);
-    p.setOpacity(is_active ? 1.0 : 0.3);
-    p.drawPixmap(x - subsign_img_size / 2, y - 55 - subsign_img_size / 2, map_img);
-    p.setOpacity(1.0);
-  }
-}
-
-void NvgWindow::drawTrunSpeedSign(QPainter &p, QRect rc, const QString &turn_speed, const QString &sub_text, 
+void NvgWindow::drawTurnSpeedSign(QPainter &p, QRect rc, const QString &turn_speed, const QString &sub_text,
                                   int curv_sign, bool is_active) {
   const QColor border_color = is_active ? QColor(255, 0, 0, 255) : QColor(0, 0, 0, 50);
   const QColor inner_color = QColor(255, 255, 255, is_active ? 255 : 85);
@@ -569,7 +572,7 @@ void NvgWindow::drawTrunSpeedSign(QPainter &p, QRect rc, const QString &turn_spe
   const float h1 = A * h2;
   const float L = 4.0 * R / sqrt(3.0);
 
-  // Draw the internal triangle, compensate for stroke width. Needed to improve rendering when in inactive 
+  // Draw the internal triangle, compensate for stroke width. Needed to improve rendering when in inactive
   // state due to stroke transparency being different from inner transparency.
   QPainterPath path;
   path.moveTo(x, y - R + cS);
@@ -579,7 +582,7 @@ void NvgWindow::drawTrunSpeedSign(QPainter &p, QRect rc, const QString &turn_spe
   p.setPen(Qt::NoPen);
   p.setBrush(inner_color);
   p.drawPath(path);
-  
+
   // Draw the stroke
   QPainterPath stroke_path;
   stroke_path.moveTo(x, y - R);
@@ -599,9 +602,9 @@ void NvgWindow::drawTrunSpeedSign(QPainter &p, QRect rc, const QString &turn_spe
   }
 
   // Draw the texts.
-  configFont(p, "Open Sans", 67, "Bold");
+  configFont(p, "Inter", 67, "Bold");
   drawCenteredText(p, x, y + 25, turn_speed, text_color);
-  configFont(p, "Open Sans", 22, "Bold");
+  configFont(p, "Inter", 22, "Bold");
   drawCenteredText(p, x, y + 65, sub_text, text_color);
 }
 

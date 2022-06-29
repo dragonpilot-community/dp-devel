@@ -30,7 +30,7 @@ class NvgWindow : public CameraViewWidget {
   Q_PROPERTY(float speed MEMBER speed);
   Q_PROPERTY(QString speedUnit MEMBER speedUnit);
   Q_PROPERTY(float setSpeed MEMBER setSpeed);
-  Q_PROPERTY(float speedLimit MEMBER speedLimit);
+  Q_PROPERTY(float speedLimitComma MEMBER speedLimitComma);
   Q_PROPERTY(bool is_cruise_set MEMBER is_cruise_set);
   Q_PROPERTY(bool has_eu_speed_limit MEMBER has_eu_speed_limit);
   Q_PROPERTY(bool has_us_speed_limit MEMBER has_us_speed_limit);
@@ -49,7 +49,7 @@ class NvgWindow : public CameraViewWidget {
   Q_PROPERTY(QString roadName MEMBER roadName);
 
   Q_PROPERTY(bool showSpeedLimit MEMBER showSpeedLimit);
-  Q_PROPERTY(QString speedLimit MEMBER speedLimit);
+  Q_PROPERTY(float speedLimit MEMBER speedLimit);
   Q_PROPERTY(QString slcSubText MEMBER slcSubText);
   Q_PROPERTY(float slcSubTextSize MEMBER slcSubTextSize);
   Q_PROPERTY(bool mapSourcedSpeedLimit MEMBER mapSourcedSpeedLimit);
@@ -57,8 +57,8 @@ class NvgWindow : public CameraViewWidget {
 
   Q_PROPERTY(bool showTurnSpeedLimit MEMBER showTurnSpeedLimit);
   Q_PROPERTY(QString turnSpeedLimit MEMBER turnSpeedLimit);
-  Q_PROPERTY(QString tscSubText MEMBER tscSubText);
-  Q_PROPERTY(bool tscActive MEMBER tscActive);
+  Q_PROPERTY(QString mtscSubText MEMBER mtscSubText);
+  Q_PROPERTY(bool mtscActive MEMBER mtscActive);
   Q_PROPERTY(int curveSign MEMBER curveSign);
 
 public:
@@ -72,10 +72,7 @@ private:
   void drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, const QColor &color, const QString &speed,
                                   int alpha);
   void drawCircle(QPainter &p, int x, int y, int r, QBrush bg);
-  void drawSpeedSign(QPainter &p, QRect rc, const QString &speed, const QString &sub_text, int subtext_size, 
-                     bool is_map_sourced, bool is_active);
-  void drawTrunSpeedSign(QPainter &p, QRect rc, const QString &speed, const QString &sub_text, int curv_sign, 
-                         bool is_active);
+  void drawTurnSpeedSign(QPainter &p, QRect rc, const QString &speed, const QString &sub_text, int curv_sign, bool is_active);
 
   QPixmap engage_img;
   QPixmap dm_img;
@@ -85,10 +82,10 @@ private:
   const int radius = 192;
   const int img_size = (radius / 2) * 1.5;
   const int subsign_img_size = 35;
-  QString speed;
+  float speed;
   QString speedUnit;
   float setSpeed;
-  float speedLimit;
+  float speedLimitComma;
   bool is_cruise_set = false;
   bool is_metric = false;
   bool engageable = false;
@@ -107,7 +104,7 @@ private:
   QString roadName;
 
   bool showSpeedLimit = false;
-  QString speedLimit;
+  float speedLimit;
   QString slcSubText;
   float slcSubTextSize = 0.0;
   bool mapSourcedSpeedLimit = false;
@@ -115,9 +112,10 @@ private:
 
   bool showTurnSpeedLimit = false;
   QString turnSpeedLimit;
-  QString tscSubText;
-  bool tscActive = false;
+  QString mtscSubText;
+  bool mtscActive = false;
   int curveSign = 0;
+  int speedLimitStyle;
 
 protected:
   void paintGL() override;
