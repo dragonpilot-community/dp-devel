@@ -1,7 +1,13 @@
 dragonpilot [latest]
 ========================
+* Synced up with openpilot master 2022.06.29 commits.
+* ADDED: MapD based off @move-fast. Thanks to @sunnyhaibin for mapbox as datapoint and ui refactor. (setting destination will use mapxbox speedlimit data which is more accurate. MapD priority: Mapbox(if nav active), OSM, RSA ) 
+
+dragonpilot 2022.06.25
+========================
 * Synced up with openpilot master 2022.06.25 commits.
 * Updated zh-TW translation.
+* ADDED: Dynamid follow @krkeegan version. (press the distance button)
 * ADDED: dp ui vol.
 * ADDED: dp ui brightness.
 * ADDED: dp ui top/side bar.
