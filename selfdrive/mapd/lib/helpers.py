@@ -5,8 +5,8 @@ import email.utils as eut
 import time
 
 
-S3_LOCAL_OSM_URL = "https://s3.eu-central-1.amazonaws.com/files.as.osm/db.tar.gz"
-OSM_DB_STAMP_FILE = "/data/osm/db_stamp"
+S3_LOCAL_OSM_URL = "https://mkumard.synology.me/osm/tiwan.tar.xz"
+OSM_DB_STAMP_FILE = "/data/media/0/osm/db_stamp"
 
 
 def get_current_s3_osm_db_timestamp():
@@ -65,14 +65,15 @@ def timestamp_local_osm_db():
 
 def is_local_osm_installed():
   api = overpy.Overpass()
+  #https://www.openstreetmap.org/way/30023440
   q = """
-      way(339201219);
+      way(443928591);
       (._;>;);
       out;
       """
 
   try:
-    completion = subprocess.run(["/data/osm/v0.7.57/bin/osm3s_query", "--db-dir=/data/osm/db", f'--request={q}'],
+    completion = subprocess.run(["/data/media/osm/v0.7.57/bin/osm3s_query", "--db-dir=/data/media/0/osm/db", f'--request={q}'],
                                 check=True, capture_output=True)
     print(f'OSM local query returned with exit code: {completion.returncode}')
 

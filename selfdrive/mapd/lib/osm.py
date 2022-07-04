@@ -36,7 +36,7 @@ class OSM():
     try:
       if _LOCAL_OSM:
         print("Query OSM from Local Server")
-        completion = subprocess.run(["/data/osm/v0.7.57/bin/osm3s_query", "--db-dir=/data/osm/db", f'--request={q}'], check=True, capture_output=True)
+        completion = subprocess.run(["/data/media/0/osm/v0.7.57/bin/osm3s_query", "--db-dir=/data/media/0/osm/db", f'--request={q}'], check=True, capture_output=True)
         ways = self.api.parse_xml(completion.stdout).ways
       else:
         print("Query OSM from remote Server")
