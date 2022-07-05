@@ -1,7 +1,11 @@
 dragonpilot [latest]
 ========================
+* Synced up with openpilot master 2022.07.05 commits.
+
+dragonpilot 2022.07.01
+========================
 * Synced up with openpilot master 2022.06.29 commits.
-* ADDED: MapD based off @move-fast. Thanks to @sunnyhaibin for mapbox as datapoint and ui refactor. (setting destination will use mapxbox speedlimit data which is more accurate. MapD priority: Mapbox(if nav active), OSM, RSA ) 
+* ADDED: MapD based off @move-fast. Thanks to @sunnyhaibin for mapbox as datapoint and ui refactor. (setting destination will use mapxbox speedlimit data which is more accurate. MapD priority: Mapbox(if nav active), OSM, RSA )
 
 dragonpilot 2022.06.25
 ========================
