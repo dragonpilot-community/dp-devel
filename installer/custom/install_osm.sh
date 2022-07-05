@@ -17,4 +17,4 @@ mkdir osm
 cd /data/media/0/osm
 cp -f /data/openpilot/selfdrive/mapd/assets/$GZ_FILE .
 tar -vxf $GZ_FILE
-rm -rf osm-3s_v0.7.57*
+mv osm-3s_v0.7.57 v0.7.57
