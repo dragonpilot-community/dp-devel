@@ -73,7 +73,7 @@ def is_local_osm_installed():
       """
 
   try:
-    completion = subprocess.run(["/data/media/osm/v0.7.57/bin/osm3s_query", "--db-dir=/data/media/0/osm/db", f'--request={q}'],
+    completion = subprocess.run(["/data/media/0/osm/v0.7.57/bin/osm3s_query", "--db-dir=/data/media/0/osm/db", f'--request={q}'],
                                 check=True, capture_output=True)
     print(f'OSM local query returned with exit code: {completion.returncode}')
 
