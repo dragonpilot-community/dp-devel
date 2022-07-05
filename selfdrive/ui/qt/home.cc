@@ -9,7 +9,6 @@
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/widgets/drive_stats.h"
 #include "selfdrive/ui/qt/widgets/prime.h"
-#include <QLocale>
 
 // HomeWindow: the container for the offroad and onroad UIs
 
@@ -101,7 +100,6 @@ void HomeWindow::mouseDoubleClickEvent(QMouseEvent* e) {
 // OffroadHome: the offroad home page
 
 OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
-  locale = QString::fromStdString(Params().get("dp_locale"));
   QVBoxLayout* main_layout = new QVBoxLayout(this);
   main_layout->setContentsMargins(40, 40, 40, 45);
 
@@ -113,7 +111,7 @@ OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
   date = new QLabel();
   header_layout->addWidget(date, 1, Qt::AlignHCenter | Qt::AlignLeft);
 
-  update_notif = new QPushButton(OffroadHome::tr("UPDATE"));
+  update_notif = new QPushButton(tr("UPDATE"));
   update_notif->setVisible(false);
   update_notif->setStyleSheet("background-color: #364DEF;");
   QObject::connect(update_notif, &QPushButton::clicked, [=]() { center_layout->setCurrentIndex(1); });
@@ -185,8 +183,7 @@ void OffroadHome::hideEvent(QHideEvent *event) {
 }
 
 void OffroadHome::refresh() {
-  QLocale ql = locale == "zh-TW"? QLocale("zh_Hant") : QLocale::English;
-  date->setText(ql.toString(QDateTime::currentDateTime(), QLocale::ShortFormat) + " " + ql.toString(QDateTime::currentDateTime(), "dddd"));
+  date->setText(QDateTime::currentDateTime().toString("dddd, MMMM d"));
 
   bool updateAvailable = update_widget->refresh();
   int alerts = alerts_widget->refresh();
@@ -205,6 +202,6 @@ void OffroadHome::refresh() {
   update_notif->setVisible(updateAvailable);
   alert_notif->setVisible(alerts);
   if (alerts) {
-    alert_notif->setText(QString::number(alerts) + (alerts > 1 ? " ALERTS" : " ALERT"));
+    alert_notif->setText(QString::number(alerts) + (alerts > 1 ? tr(" ALERTS") : tr(" ALERT")));
   }
 }
