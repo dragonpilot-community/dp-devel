@@ -34,7 +34,7 @@ def install_osm_db(spinner, steps=0, total_steps=INSTALL_DB_STEPS):
   # Fetch and get db
   fetch_osm_db = subprocess.Popen(['sh', './install_osm_db.sh'], cwd=os.path.join(BASEDIR, 'installer/custom/'),
                                   stdout=subprocess.PIPE)
-  # Read progress from install script and update spinner
+   #Read progress from install script and update spinner
   while True:
     output = fetch_osm_db.stdout.readline()
     if fetch_osm_db.poll() is not None:
@@ -67,4 +67,5 @@ if __name__ == "__main__" and TICI:
 
       if not is_local_osm_installed():
         print("Local OSM was not setup succesfully. Cleaning up.")
-        shutil.rmtree("/data/osm")
+        # /data only has 30gb on c3 and us-west is 50gb so move to /data/media/0/
+        shutil.rmtree("/data/media/0/osm")
