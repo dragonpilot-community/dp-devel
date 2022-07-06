@@ -10,7 +10,7 @@ rm -rf $XZ_MAP_FILE
 cd $OSM_DIR
 
 # Download map file
-wget https://mkumard.synology.me/osm/${XZ_MAP_FILE_NAME}
+wget -O ${XZ_MAP_FILE_NAME} "https://thecorgirosie-my.sharepoint.com/:u:/p/jason_wen/EfSUnV9PtLFCjDiTrvMZOPIBVeg1SYjMQOCq-FsoUrv5vg?e=yaDpL2&download=1"
 
 if [[ "$?" != 0 ]]; then
   echo "Error downloading map file"
@@ -20,5 +20,5 @@ else
   rm -rf $DB_DIR
   # Decompressing
   tar -vxf ${XZ_MAP_FILE_NAME}
-  mv florida db
+  mv florida  db
 fi
