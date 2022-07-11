@@ -97,6 +97,12 @@ class SpeedLimitResolver():
       _debug('SL: No map data for speed limit')
       return
 
+    if not self._sm.updated[sock]:
+      self._limit_solutions[SpeedLimitResolver.Source.map_data] = 0.
+      self._distance_solutions[SpeedLimitResolver.Source.map_data] = 0.
+      _debug('SL: not updated, mapd crashed?')
+      return
+
     # Load limits from map_data
     map_data = self._sm[sock]
     speed_limit = map_data.speedLimit if map_data.speedLimitValid else 0.
