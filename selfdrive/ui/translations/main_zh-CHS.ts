@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ko_KR">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AbstractAlert</name>
     <message>
         <location filename="../qt/widgets/offroad_alerts.cc" line="25"/>
         <source>Close</source>
-        <translation>닫기</translation>
+        <translation>关</translation>
     </message>
     <message>
         <location filename="../qt/widgets/offroad_alerts.cc" line="30"/>
         <source>Snooze Update</source>
-        <translation>업데이트 일시중지</translation>
+        <translation>暂停更新</translation>
     </message>
     <message>
         <location filename="../qt/widgets/offroad_alerts.cc" line="41"/>
         <source>Reboot and Update</source>
-        <translation>업데이트 및 재부팅</translation>
+        <translation>重启和更新</translation>
     </message>
 </context>
 <context>
@@ -24,53 +24,53 @@
     <message>
         <location filename="../qt/offroad/networking.cc" line="121"/>
         <source>Back</source>
-        <translation>뒤로</translation>
+        <translation>后退</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="129"/>
         <source>Enable Tethering</source>
-        <translation>테더링 사용</translation>
+        <translation>启用网络共享</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="134"/>
         <source>Tethering Password</source>
-        <translation>테더링 비밀번호</translation>
+        <translation>网络共享密码</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="134"/>
         <location filename="../qt/offroad/networking.cc" line="161"/>
         <source>EDIT</source>
-        <translation>편집</translation>
+        <translation>编辑</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="136"/>
         <source>Enter new tethering password</source>
-        <translation>새 테더링 비밀번호 입력</translation>
+        <translation>输入新的网络共享密码</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="144"/>
         <source>IP Address</source>
-        <translation>IP 주소</translation>
+        <translation>IP地址</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="153"/>
         <source>Enable Roaming</source>
-        <translation>로밍 사용</translation>
+        <translation>启用漫游</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="161"/>
         <source>APN Setting</source>
-        <translation>APN 설정</translation>
+        <translation>APN 设置</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="165"/>
         <source>Enter APN</source>
-        <translation>APN 입력</translation>
+        <translation>输入 APN</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="165"/>
         <source>leave blank for automatic configuration</source>
-        <translation>자동 구성을 위해 비워둠</translation>
+        <translation>为自动配置留空</translation>
     </message>
 </context>
 <context>
@@ -79,12 +79,12 @@
         <location filename="../qt/widgets/input.cc" line="221"/>
         <location filename="../qt/widgets/input.cc" line="226"/>
         <source>Ok</source>
-        <translation>확인</translation>
+        <translation>好的</translation>
     </message>
     <message>
         <location filename="../qt/widgets/input.cc" line="226"/>
         <source>Cancel</source>
-        <translation>취소</translation>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
@@ -92,17 +92,17 @@
     <message>
         <location filename="../qt/offroad/onboarding.cc" line="140"/>
         <source>You must accept the Terms and Conditions in order to use openpilot.</source>
-        <translation>당신은 반드시 약관에 동의해야만 openpilot을 사용할 수 있습니다.</translation>
+        <translation>您必须接受条款和条件才能使用 openpilot。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/onboarding.cc" line="149"/>
         <source>Back</source>
-        <translation>뒤로</translation>
+        <translation>后退</translation>
     </message>
     <message>
         <location filename="../qt/offroad/onboarding.cc" line="154"/>
         <source>Decline, uninstall %1</source>
-        <translation>거절，삭제 %1</translation>
+        <translation>拒绝，卸载 %1</translation>
     </message>
 </context>
 <context>
@@ -110,152 +110,152 @@
     <message>
         <location filename="../qt/offroad/settings.cc" line="99"/>
         <source>Dongle ID</source>
-        <translation>Dongle ID</translation>
+        <translation>加密狗 ID</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="99"/>
         <source>N/A</source>
-        <translation>N/A</translation>
+        <translation>不适用</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="100"/>
         <source>Serial</source>
-        <translation>Serial</translation>
+        <translation>串行</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="104"/>
         <source>Driver Camera</source>
-        <translation>운전자 카메라</translation>
+        <translation>司机摄像头</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="104"/>
         <source>PREVIEW</source>
-        <translation>미리보기</translation>
+        <translation>预习</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="105"/>
         <source>Preview the driver facing camera to help optimize device mounting position for best driver monitoring experience. (vehicle must be off)</source>
-        <translation>운전자 카메라를 미리 보면서 최적의 운전자 모니터링 경험을 위해 기기 장착 위치를 최적화할수 있습니다. (차량은 반드시 닫아야 합니다)</translation>
+        <translation>预览面向驾驶员的摄像头，以帮助优化设备安装位置以获得最佳驾驶员监控体验。 （车辆必须关闭）</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="109"/>
         <source>Reset Calibration</source>
-        <translation>캘리브레이션 재설정</translation>
+        <translation>重置校准</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="109"/>
         <source>RESET</source>
-        <translation>재설정</translation>
+        <translation>重置</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="112"/>
         <source>Are you sure you want to reset calibration?</source>
-        <translation>캘리브레이션을 재설정하시겠습니까？</translation>
+        <translation>您确定要重置校准吗？</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="119"/>
         <source>Review Training Guide</source>
-        <translation>트레이닝 가이드 다시보기</translation>
+        <translation>查看培训指南</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="119"/>
         <source>REVIEW</source>
-        <translation>다시보기</translation>
+        <translation>重新查看</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="119"/>
         <source>Review the rules, features, and limitations of openpilot</source>
-        <translation>openpilot의 규칙, 기능, 제한 다시보기</translation>
+        <translation>查看 openpilot 的规则、功能和限制</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="121"/>
         <source>Are you sure you want to review the training guide?</source>
-        <translation>트레이닝 가이드를 다시보시겠습니까？</translation>
+        <translation>您确定要查看培训指南吗？</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="129"/>
         <source>Regulatory</source>
-        <translation>규제</translation>
+        <translation>监管</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="129"/>
         <source>VIEW</source>
-        <translation>보기</translation>
+        <translation>查看</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="137"/>
         <source>Change Language</source>
-        <translation>언어변경</translation>
+        <translation>切换语言</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="137"/>
         <source>CHANGE</source>
-        <translation>변경</translation>
+        <translation>切换</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="141"/>
         <source>Select a language</source>
-        <translation>언어선택</translation>
+        <translation>选择语言</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="161"/>
         <source>Reboot</source>
-        <translation>재부팅</translation>
+        <translation>重启</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="166"/>
         <source>Power Off</source>
-        <translation>전원 종료</translation>
+        <translation>关机</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="186"/>
         <source>openpilot requires the device to be mounted within 4° left or right and within 5° up or 8° down. openpilot is continuously calibrating, resetting is rarely required.</source>
-        <translation>openpilot은 장치를 왼쪽 또는 오른쪽 4° 이내, 위쪽 5° 또는 아래쪽 8° 이내로 설치해야 합니다. openpilot은 지속적으로 보정되므로 리셋이 거의 필요하지 않습니다.</translation>
+        <translation>openpilot 要求设备安装在左或右 4° 以内，上 5° 或下 8° 以内。 openpilot 会持续校准，很少需要重置。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="197"/>
         <source> Your device is pointed %1° %2 and %3° %4.</source>
-        <translation> 사용자의 기기가 %1° %2 및 %3° %4를 가리키고 있습니다.</translation>
+        <translation> 您的设备指向 %1° %2 和 %3° %4。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="198"/>
         <source>down</source>
-        <translation>아래</translation>
+        <translation>下</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="198"/>
         <source>up</source>
-        <translation>위</translation>
+        <translation>向上</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="199"/>
         <source>left</source>
-        <translation>왼쪽</translation>
+        <translation>向左</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="199"/>
         <source>right</source>
-        <translation>오른쪽</translation>
+        <translation>向右</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="210"/>
         <source>Are you sure you want to reboot?</source>
-        <translation>재부팅 하시겠습니까？</translation>
+        <translation>您确定要重新启动吗？</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="217"/>
         <source>Disengage to Reboot</source>
-        <translation>재부팅 하려면 해제하세요</translation>
+        <translation>脱离以重新启动</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="223"/>
         <source>Are you sure you want to power off?</source>
-        <translation>전원을 종료하시겠습니까？</translation>
+        <translation>您确定要关闭电源吗？</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="230"/>
         <source>Disengage to Power Off</source>
-        <translation>전원을 종료하려면 해제하세요</translation>
+        <translation>脱离以关闭电源</translation>
     </message>
 </context>
 <context>
@@ -263,32 +263,32 @@
     <message>
         <location filename="../qt/widgets/drive_stats.cc" line="37"/>
         <source>Drives</source>
-        <translation>주행수</translation>
+        <translation>驱动器</translation>
     </message>
     <message>
         <location filename="../qt/widgets/drive_stats.cc" line="39"/>
         <source>Hours</source>
-        <translation>시간</translation>
+        <translation>小时</translation>
     </message>
     <message>
         <location filename="../qt/widgets/drive_stats.cc" line="44"/>
         <source>ALL TIME</source>
-        <translation>전체 시간</translation>
+        <translation>全部</translation>
     </message>
     <message>
         <location filename="../qt/widgets/drive_stats.cc" line="46"/>
         <source>PAST WEEK</source>
-        <translation>지난주</translation>
+        <translation>上周</translation>
     </message>
     <message>
         <location filename="../qt/widgets/drive_stats.h" line="15"/>
         <source>KM</source>
-        <translation>Km</translation>
+        <translation>千米</translation>
     </message>
     <message>
         <location filename="../qt/widgets/drive_stats.h" line="15"/>
         <source>Miles</source>
-        <translation>Miles</translation>
+        <translation>英里</translation>
     </message>
 </context>
 <context>
@@ -296,7 +296,7 @@
     <message>
         <location filename="../qt/offroad/driverview.cc" line="56"/>
         <source>camera starting</source>
-        <translation>카메라 시작중</translation>
+        <translation>相机启动中</translation>
     </message>
 </context>
 <context>
@@ -304,17 +304,17 @@
     <message>
         <location filename="../qt/widgets/input.cc" line="71"/>
         <source>Cancel</source>
-        <translation>취소</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../qt/widgets/input.cc" line="168"/>
         <source>Need at least </source>
-        <translation>최소 필요 </translation>
+        <translation>需要至少 </translation>
     </message>
     <message>
         <location filename="../qt/widgets/input.cc" line="168"/>
         <source> characters!</source>
-        <translation> 문자！</translation>
+        <translation> 字符！</translation>
     </message>
 </context>
 <context>
@@ -322,22 +322,22 @@
     <message>
         <location filename="../installer/installer.cc" line="56"/>
         <source>Installing...</source>
-        <translation>설치중...</translation>
+        <translation>安装...</translation>
     </message>
     <message>
         <location filename="../installer/installer.cc" line="144"/>
         <source>Receiving objects: </source>
-        <translation>수신중： </translation>
+        <translation>正在接收： </translation>
     </message>
     <message>
         <location filename="../installer/installer.cc" line="145"/>
         <source>Resolving deltas: </source>
-        <translation>델타병합： </translation>
+        <translation>解决增量： </translation>
     </message>
     <message>
         <location filename="../installer/installer.cc" line="146"/>
         <source>Updating files: </source>
-        <translation>파일갱신： </translation>
+        <translation>更新文件： </translation>
     </message>
 </context>
 <context>
@@ -345,17 +345,17 @@
     <message>
         <location filename="../qt/maps/map.cc" line="618"/>
         <source>eta</source>
-        <translation>에타</translation>
+        <translation>埃塔</translation>
     </message>
     <message>
         <location filename="../qt/maps/map.cc" line="628"/>
         <source>min</source>
-        <translation>분</translation>
+        <translation>分钟</translation>
     </message>
     <message>
         <location filename="../qt/maps/map.cc" line="632"/>
         <source>hr</source>
-        <translation>시간</translation>
+        <translation>小时</translation>
     </message>
     <message>
         <location filename="../qt/maps/map.cc" line="652"/>
@@ -396,7 +396,7 @@
     <message>
         <location filename="../qt/maps/map_settings.cc" line="62"/>
         <source>Current Destination</source>
-        <translation>현재 목적지</translation>
+        <translation>当前目的地</translation>
     </message>
     <message>
         <location filename="../qt/maps/map_settings.cc" line="66"/>
@@ -406,38 +406,38 @@
     <message>
         <location filename="../qt/maps/map_settings.cc" line="81"/>
         <source>Recent Destinations</source>
-        <translation>최근 목적지</translation>
+        <translation>近期目的地</translation>
     </message>
     <message>
         <location filename="../qt/maps/map_settings.cc" line="95"/>
         <source>Try the Navigation Beta</source>
-        <translation>네비게이션(베타)을 사용해보세요</translation>
+        <translation>试用导航测试版</translation>
     </message>
     <message>
         <location filename="../qt/maps/map_settings.cc" line="107"/>
         <source>Get turn-by-turn directions displayed and more with a comma 
 prime subscription. Sign up now: https://connect.comma.ai</source>
-        <translation>자세한 경로안내를 확인하시려면 comma prime을 구독하세요.
-즉시등록：https://connect.comma.ai</translation>
+        <translation>使用逗号获取显示的详细路线和更多信息
+主要订阅。 立即注册：https://connect.comma.ai</translation>
     </message>
     <message>
         <location filename="../qt/maps/map_settings.cc" line="164"/>
         <source>No home
 location set</source>
-        <translation>집
-설정되지않음</translation>
+        <translation>没有家
+位置集</translation>
     </message>
     <message>
         <location filename="../qt/maps/map_settings.cc" line="169"/>
         <source>No work
 location set</source>
-        <translation>회사
-설정되지않음</translation>
+        <translation>没有工作
+位置集</translation>
     </message>
     <message>
         <location filename="../qt/maps/map_settings.cc" line="282"/>
         <source>no recent destinations</source>
-        <translation>최근 경로 없음</translation>
+        <translation>没有最近的目的地</translation>
     </message>
 </context>
 <context>
@@ -445,12 +445,12 @@ location set</source>
     <message>
         <location filename="../qt/maps/map.cc" line="178"/>
         <source>Map Loading</source>
-        <translation>지도 로딩</translation>
+        <translation>地图加载</translation>
     </message>
     <message>
         <location filename="../qt/maps/map.cc" line="195"/>
         <source>Waiting for GPS</source>
-        <translation>GPS를 기다리는 중</translation>
+        <translation>等待 GPS</translation>
     </message>
 </context>
 <context>
@@ -458,12 +458,12 @@ location set</source>
     <message>
         <location filename="../qt/widgets/input.cc" line="300"/>
         <source>Select</source>
-        <translation>선택</translation>
+        <translation>选择</translation>
     </message>
     <message>
         <location filename="../qt/widgets/input.cc" line="333"/>
         <source>Cancel</source>
-        <translation>취소</translation>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
@@ -471,23 +471,23 @@ location set</source>
     <message>
         <location filename="../qt/offroad/networking.cc" line="30"/>
         <source>Advanced</source>
-        <translation>고급</translation>
+        <translation>先进的</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="87"/>
         <source>Enter password</source>
-        <translation>비밀번호를 입력하세요</translation>
+        <translation>先进的</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="87"/>
         <location filename="../qt/offroad/networking.cc" line="97"/>
         <source>for &quot;</source>
-        <translation>하기위한 &quot;</translation>
+        <translation>为了 &quot;</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="97"/>
         <source>Wrong password</source>
-        <translation>비밀번호가 틀렸습니다</translation>
+        <translation>Wrong password</translation>
     </message>
 </context>
 <context>
@@ -495,30 +495,30 @@ location set</source>
     <message>
         <location filename="../qt/onroad.cc" line="202"/>
         <source>km/h</source>
-        <translation>km/h</translation>
+        <translation>公里/小时</translation>
     </message>
     <message>
         <location filename="../qt/onroad.cc" line="202"/>
         <source>mph</source>
-        <translation>mph</translation>
+        <translation>英里/小时</translation>
     </message>
     <message>
         <location filename="../qt/onroad.cc" line="269"/>
         <location filename="../qt/onroad.cc" line="272"/>
         <source>MAX</source>
-        <translation>MAX</translation>
+        <translation>最大限度</translation>
     </message>
     <message>
         <location filename="../qt/onroad.cc" line="316"/>
         <location filename="../qt/onroad.cc" line="319"/>
         <source>SPEED</source>
-        <translation>SPEED</translation>
+        <translation>速度</translation>
     </message>
     <message>
         <location filename="../qt/onroad.cc" line="322"/>
         <location filename="../qt/onroad.cc" line="325"/>
         <source>LIMIT</source>
-        <translation>LIMIT</translation>
+        <translation>限制</translation>
     </message>
 </context>
 <context>
@@ -526,17 +526,17 @@ location set</source>
     <message>
         <location filename="../qt/home.cc" line="114"/>
         <source>UPDATE</source>
-        <translation>업데이트</translation>
+        <translation>更新</translation>
     </message>
     <message>
         <location filename="../qt/home.cc" line="205"/>
         <source> ALERTS</source>
-        <translation> 알림</translation>
+        <translation> 警报</translation>
     </message>
     <message>
         <location filename="../qt/home.cc" line="205"/>
         <source> ALERT</source>
-        <translation> 알림</translation>
+        <translation> 警报</translation>
     </message>
 </context>
 <context>
@@ -544,7 +544,7 @@ location set</source>
     <message>
         <location filename="../qt/widgets/prime.cc" line="86"/>
         <source>Pair your device to your comma account</source>
-        <translation>장치를 콤마 계정과 페어링합니다</translation>
+        <translation>将您的设备与您的逗号账户配对</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="91"/>
@@ -557,9 +557,9 @@ location set</source>
     </source>
         <translation>
       &lt;ol type=&apos;1&apos; style=&apos;margin-left: 15px;&apos;&gt;
-        &lt;li style=&apos;margin-bottom: 50px;&apos;&gt;https://connect.comma.ai에 접속하세요&lt;/li&gt;
-        &lt;li style=&apos;margin-bottom: 50px;&apos;&gt;&quot;새 장치 추가&quot;를 클릭하고 오른쪽 QR 코드를 검색합니다.&lt;/li&gt;
-        &lt;li style=&apos;margin-bottom: 50px;&apos;&gt;connect.comma.ai을 앱처럼 사용하려면 홈 화면에 바로가기를 만드십시오.&lt;/li&gt;
+        &lt;li style=&apos;margin-bottom: 50px;&apos;&gt;在手机上访问 https://connect.comma.ai&lt;/li&gt;
+        &lt;li style=&apos;margin-bottom: 50px;&apos;&gt;点击“添加新设备”，扫描右侧二维码&lt;/li&gt;
+        &lt;li style=&apos;margin-bottom: 50px;&apos;&gt;将 connect.comma.ai 收藏到您的主屏幕，以便像应用程序一样使用它&lt;/li&gt;
       &lt;/ol&gt;
     </translation>
     </message>
@@ -569,32 +569,32 @@ location set</source>
     <message>
         <location filename="../qt/widgets/prime.cc" line="184"/>
         <source>Upgrade Now</source>
-        <translation>지금 업그레이드</translation>
+        <translation>现在升级</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="189"/>
         <source>Become a comma prime member at connect.comma.ai</source>
-        <translation>connect.comma.ai에서 comma prime에 가입합니다</translation>
+        <translation>成为 connect.comma.ai 的逗号主要会员</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="196"/>
         <source>PRIME FEATURES:</source>
-        <translation>PRIME 기능：</translation>
+        <translation>主要特点：</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="201"/>
         <source>Remote access</source>
-        <translation>원격 접속</translation>
+        <translation>远程访问</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="201"/>
         <source>1 year of storage</source>
-        <translation>1년간 저장</translation>
+        <translation>1年存储</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="201"/>
         <source>Developer perks</source>
-        <translation>개발자 혜택</translation>
+        <translation>开发者福利</translation>
     </message>
 </context>
 <context>
@@ -602,12 +602,12 @@ location set</source>
     <message>
         <location filename="../qt/widgets/prime.cc" line="123"/>
         <source>✓ SUBSCRIBED</source>
-        <translation>✓ 구독함</translation>
+        <translation>✓ 订阅</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="129"/>
         <source>comma prime</source>
-        <translation>comma prime</translation>
+        <translation>逗号素数</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="135"/>
@@ -617,7 +617,7 @@ location set</source>
     <message>
         <location filename="../qt/widgets/prime.cc" line="148"/>
         <source>COMMA POINTS</source>
-        <translation>COMMA POINTS</translation>
+        <translation>逗号分</translation>
     </message>
 </context>
 <context>
@@ -625,17 +625,17 @@ location set</source>
     <message>
         <location filename="../qt/text.cc" line="36"/>
         <source>Reboot</source>
-        <translation>재부팅</translation>
+        <translation>重启</translation>
     </message>
     <message>
         <location filename="../qt/text.cc" line="41"/>
         <source>Exit</source>
-        <translation>종료</translation>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="../qt/util.cc" line="21"/>
         <source>dashcam</source>
-        <translation>dashcam</translation>
+        <translation>行车记录器</translation>
     </message>
     <message>
         <location filename="../qt/util.cc" line="21"/>
@@ -645,17 +645,17 @@ location set</source>
     <message>
         <location filename="../qt/util.cc" line="82"/>
         <source>%1 minute%2 ago</source>
-        <translation>%1 분%2 전</translation>
+        <translation>%1 分钟%2 前</translation>
     </message>
     <message>
         <location filename="../qt/util.cc" line="85"/>
         <source>%1 hour%2 ago</source>
-        <translation>%1 시간%2 전</translation>
+        <translation>%1 小时%2 前</translation>
     </message>
     <message>
         <location filename="../qt/util.cc" line="88"/>
         <source>%1 day%2 ago</source>
-        <translation>%1 일%2 전</translation>
+        <translation>%1 天%2 前</translation>
     </message>
 </context>
 <context>
@@ -663,47 +663,47 @@ location set</source>
     <message>
         <location filename="../qt/setup/reset.cc" line="29"/>
         <source>Reset failed. Reboot to try again.</source>
-        <translation>초기화 실패. 재부팅후 다시 시도하세요.</translation>
+        <translation>重置失败。 重新启动以重试。</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="34"/>
         <source>Are you sure you want to reset your device?</source>
-        <translation>장치를 초기화 하시겠습니까?</translation>
+        <translation>您确定要重置您的设备吗？</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="38"/>
         <source>Resetting device...</source>
-        <translation>장치 초기화중...</translation>
+        <translation>正在重置设备...</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="53"/>
         <source>System Reset</source>
-        <translation>장치 초기화</translation>
+        <translation>系统重置</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="59"/>
         <source>System reset triggered. Press confirm to erase all content and settings. Press cancel to resume boot.</source>
-        <translation>장치를 초기화 합니다. 확인버튼을 누르면 모든 내용과 설정이 초기화됩니다. 취소를 누르면 다시 부팅합니다.</translation>
+        <translation>触发系统重置。 按确认删除所有内容和设置。 按取消恢复启动。</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="68"/>
         <source>Cancel</source>
-        <translation>취소</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="72"/>
         <source>Reboot</source>
-        <translation>재부팅</translation>
+        <translation>重启</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="80"/>
         <source>Confirm</source>
-        <translation>확인</translation>
+        <translation>确认</translation>
     </message>
     <message>
         <location filename="../qt/setup/reset.cc" line="88"/>
         <source>Unable to mount data partition. Press confirm to reset your device.</source>
-        <translation>데이터 파티션을 마운트할 수 없습니다. 확인 버튼을 눌러 장치를 리셋합니다.</translation>
+        <translation>无法挂载数据分区。 按确认重置您的设备。</translation>
     </message>
 </context>
 <context>
@@ -711,7 +711,7 @@ location set</source>
     <message>
         <location filename="../qt/widgets/input.cc" line="258"/>
         <source>Ok</source>
-        <translation>확인</translation>
+        <translation>好的</translation>
     </message>
 </context>
 <context>
@@ -724,28 +724,28 @@ location set</source>
     <message>
         <location filename="../qt/offroad/settings.cc" line="341"/>
         <source>Device</source>
-        <translation>장치</translation>
+        <translation>设备</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="342"/>
         <location filename="../qt/offroad/settings.cc" line="381"/>
         <source>Network</source>
-        <translation>네트워크</translation>
+        <translation>网络</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="343"/>
         <source>Toggles</source>
-        <translation>토글</translation>
+        <translation>切换</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="344"/>
         <source>Software</source>
-        <translation>소프트웨어</translation>
+        <translation>软件</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="349"/>
         <source>Navigation</source>
-        <translation>네비게이션</translation>
+        <translation>导航</translation>
     </message>
 </context>
 <context>
@@ -753,105 +753,105 @@ location set</source>
     <message>
         <location filename="../qt/setup/setup.cc" line="73"/>
         <source>WARNING: Low Voltage</source>
-        <translation>경고: 전압이 낮습니다</translation>
+        <translation>警告：低电压</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="79"/>
         <source>Power your device in a car with a harness or proceed at your own risk.</source>
-        <translation>하네스 보드에 차량의 전원을 연결하세요.</translation>
+        <translation>使用安全带在汽车中为您的设备供电或自行承担风险。</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="92"/>
         <source>Power off</source>
-        <translation>전원 종료</translation>
+        <translation>关机</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="99"/>
         <location filename="../qt/setup/setup.cc" line="182"/>
         <location filename="../qt/setup/setup.cc" line="268"/>
         <source>Continue</source>
-        <translation>계속</translation>
+        <translation>继续</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="117"/>
         <source>Getting Started</source>
-        <translation>시작</translation>
+        <translation>入门</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="122"/>
         <source>Before we get on the road, let’s finish installation and cover some details.</source>
-        <translation>출발하기 전에 설치를 완료하고 몇 가지 세부 사항을 살펴보겠습니다.</translation>
+        <translation>在我们上路之前，让我们完成安装并介绍一些细节。</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="147"/>
         <source>Connect to Wi-Fi</source>
-        <translation>wifi 연결</translation>
+        <translation>连接到无线网络</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="165"/>
         <location filename="../qt/setup/setup.cc" line="263"/>
         <source>Back</source>
-        <translation>뒤로</translation>
+        <translation>后退</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="182"/>
         <source>Continue without Wi-Fi</source>
-        <translation>wifi 없이 계속</translation>
+        <translation>在没有 Wi-Fi 的情况下继续</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="184"/>
         <source>Waiting for internet</source>
-        <translation>네트워크 접속을 기다립니다</translation>
+        <translation>等待网络连接</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="238"/>
         <source>Choose Software to Install</source>
-        <translation>설치할 소프트웨어를 선택하세요</translation>
+        <translation>选择要安装的软件</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="248"/>
         <source>Dashcam</source>
-        <translation>Dashcam</translation>
+        <translation>行车记录器</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="253"/>
         <source>Custom Software</source>
-        <translation>Custom Software</translation>
+        <translation>定制的软件</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="281"/>
         <source>Enter URL</source>
-        <translation>URL 입력</translation>
+        <translation>输入网址</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="281"/>
         <source>for Custom Software</source>
-        <translation>for Custom Software</translation>
+        <translation>定制软件</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="303"/>
         <source>Downloading...</source>
-        <translation>다운로드중...</translation>
+        <translation>正在下载...</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="315"/>
         <source>Download Failed</source>
-        <translation>다운로드 실패</translation>
+        <translation>下载失败</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="321"/>
         <source>Ensure the entered URL is valid, and the device’s internet connection is good.</source>
-        <translation>입력된 URL이 유효하고 장치의 인터넷 연결이 잘 되어 있는지 확인합니다.</translation>
+        <translation>确保输入的 URL 有效，并且设备的互联网连接良好。</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="334"/>
         <source>Reboot device</source>
-        <translation>재부팅</translation>
+        <translation>重启设备</translation>
     </message>
     <message>
         <location filename="../qt/setup/setup.cc" line="341"/>
         <source>Start over</source>
-        <translation>다시 시작</translation>
+        <translation>重来</translation>
     </message>
 </context>
 <context>
@@ -859,17 +859,17 @@ location set</source>
     <message>
         <location filename="../qt/widgets/prime.cc" line="230"/>
         <source>Finish Setup</source>
-        <translation>설치완료</translation>
+        <translation>完成设置</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="236"/>
         <source>Pair your device with comma connect (connect.comma.ai) and claim your comma prime offer.</source>
-        <translation>장치를 (connect.comma.ai)에서 페어링하고 comma prime 오퍼를 청구합니다.</translation>
+        <translation>将您的设备与 comma connect (connect.comma.ai) 配对并领取您的 comma prime 优惠。</translation>
     </message>
     <message>
         <location filename="../qt/widgets/prime.cc" line="243"/>
         <source>Pair device</source>
-        <translation>페어링</translation>
+        <translation>配对设备</translation>
     </message>
 </context>
 <context>
@@ -878,60 +878,60 @@ location set</source>
         <location filename="../qt/sidebar.cc" line="67"/>
         <location filename="../qt/sidebar.cc" line="69"/>
         <source>CONNECT</source>
-        <translation>연결</translation>
+        <translation>连接</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="67"/>
         <source>OFFLINE</source>
-        <translation>오프라인</translation>
+        <translation>离线</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="69"/>
         <location filename="../qt/sidebar.cc" line="82"/>
         <source>ONLINE</source>
-        <translation>온라인</translation>
+        <translation>在线的</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="69"/>
         <source>ERROR</source>
-        <translation>오류</translation>
+        <translation>错误</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="73"/>
         <location filename="../qt/sidebar.cc" line="76"/>
         <location filename="../qt/sidebar.cc" line="78"/>
         <source>TEMP</source>
-        <translation>온도</translation>
+        <translation>温度</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="73"/>
         <source>HIGH</source>
-        <translation>높음</translation>
+        <translation>高的</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="76"/>
         <source>GOOD</source>
-        <translation>경고</translation>
+        <translation>好的</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="78"/>
         <source>OK</source>
-        <translation>좋음</translation>
+        <translation>好的</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="82"/>
         <source>VEHICLE</source>
-        <translation>차량</translation>
+        <translation>车辆</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="84"/>
         <source>NO</source>
-        <translation>NO</translation>
+        <translation>未连接</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="84"/>
         <source>PANDA</source>
-        <translation>PANDA</translation>
+        <translation>熊猫</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.cc" line="86"/>
@@ -941,7 +941,7 @@ location set</source>
     <message>
         <location filename="../qt/sidebar.cc" line="86"/>
         <source>SEARCH</source>
-        <translation>검색중</translation>
+        <translation>搜索</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.h" line="37"/>
@@ -956,7 +956,7 @@ location set</source>
     <message>
         <location filename="../qt/sidebar.h" line="39"/>
         <source>ETH</source>
-        <translation>이더넷</translation>
+        <translation>以太網</translation>
     </message>
     <message>
         <location filename="../qt/sidebar.h" line="40"/>
@@ -984,68 +984,68 @@ location set</source>
     <message>
         <location filename="../qt/offroad/settings.cc" line="235"/>
         <source>Git Branch</source>
-        <translation>Git 브렌치</translation>
+        <translation>Git 分支</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="236"/>
         <source>Git Commit</source>
-        <translation>Git 커밋</translation>
+        <translation>Git 提交</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="237"/>
         <source>OS Version</source>
-        <translation>OS 버전</translation>
+        <translation>操作系统版本</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="238"/>
         <source>Version</source>
-        <translation>버전</translation>
+        <translation>版本</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="239"/>
         <source>Last Update Check</source>
-        <translation>최신 업데이트 검사</translation>
+        <translation>最后更新检查</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="239"/>
         <source>The last time openpilot successfully checked for an update. The updater only runs while the car is off.</source>
-        <translation>이전에 openpilot에서 업데이트를 성공적으로 확인한 시간입니다. 업데이트 프로그램은 차량 연결이 해제되었을때만 작동합니다.</translation>
+        <translation>上次 openpilot 成功检查更新的时间。 更新程序仅在汽车关闭时运行。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="240"/>
         <source>Check for Update</source>
-        <translation>업데이트 확인</translation>
+        <translation>检查更新</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="245"/>
         <source>CHECKING</source>
-        <translation>검사중</translation>
+        <translation>正在检查</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="252"/>
         <source>Uninstall </source>
-        <translation>삭제 </translation>
+        <translation>卸载 </translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="252"/>
         <source>UNINSTALL</source>
-        <translation>삭제</translation>
+        <translation>卸载</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="254"/>
         <source>Are you sure you want to uninstall?</source>
-        <translation>삭제하시겠습니까？</translation>
+        <translation>您确定要卸载吗？</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="268"/>
         <source>failed to fetch update</source>
-        <translation>업데이트를 가져올수없습니다</translation>
+        <translation>未能获取更新</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="269"/>
         <location filename="../qt/offroad/settings.cc" line="290"/>
         <source>CHECK</source>
-        <translation>확인</translation>
+        <translation>查看</translation>
     </message>
 </context>
 <context>
@@ -1053,48 +1053,48 @@ location set</source>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="7"/>
         <source>SSH Keys</source>
-        <translation>SSH 키</translation>
+        <translation>SSH 密钥</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="7"/>
         <source>Warning: This grants SSH access to all public keys in your GitHub settings. Never enter a GitHub username other than your own. A comma employee will NEVER ask you to add their GitHub username.</source>
-        <translation>경고：이렇게 하면 GitHub 설정의 모든 공용 키에 대한 SSH 액세스 권한이 부여됩니다. 자신의 사용자 이름이 아닌 GitHub 사용자 이름을 입력하지 마십시오. comma 직원은 GitHub 사용자 이름을 추가하도록 요청하지 않습니다.</translation>
+        <translation>警告：这将授予对 GitHub 设置中所有公钥的 SSH 访问权限。 切勿输入您自己以外的 GitHub 用户名。 逗号员工永远不会要求您添加他们的 GitHub 用户名。</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="13"/>
         <location filename="../qt/widgets/ssh_keys.cc" line="37"/>
         <source>ADD</source>
-        <translation>추가</translation>
+        <translation>添加</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="14"/>
         <source>Enter your GitHub username</source>
-        <translation>GitHub 사용자 ID</translation>
+        <translation>输入你的 GitHub 用户名</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="16"/>
         <source>LOADING</source>
-        <translation>로딩</translation>
+        <translation>正在加载</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="34"/>
         <source>REMOVE</source>
-        <translation>제거</translation>
+        <translation>消除</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="50"/>
         <source>Username &apos;%1&apos; has no keys on GitHub</source>
-        <translation>사용자 이름 &apos;%1&apos; GitHub에 키가 없습니다</translation>
+        <translation>用户名“%1”在 GitHub 上没有密钥</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="54"/>
         <source>Request timed out</source>
-        <translation>요청 시간 초과</translation>
+        <translation>请求超时</translation>
     </message>
     <message>
         <location filename="../qt/widgets/ssh_keys.cc" line="56"/>
         <source>Username &apos;%1&apos; doesn&apos;t exist on GitHub</source>
-        <translation>사용자 이름 &apos;%1&apos; GitHub에 없습니다</translation>
+        <translation>GitHub 上不存在用户名“%1”</translation>
     </message>
 </context>
 <context>
@@ -1102,7 +1102,7 @@ location set</source>
     <message>
         <location filename="../qt/widgets/ssh_keys.h" line="13"/>
         <source>Enable SSH</source>
-        <translation>SSH 사용</translation>
+        <translation>启用 SSH</translation>
     </message>
 </context>
 <context>
@@ -1110,22 +1110,22 @@ location set</source>
     <message>
         <location filename="../qt/offroad/onboarding.cc" line="79"/>
         <source>Terms &amp; Conditions</source>
-        <translation>약관</translation>
+        <translation>条款和条件</translation>
     </message>
     <message>
         <location filename="../qt/offroad/onboarding.cc" line="107"/>
         <source>Decline</source>
-        <translation>거절</translation>
+        <translation>拒绝</translation>
     </message>
     <message>
         <location filename="../qt/offroad/onboarding.cc" line="111"/>
         <source>Scroll to accept</source>
-        <translation>스크롤 허용</translation>
+        <translation>滑动接受</translation>
     </message>
     <message>
         <location filename="../qt/offroad/onboarding.cc" line="126"/>
         <source>Agree</source>
-        <translation>동의</translation>
+        <translation>同意</translation>
     </message>
 </context>
 <context>
@@ -1133,82 +1133,82 @@ location set</source>
     <message>
         <location filename="../qt/offroad/settings.cc" line="33"/>
         <source>Enable openpilot</source>
-        <translation>openpilot 사용</translation>
+        <translation>启用 openpilot</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="34"/>
         <source>Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this setting takes effect when the car is powered off.</source>
-        <translation>어댑티브 크루즈 컨트롤 및 차선 유지 운전자 보조를 위해 openpilot 시스템을 사용하십시오. 이 기능을 사용하려면 항상 주의를 기울여야 합니다. 이 설정을 변경하면 차량 전원이 꺼질 때 적용됩니다.</translation>
+        <translation>使用 openpilot 系统进行自适应巡航控制和车道保持驾驶员辅助。 任何时候都需要您注意使用此功能。 更改此设置在汽车断电时生效。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="39"/>
         <source>Enable Lane Departure Warnings</source>
-        <translation>차선 이탈 경고 사용</translation>
+        <translation>启用车道偏离警告</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="40"/>
         <source>Receive alerts to steer back into the lane when your vehicle drifts over a detected lane line without a turn signal activated while driving over 31 mph (50 km/h).</source>
-        <translation>차량이 50km/h(31mph) 이상의 속도로 주행하는 동안 방향 지시등이 활성화되지 않은 상태에서 감지된 차선 위를 주행할 경우 차선이탈 경고를 사용합니다.</translation>
+        <translation>当您的车辆在以超过 31 英里/小时（50 公里/小时）的速度行驶时在检测到的车道线上漂移而没有激活转向信号时，接收提醒以返回车道。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="45"/>
         <source>Enable Right-Hand Drive</source>
-        <translation>우측핸들 사용</translation>
+        <translation>启用右舵模式</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="46"/>
         <source>Allow openpilot to obey left-hand traffic conventions and perform driver monitoring on right driver seat.</source>
-        <translation>openpilot이 좌측 교통 규칙을 준수하고 우측 운전석에서 운전자 모니터링을 수행합니다.</translation>
+        <translation>允许 openpilot 遵守左侧交通惯例并在右侧驾驶座上执行驾驶员监控。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="51"/>
         <source>Use Metric System</source>
-        <translation>미터법 사용</translation>
+        <translation>使用公制</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="52"/>
         <source>Display speed in km/h instead of mph.</source>
-        <translation>mph가 아닌 km/h로 속도 표시.</translation>
+        <translation>以公里/小时而不是英里/小时显示速度。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="57"/>
         <source>Record and Upload Driver Camera</source>
-        <translation>운전자 카메라 기록 및 업로드</translation>
+        <translation>记录和上传司机摄像头</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="58"/>
         <source>Upload data from the driver facing camera and help improve the driver monitoring algorithm.</source>
-        <translation>운전자 카메라에서 데이터를 업로드하고 운전자 모니터링 알고리즘을 개선합니다.</translation>
+        <translation>从面向驾驶员的摄像头上传数据，帮助改进驾驶员监控算法。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="63"/>
         <source>Disengage On Accelerator Pedal</source>
-        <translation>가속페달 조작시 해제</translation>
+        <translation>踩油门解除</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="64"/>
         <source>When enabled, pressing the accelerator pedal will disengage openpilot.</source>
-        <translation>활성화된 경우 가속 페달을 누르면 openpilot이 해제됩니다.</translation>
+        <translation>启用后，踩下油门踏板将解除 openpilot。</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="70"/>
         <source>Show ETA in 24h format</source>
-        <translation>24시간 형식으로 ETA 표시</translation>
+        <translation>以 24 小时格式显示 ETA</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="71"/>
         <source>Use 24h format instead of am/pm</source>
-        <translation>오전/오후 대신 24시간 형식 사용</translation>
+        <translation>使用 24 小时制代替上午/下午</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="83"/>
         <source>openpilot Longitudinal Control</source>
-        <translation>openpilot Longitudinal Control</translation>
+        <translation>openpilot 纵向控制</translation>
     </message>
     <message>
         <location filename="../qt/offroad/settings.cc" line="84"/>
         <source>openpilot will disable the car&apos;s radar and will take over control of gas and brakes. Warning: this disables AEB!</source>
-        <translation>openpilot은 차량&apos;의 레이더를 무력화시키고 가속페달과 브레이크의 제어를 인계받을 것이다. 경고: AEB를 비활성화합니다!</translation>
+        <translation>openpilot 将禁用汽车的雷达并接管油门和刹车的控制。 警告：这会禁用 AEB！</translation>
     </message>
 </context>
 <context>
@@ -1216,42 +1216,42 @@ location set</source>
     <message>
         <location filename="../qt/setup/updater.cc" line="23"/>
         <source>Update Required</source>
-        <translation>업데이트 필요</translation>
+        <translation>需要更新</translation>
     </message>
     <message>
         <location filename="../qt/setup/updater.cc" line="29"/>
         <source>An operating system update is required. Connect your device to Wi-Fi for the fastest update experience. The download size is approximately 1GB.</source>
-        <translation>OS 업데이트가 필요합니다. 장치를 wifi에 연결하여 가장 빠른 업데이트 경험을 제공합니다. 다운로드 크기는 약 1GB입니다.</translation>
+        <translation>需要操作系统更新。 将您的设备连接到 Wi-Fi，以获得最快的更新体验。 下载大小约为 1GB。</translation>
     </message>
     <message>
         <location filename="../qt/setup/updater.cc" line="40"/>
         <source>Connect to Wi-Fi</source>
-        <translation>wifi 연결</translation>
+        <translation>连接到无线网络</translation>
     </message>
     <message>
         <location filename="../qt/setup/updater.cc" line="47"/>
         <source>Install</source>
-        <translation>설치</translation>
+        <translation>安装</translation>
     </message>
     <message>
         <location filename="../qt/setup/updater.cc" line="64"/>
         <source>Back</source>
-        <translation>뒤로</translation>
+        <translation>后退</translation>
     </message>
     <message>
         <location filename="../qt/setup/updater.cc" line="80"/>
         <source>Loading...</source>
-        <translation>로딩중...</translation>
+        <translation>正在加载...</translation>
     </message>
     <message>
         <location filename="../qt/setup/updater.cc" line="94"/>
         <source>Reboot</source>
-        <translation>재부팅</translation>
+        <translation>重启</translation>
     </message>
     <message>
         <location filename="../qt/setup/updater.cc" line="164"/>
         <source>Update failed</source>
-        <translation>업데이트 실패</translation>
+        <translation>更新失败</translation>
     </message>
 </context>
 <context>
@@ -1260,22 +1260,22 @@ location set</source>
         <location filename="../qt/offroad/networking.cc" line="210"/>
         <location filename="../qt/offroad/networking.cc" line="263"/>
         <source>Scanning for networks...</source>
-        <translation>네트워크 검색 중...</translation>
+        <translation>正在扫描网络...</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="289"/>
         <source>CONNECTING...</source>
-        <translation>연결중...</translation>
+        <translation>正在连接...</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="296"/>
         <source>FORGET</source>
-        <translation>저장안함</translation>
+        <translation>忘记</translation>
     </message>
     <message>
         <location filename="../qt/offroad/networking.cc" line="299"/>
         <source>Forget Wi-Fi Network &quot;</source>
-        <translation>wifi 네트워크 저장안함&quot;</translation>
+        <translation>忘记 Wi-Fi 网络&quot;</translation>
     </message>
 </context>
 </TS>

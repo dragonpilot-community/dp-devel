@@ -8,7 +8,7 @@ from common.basedir import BASEDIR
 from selfdrive.car.interfaces import get_interface_attr
 from selfdrive.car.fingerprints import eliminate_incompatible_cars, all_legacy_fingerprint_cars
 from selfdrive.car.vin import get_vin, VIN_UNKNOWN
-from selfdrive.car.fw_versions import get_fw_versions, match_fw_to_car, get_present_ecus
+from selfdrive.car.fw_versions import get_fw_versions_ordered, match_fw_to_car, get_present_ecus
 from system.swaglog import cloudlog
 import cereal.messaging as messaging
 from selfdrive.car import gen_empty_fingerprint
@@ -83,7 +83,7 @@ interfaces = load_interfaces(interface_names)
 def fingerprint(logcan, sendcan):
   fixed_fingerprint = os.environ.get('FINGERPRINT', "")
   skip_fw_query = os.environ.get('SKIP_FW_QUERY', False)
-  ecu_responses = set()
+  ecu_rx_addrs = set()
 
   dp_car_assigned = Params().get('dp_car_assigned', encoding='utf8')
   if not fixed_fingerprint and dp_car_assigned is not None:
@@ -107,8 +107,8 @@ def fingerprint(logcan, sendcan):
     else:
       cloudlog.warning("Getting VIN & FW versions")
       _, vin = get_vin(logcan, sendcan, bus)
-      ecu_responses = get_present_ecus(logcan, sendcan)
-      car_fw = get_fw_versions(logcan, sendcan)
+      ecu_rx_addrs = get_present_ecus(logcan, sendcan)
+      car_fw = get_fw_versions_ordered(logcan, sendcan, ecu_rx_addrs)
 
     exact_fw_match, fw_candidates = match_fw_to_car(car_fw)
   else:
@@ -175,7 +175,7 @@ def fingerprint(logcan, sendcan):
     source = car.CarParams.FingerprintSource.fixed
 
   cloudlog.event("fingerprinted", car_fingerprint=car_fingerprint, source=source, fuzzy=not exact_match,
-                 fw_count=len(car_fw), ecu_responses=ecu_responses, error=True)
+                 fw_count=len(car_fw), ecu_responses=list(ecu_rx_addrs), error=True)
   return car_fingerprint, finger, vin, car_fw, source, exact_match
 
 #dp
