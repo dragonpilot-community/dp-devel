@@ -499,9 +499,9 @@ void NvgWindow::drawHud(QPainter &p) {
     const int h = 60;
     QRect bar_rc(rect().left(), rect().bottom() - h, rect().width(), h);
     p.setPen(Qt::NoPen);
-    p.setBrush(QColor(0, 0, 0, 100));
+    p.setBrush(QColor(0, 0, 0, 200));
     p.drawRect(bar_rc);
-    configFont(p, "Inter", 38, "Bold");
+    configFont(p, "Inter", 54, "Bold");
     drawCenteredText(p, bar_rc.center().x(), bar_rc.center().y(), roadName, QColor(255, 255, 255, 200));
   }
   p.restore();
