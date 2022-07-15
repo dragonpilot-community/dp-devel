@@ -104,9 +104,9 @@ class TurnSpeedController():
       _debug('TS: No map data for turn speed limit')
       return 0., 0., 0
 
-    if not sm.updated[sock]:
-      _debug('TS: not updated, mapd crashed?')
-      return 0., 0., 0
+    #if not sm.updated[sock]:
+    #  _debug('TS: not updated, mapd crashed?')
+    #  return 0., 0., 0
 
     # Load map_data and initialize
     map_data = sm[sock]
