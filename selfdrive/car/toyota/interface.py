@@ -12,6 +12,11 @@ EventName = car.CarEvent.EventName
 
 
 class CarInterface(CarInterfaceBase):
+  def __init__(self, CP, CarController, CarState):
+    super().__init__(CP, CarController, CarState)
+
+    self.dp_cruise_speed = 0.
+
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
@@ -258,9 +263,27 @@ class CarInterface(CarInterfaceBase):
     return ret
 
   # returns a car.CarState
-  def _update(self, c):
+  def _update(self, c, dragonconf):
     ret = self.CS.update(self.cp, self.cp_cam)
+
+    # dp
+    self.dragonconf = dragonconf
     ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
+
+    params = Params()
+
+    # low speed re-write
+    if ret.cruiseState.enabled and dragonconf.dpToyotaCruiseOverride and \
+      self.CP.openpilotLongitudinalControl and ret.cruiseState.speed < 12:
+      if dragonconf.dpToyotaCruiseOverride:
+        if self.dp_cruise_speed == 0.:
+          ret.cruiseState.speed = self.dp_cruise_speed = max(5., ret.vEgo)
+        else:
+          ret.cruiseState.speed = self.dp_cruise_speed
+      else:
+        ret.cruiseState.speed = 5.
+    else:
+      self.dp_cruise_speed = 0.
 
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 
