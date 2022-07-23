@@ -341,7 +341,7 @@ class CarState(CarStateBase):
     if CP.carFingerprint == CAR.RAV4_TSS2:
       signals.append(("SPORT_ON_2", "GEAR_PACKET"))
 
-    if CP.carFingerprint in TSS2_CAR:
+    if CP.carFingerprint in (CAR.LEXUS_ESH_TSS2, CAR.RAV4H_TSS2, CAR.CHRH, CAR.PRIUS_TSS2, CAR.HIGHLANDERH_TSS2):
       signals.append(("SPORT_ON", "GEAR_PACKET"))
       signals.append(("ECON_ON", "GEAR_PACKET"))
 
