@@ -151,7 +151,7 @@ class CarInterfaceBase(ABC):
     tune.torque.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
 
   @abstractmethod
-  def _update(self, c: car.CarControl, dragonconf) -> car.CarState:
+  def _update(self, c: car.CarControl) -> car.CarState:
     pass
 
   def update(self, c: car.CarControl, can_strings: List[bytes], dragonconf) -> car.CarState:
@@ -348,7 +348,7 @@ class CarStateBase(ABC):
   def parse_gear_shifter(gear: Optional[str]) -> car.CarState.GearShifter:
     if gear is None:
       return GearShifter.unknown
-    
+
     d: Dict[str, car.CarState.GearShifter] = {
         'P': GearShifter.park, 'PARK': GearShifter.park,
         'R': GearShifter.reverse, 'REVERSE': GearShifter.reverse,
