@@ -66,9 +66,11 @@ class CarInterface(CarInterfaceBase):
   # returns a car.CarState
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
+    ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
     # events
     events = self.create_common_events(ret)
+    events = self.dp_atl_warning(ret, events)
 
     if self.CS.lkas_disabled:
       events.add(EventName.lkasDisabled)

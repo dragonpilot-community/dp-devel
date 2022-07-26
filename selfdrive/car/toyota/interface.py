@@ -263,25 +263,18 @@ class CarInterface(CarInterfaceBase):
     return ret
 
   # returns a car.CarState
-  def _update(self, c, dragonconf):
+  def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
 
     # dp
-    self.dragonconf = dragonconf
     ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
-    params = Params()
-
     # low speed re-write
-    if ret.cruiseState.enabled and dragonconf.dpToyotaCruiseOverride and \
-      self.CP.openpilotLongitudinalControl and ret.cruiseState.speed < 12:
-      if dragonconf.dpToyotaCruiseOverride:
-        if self.dp_cruise_speed == 0.:
-          ret.cruiseState.speed = self.dp_cruise_speed = max(5., ret.vEgo)
-        else:
-          ret.cruiseState.speed = self.dp_cruise_speed
+    if self.dragonconf.dpToyotaCruiseOverride and self.CP.openpilotLongitudinalControl and ret.cruiseState.enabled:
+      if self.dp_cruise_speed == 0.:
+        ret.cruiseState.speed = self.dp_cruise_speed = max(5., ret.vEgo)
       else:
-        ret.cruiseState.speed = 5.
+        ret.cruiseState.speed = self.dp_cruise_speed
     else:
       self.dp_cruise_speed = 0.
 
