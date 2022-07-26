@@ -285,8 +285,6 @@ class CarInterface(CarInterfaceBase):
     else:
       self.dp_cruise_speed = 0.
 
-    ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
-
     # events
     events = self.create_common_events(ret)
     events = self.dp_atl_warning(ret, events)
