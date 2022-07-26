@@ -106,18 +106,13 @@ class CarState(CarStateBase):
       if self.CP.carFingerprint in TSS2_CAR:
         sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
         econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
+      if self.CP.carFingerprint == CAR.RAV4_TSS2:
+        sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON_2']
       else:
         try:
-          econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
+          sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
         except KeyError:
-          econ_on = 0
-        if self.CP.carFingerprint == CAR.RAV4_TSS2:
-          sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON_2']
-        else:
-          try:
-            sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
-          except KeyError:
-            sport_on = 0
+          sport_on = 0
       if sport_on == 0 and econ_on == 0:
         self.dp_accel_profile = DP_ACCEL_NORMAL
       elif sport_on == 1:
@@ -341,7 +336,7 @@ class CarState(CarStateBase):
     if CP.carFingerprint == CAR.RAV4_TSS2:
       signals.append(("SPORT_ON_2", "GEAR_PACKET"))
 
-    if CP.carFingerprint in (CAR.LEXUS_ESH_TSS2, CAR.RAV4H_TSS2, CAR.CHRH, CAR.PRIUS_TSS2, CAR.HIGHLANDERH_TSS2):
+    if CP.carFingerprint in (CAR.ALPHARD_TSS2, CAR.ALPHARDH_TSS2, CAR.AVALON_TSS2, CAR.AVALONH_TSS2, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2, CAR.CHR_TSS2, CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2, CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2, CAR.PRIUS_TSS2, CAR.RAV4H_TSS2, CAR.MIRAI, CAR.LEXUS_ES_TSS2, CAR.LEXUS_ESH_TSS2, CAR.LEXUS_NX_TSS2, CAR.LEXUS_NXH_TSS2, CAR.LEXUS_RX_TSS2, CAR.LEXUS_RXH_TSS2, CAR.CHRH):
       signals.append(("SPORT_ON", "GEAR_PACKET"))
       signals.append(("ECON_ON", "GEAR_PACKET"))
 
