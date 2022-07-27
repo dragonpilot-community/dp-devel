@@ -10,6 +10,9 @@ from common.params import Params
 
 EventName = car.CarEvent.EventName
 
+CRUISE_OVERRIDE_SPEED_LIMIT = 26 * CV.KPH_TO_MS
+CRUISE_OVERRIDE_SPEED_MIN = 5 * CV.KPH_TO_MS
+
 
 class CarInterface(CarInterfaceBase):
   def __init__(self, CP, CarController, CarState):
@@ -270,9 +273,10 @@ class CarInterface(CarInterfaceBase):
     ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
     # low speed re-write
-    if self.dragonconf.dpToyotaCruiseOverride and self.CP.openpilotLongitudinalControl and ret.cruiseState.enabled:
+    if self.dragonconf.dpToyotaCruiseOverride and self.CP.openpilotLongitudinalControl \
+      and ret.cruiseActualEnabled and ret.cruiseState.speed <= CRUISE_OVERRIDE_SPEED_LIMIT:
       if self.dp_cruise_speed == 0.:
-        ret.cruiseState.speed = self.dp_cruise_speed = max(5., ret.vEgo)
+        self.dp_cruise_speed = self.dp_cruise_speed = max(CRUISE_OVERRIDE_SPEED_MIN, ret.vEgo)
       else:
         ret.cruiseState.speed = self.dp_cruise_speed
     else:
