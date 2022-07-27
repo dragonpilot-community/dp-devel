@@ -89,7 +89,6 @@ git checkout third_party/
 # dp clean up
 rm -fr selfdrive/car/chrysler/
 rm -fr selfdrive/car/gm/
-rm -fr selfdrive/car/mazda/
 rm -fr selfdrive/car/nissan/
 rm -fr selfdrive/car/tesla/
 rm -fr selfdrive/car/tests/
