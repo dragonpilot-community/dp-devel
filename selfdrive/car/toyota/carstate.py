@@ -106,13 +106,18 @@ class CarState(CarStateBase):
       if self.CP.carFingerprint in TSS2_CAR:
         sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
         econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
-      if self.CP.carFingerprint == CAR.RAV4_TSS2:
-        sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON_2']
       else:
         try:
-          sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
+          econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
         except KeyError:
-          sport_on = 0
+          econ_on = 0
+        if self.CP.carFingerprint == CAR.RAV4_TSS2:
+          sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON_2']
+        else:
+          try:
+            sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
+          except KeyError:
+            sport_on = 0
       if sport_on == 0 and econ_on == 0:
         self.dp_accel_profile = DP_ACCEL_NORMAL
       elif sport_on == 1:
