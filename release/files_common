@@ -563,3 +563,5 @@ selfdrive/manager/custom_dep.py
 selfdrive/controls/lib/speed_limit_controller.py
 selfdrive/controls/lib/turn_speed_controller.py
 selfdrive/controls/lib/vision_turn_controller.py
+scripts/sshkey_installer.py
+scripts/ssh_key/**
