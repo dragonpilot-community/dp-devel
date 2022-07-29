@@ -221,6 +221,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_accel_profile", PERSISTENT},
     {"dp_toyota_ap_btn_link", PERSISTENT},
     {"dp_toyota_cruise_override", PERSISTENT},
+    {"dp_toyota_cruise_override_speed", PERSISTENT},
     {"dp_use_lanelines", PERSISTENT},
     {"dp_mapd", PERSISTENT},
 };

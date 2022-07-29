@@ -4,13 +4,14 @@ from traceback import print_exception
 import numpy as np
 from time import strftime, gmtime
 import cereal.messaging as messaging
-from common.realtime import Ratekeeper
+from common.realtime import Ratekeeper, sec_since_boot
 from selfdrive.mapd.lib.osm import OSM
 from selfdrive.mapd.lib.geo import distance_to_points
 from selfdrive.mapd.lib.WayCollection import WayCollection
 from selfdrive.mapd.config import QUERY_RADIUS, MIN_DISTANCE_FOR_NEW_QUERY, FULL_STOP_MAX_SPEED, LOOK_AHEAD_HORIZON_TIME
 from system.swaglog import cloudlog
 
+ROAD_NAME_TIMEOUT = 10 # secs
 
 _DEBUG = False
 _CLOUDLOG_DEBUG = True
@@ -50,6 +51,8 @@ class MapD():
     self._disengaging = False
     self._query_thread = None
     self._lock = threading.RLock()
+    self._road_name_last = ""
+    self._road_name_last_timed_out = 0.
 
   def udpate_state(self, sm):
     sock = 'controlsState'
@@ -231,7 +234,18 @@ class MapD():
     map_data_msg.liveMapData.turnSpeedLimitsAheadDistances = [float(s.start) for s in next_turn_speed_limit_sections]
     map_data_msg.liveMapData.turnSpeedLimitsAheadSigns = [float(s.curv_sign) for s in next_turn_speed_limit_sections]
 
-    map_data_msg.liveMapData.currentRoadName = str(current_road_name if current_road_name is not None else "")
+    road_name = str(current_road_name if current_road_name is not None else "").strip()
+    if road_name == "" and self._road_name_last != "":
+      if self._road_name_last_timed_out == 0.:
+        self._road_name_last_timed_out = sec_since_boot() + ROAD_NAME_TIMEOUT
+      else:
+        if sec_since_boot() <= self._road_name_last_timed_out:
+          road_name = self._road_name_last
+    else:
+      self._road_name_last_timed_out = 0.
+      self._road_name_last = road_name
+
+    map_data_msg.liveMapData.currentRoadName = road_name
 
     pm.send('liveMapData', map_data_msg)
     _debug(f'Mapd *****: Publish: \n{map_data_msg}\n********', log_to_cloud=False)

@@ -10,7 +10,6 @@ from common.params import Params
 
 EventName = car.CarEvent.EventName
 
-CRUISE_OVERRIDE_SPEED_LIMIT = 30 * CV.KPH_TO_MS
 CRUISE_OVERRIDE_SPEED_MIN = 5 * CV.KPH_TO_MS
 
 
@@ -18,7 +17,9 @@ class CarInterface(CarInterfaceBase):
   def __init__(self, CP, CarController, CarState):
     super().__init__(CP, CarController, CarState)
 
-    self.dp_cruise_speed = 0.
+    self.dp_cruise_speed = 0. # km/h
+    self.dp_override_speed_last = 0. # km/h
+    self.dp_override_speed = 0. # m/s
 
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
@@ -273,14 +274,17 @@ class CarInterface(CarInterfaceBase):
     ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
     # low speed re-write
-    if self.dragonconf.dpToyotaCruiseOverride and self.CP.openpilotLongitudinalControl \
-      and ret.cruiseActualEnabled and ret.cruiseState.speed <= CRUISE_OVERRIDE_SPEED_LIMIT:
-      if self.dp_cruise_speed == 0.:
-        self.dp_cruise_speed = self.dp_cruise_speed = max(CRUISE_OVERRIDE_SPEED_MIN, ret.vEgo)
+    if self.dragonconf.dpToyotaCruiseOverride:
+      if self.dragonconf.dpToyotaCruiseOverrideSpeed != self.dp_override_speed_last:
+        self.dp_override_speed = self.dragonconf.dpToyotaCruiseOverrideSpeed * CV.KPH_TO_MS
+        self.dp_override_speed_last = self.dragonconf.dpToyotaCruiseOverrideSpeed
+      if self.CP.openpilotLongitudinalControl and ret.cruiseActualEnabled and ret.cruiseState.speed <= self.dp_override_speed:
+        if self.dp_cruise_speed == 0.:
+          self.dp_cruise_speed = self.dp_cruise_speed = max(CRUISE_OVERRIDE_SPEED_MIN, ret.vEgo)
+        else:
+          ret.cruiseState.speed = self.dp_cruise_speed
       else:
-        ret.cruiseState.speed = self.dp_cruise_speed
-    else:
-      self.dp_cruise_speed = 0.
+        self.dp_cruise_speed = 0.
 
     # events
     events = self.create_common_events(ret)
