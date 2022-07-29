@@ -10,7 +10,7 @@ from common.params import Params
 
 EventName = car.CarEvent.EventName
 
-CRUISE_OVERRIDE_SPEED_LIMIT = 27 * CV.KPH_TO_MS
+CRUISE_OVERRIDE_SPEED_LIMIT = 30 * CV.KPH_TO_MS
 CRUISE_OVERRIDE_SPEED_MIN = 5 * CV.KPH_TO_MS
 
 
