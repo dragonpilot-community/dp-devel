@@ -198,6 +198,9 @@ def thermald_thread(end_event, hw_queue):
 
   fan_controller = None
 
+  dp_auto_shutdown = params.get_bool("dp_auto_shutdown")
+  dp_auto_shtudown_in = int(params.get("dp_auto_shutdown_in", encoding='utf8')) * 60
+
   while not end_event.is_set():
     sm.update(PANDA_STATES_TIMEOUT)
 
@@ -351,7 +354,7 @@ def thermald_thread(end_event, hw_queue):
     current_power_draw = HARDWARE.get_current_power_draw()
     statlog.sample("power_draw", current_power_draw)
     msg.deviceState.powerDrawW = current_power_draw
-    
+
     som_power_draw = HARDWARE.get_som_power_draw()
     statlog.sample("som_power_draw", som_power_draw)
     msg.deviceState.somPowerDrawW = som_power_draw
@@ -360,6 +363,9 @@ def thermald_thread(end_event, hw_queue):
     msg.deviceState.chargingDisabled = power_monitor.should_disable_charging(onroad_conditions["ignition"], in_car, off_ts)
 
     # Check if we need to shut down
+    if dp_auto_shutdown and (started_ts is None) and (sec_since_boot() - off_ts > dp_auto_shtudown_in):
+      params.put_bool("DoShutdown", True)
+
     if power_monitor.should_shutdown(peripheralState, onroad_conditions["ignition"], in_car, off_ts, started_seen):
       cloudlog.warning(f"shutting device down, offroad since {off_ts}")
       params.put_bool("DoShutdown", True)
