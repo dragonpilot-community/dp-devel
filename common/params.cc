@@ -225,6 +225,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_use_lanelines", PERSISTENT},
     {"dp_mapd", PERSISTENT},
     {"dp_lateral_lqr", PERSISTENT},
+    {"dp_auto_shutdown", PERSISTENT},
+    {"dp_auto_shutdown_in", PERSISTENT},
 };
 
 } // namespace
