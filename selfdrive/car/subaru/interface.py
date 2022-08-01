@@ -24,6 +24,7 @@ class CarInterface(CarInterfaceBase):
 
     ret.steerLimitTimer = 0.4
     ret.steerActuatorDelay = 0.1
+    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
     if candidate == CAR.ASCENT:

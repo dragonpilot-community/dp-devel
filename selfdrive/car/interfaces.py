@@ -13,6 +13,7 @@ from selfdrive.car import gen_empty_fingerprint
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX
 from selfdrive.controls.lib.events import Events
 from selfdrive.controls.lib.vehicle_model import VehicleModel
+from common.params import Params
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -137,6 +138,20 @@ class CarInterfaceBase(ABC):
     ret.longitudinalActuatorDelayUpperBound = 0.15
     ret.steerLimitTimer = 1.0
     return ret
+
+  @staticmethod
+  def configure_lqr_tune(tune):
+    if Params().get_bool("dp_lateral_lqr"):
+      tune.init('lqr')
+      tune.lqr.scale = 1500.0
+      tune.lqr.ki = 0.05
+
+      tune.lqr.a = [0., 1., -0.22619643, 1.21822268]
+      tune.lqr.b = [-1.92006585e-04, 3.95603032e-05]
+      tune.lqr.c = [1., 0.]
+      tune.lqr.k = [-110.73572306, 451.22718255]
+      tune.lqr.l = [0.3233671, 0.3185757]
+      tune.lqr.dcGain = 0.002237852961363602
 
   @staticmethod
   def configure_torque_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True):
