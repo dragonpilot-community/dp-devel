@@ -42,6 +42,7 @@ class CarInterface(CarInterfaceBase):
 
     stop_and_go = False
     steering_angle_deadzone_deg = 0.0
+    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
 
     if candidate == CAR.PRIUS:

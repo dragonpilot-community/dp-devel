@@ -72,6 +72,8 @@ confs = [
   {'name': 'dp_use_lanelines', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_mapd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
+  {'name': 'dp_lateral_lqr', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+
   # # dashcam related
   # {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # # auto shutdown
