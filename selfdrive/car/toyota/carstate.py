@@ -42,6 +42,9 @@ class CarState(CarStateBase):
     self.acc_type = 1
 
     #dp
+    self.dp_sig_check = False
+    self.dp_sig_sport_on_seen = True
+    self.dp_sig_econ_on_seen = True
     self.dp_accel_profile = None
     self.dp_accel_profile_prev = None
     self.dp_accel_profile_init = False
@@ -103,34 +106,42 @@ class CarState(CarStateBase):
 
     #dp: Thank you Arne (acceleration)
     if self.dp_toyota_ap_btn_link:
-      if self.CP.carFingerprint in TSS2_CAR:
-        sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
-        econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
-      else:
+      sport_on_sig = 'SPORT_ON_2' if CAR.RAV4_TSS2 else 'SPORT_ON'
+      # check signal once
+      if not self.dp_sig_check:
+        self.dp_sig_check = True
+        # sport on
         try:
-          econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
+          val = cp.vl["GEAR_PACKET"][sport_on_sig]
         except KeyError:
-          econ_on = 0
-        if self.CP.carFingerprint == CAR.RAV4_TSS2:
-          sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON_2']
-        else:
-          try:
-            sport_on = cp.vl["GEAR_PACKET"]['SPORT_ON']
-          except KeyError:
-            sport_on = 0
-      if sport_on == 0 and econ_on == 0:
-        self.dp_accel_profile = DP_ACCEL_NORMAL
-      elif sport_on == 1:
-        self.dp_accel_profile = DP_ACCEL_SPORT
-      elif econ_on == 1:
-        self.dp_accel_profile = DP_ACCEL_ECO
+          self.dp_sig_sport_on_seen = False
+        # econ on
+        try:
+          val = cp.vl["GEAR_PACKET"]['ECON_ON']
+        except KeyError:
+          self.dp_sig_econ_on_seen = False
 
-      # if init is false, we sync profile with whatever mode we have on car
-      if not self.dp_accel_profile_init or self.dp_accel_profile != self.dp_accel_profile_prev:
-        put_nonblocking('dp_accel_profile', str(self.dp_accel_profile))
-        put_nonblocking('dp_last_modified',str(floor(time.time())))
-        self.dp_accel_profile_init = True
-      self.dp_accel_profile_prev = self.dp_accel_profile
+      # we need at least 1 sig available, otherwise we disable toggle
+      if not self.dp_sig_sport_on_seen and not self.dp_sig_econ_on_seen:
+        self.dp_toyota_ap_btn_link = False
+        Params().put_bool('dp_toyota_ap_btn_link', False)
+      else:
+        sport_on = cp.vl["GEAR_PACKET"][sport_on_sig] if self.dp_sig_sport_on_seen else 0
+        econ_on = cp.vl["GEAR_PACKET"]['ECON_ON'] if self.dp_sig_econ_on_seen else 0
+
+        if sport_on == 0 and econ_on == 0:
+          self.dp_accel_profile = DP_ACCEL_NORMAL
+        elif sport_on == 1:
+          self.dp_accel_profile = DP_ACCEL_SPORT
+        elif econ_on == 1:
+          self.dp_accel_profile = DP_ACCEL_ECO
+
+        # if init is false, we sync profile with whatever mode we have on car
+        if not self.dp_accel_profile_init or self.dp_accel_profile != self.dp_accel_profile_prev:
+          put_nonblocking('dp_accel_profile', str(self.dp_accel_profile))
+          put_nonblocking('dp_last_modified',str(floor(time.time())))
+          self.dp_accel_profile_init = True
+        self.dp_accel_profile_prev = self.dp_accel_profile
 
     #dp
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
