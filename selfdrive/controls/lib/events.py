@@ -683,7 +683,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   EventName.sensorDataInvalid: {
     ET.PERMANENT: Alert(
       _("Sensor Data Invalid"),
-      _("Ensure device is mounted securely",
+      _("Ensure device is mounted securely"),
       AlertStatus.normal, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, .2, creation_delay=1.),
     ET.NO_ENTRY: NoEntryAlert(_("Sensor Data Invalid")),
