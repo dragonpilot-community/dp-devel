@@ -240,6 +240,7 @@ void NvgWindow::updateState(const UIState &s) {
   if (sm.frame % (UI_FREQ / 2) == 0) {
     setProperty("engageable", cs.getEngageable() || cs.getEnabled());
     setProperty("dmActive", sm["driverMonitoringState"].getDriverMonitoringState().getIsActiveMode());
+    setProperty("rightHandDM", sm["driverMonitoringState"].getDriverMonitoringState().getIsRHD());
 
     //dp
     const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
@@ -500,7 +501,8 @@ void NvgWindow::drawHud(QPainter &p) {
 
   // dm icon
   if (!hideDM) {
-    drawIcon(p, radius / 2 + (bdr_s * 2), rect().bottom() - footer_h / 2,
+    int dm_icon_x = rightHandDM ? rect().right() -  radius / 2 - (bdr_s * 2) : radius / 2 + (bdr_s * 2);
+    drawIcon(p, dm_icon_x, rect().bottom() - footer_h / 2,
              dm_img, blackColor(70), dmActive ? 1.0 : 0.2);
   }
 

@@ -682,11 +682,12 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.sensorDataInvalid: {
     ET.PERMANENT: Alert(
-      _("No Data from Device Sensors"),
-      _("Reboot your Device"),
+      _("Sensor Data Invalid"),
+      _("Ensure device is mounted securely",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, .2, creation_delay=1.),
-    ET.NO_ENTRY: NoEntryAlert(_("No Data from Device Sensors")),
+    ET.NO_ENTRY: NoEntryAlert(_("Sensor Data Invalid")),
+    ET.SOFT_DISABLE: soft_disable_alert(_("Sensor Data Invalid")),
   },
 
   EventName.noGps: {
