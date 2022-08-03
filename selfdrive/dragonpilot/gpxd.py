@@ -76,7 +76,7 @@ class GpxD():
     elif self.pause:
       pass
     else:
-      self.logs.append([datetime.datetime.utcfromtimestamp(gps.timestamp*0.001).isoformat(), str(gps.latitude), str(gps.longitude), str(gps.altitude)])
+      self.logs.append([datetime.datetime.utcfromtimestamp(gps.unixTimestampMillis*0.001).isoformat(), str(gps.latitude), str(gps.longitude), str(gps.altitude)])
       self.log_count += 1
       self.lost_signal_count = 0
 
