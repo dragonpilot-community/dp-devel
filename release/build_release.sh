@@ -98,6 +98,11 @@ rm -fr selfdrive/car/body/
 # Mark as prebuilt release
 touch prebuilt
 
+# include source commit hash and build date in commit
+GIT_HASH=$(git --git-dir=$SOURCE_DIR/.git rev-parse HEAD)
+DATETIME=$(date '+%Y-%m-%dT%H:%M:%S')
+SP_VERSION=$(cat $SOURCE_DIR/common/version.h | awk -F\" '{print $2}')
+
 sed -i -e "s#\[latest\]#$VERSION#g" CHANGELOGS.md
 
 # Add built files to git
