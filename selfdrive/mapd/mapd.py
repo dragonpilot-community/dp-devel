@@ -75,7 +75,7 @@ class MapD():
     if log.flags % 2 == 0:
       return
 
-    self.last_gps_fix_timestamp = log.timestamp  # Unix TS. Milliseconds since January 1, 1970.
+    self.last_gps_fix_timestamp = log.unixTimestampMillis  # Unix TS. Milliseconds since January 1, 1970.
     self.location_rad = np.radians(np.array([log.latitude, log.longitude], dtype=float))
     self.location_deg = (log.latitude, log.longitude)
     self.bearing_rad = np.radians(log.bearingDeg, dtype=float)
@@ -207,7 +207,7 @@ class MapD():
     map_data_msg.valid = sm.all_alive(service_list=['gpsLocationExternal']) and \
                          sm.all_valid(service_list=['gpsLocationExternal'])
 
-    map_data_msg.liveMapData.lastGpsTimestamp = self.last_gps.timestamp
+    map_data_msg.liveMapData.lastGpsTimestamp = self.last_gps.unixTimestampMillis
     map_data_msg.liveMapData.lastGpsLatitude = float(self.last_gps.latitude)
     map_data_msg.liveMapData.lastGpsLongitude = float(self.last_gps.longitude)
     map_data_msg.liveMapData.lastGpsSpeed = float(self.last_gps.speed)
