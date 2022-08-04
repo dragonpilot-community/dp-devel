@@ -112,8 +112,12 @@ class GpxUploader():
   def run(self):
     while True:
       files = self._get_files_to_be_uploaded()
-      if len(files) == 0 or not self._is_online():
-        _debug("run - not online or no files")
+      if len(files) == 0:
+        _debug("run - no files")
+      elif not self._is_online() and self._delete_after_upload:
+        _debug("run - not online & delete_after_upload")
+        for file in files:
+          os.remove(file)
       else:
         for file in files:
           if self._do_upload(file):
