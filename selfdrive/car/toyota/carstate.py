@@ -112,36 +112,33 @@ class CarState(CarStateBase):
         self.dp_sig_check = True
         # sport on
         try:
-          val = cp.vl["GEAR_PACKET"][sport_on_sig]
+          sport_on = cp.vl["GEAR_PACKET"][sport_on_sig]
         except KeyError:
+          sport_on = 0
           self.dp_sig_sport_on_seen = False
         # econ on
         try:
-          val = cp.vl["GEAR_PACKET"]['ECON_ON']
+          econ_on = cp.vl["GEAR_PACKET"]['ECON_ON']
         except KeyError:
+          econ_on = 0
           self.dp_sig_econ_on_seen = False
-
-      # we need at least 1 sig available, otherwise we disable toggle
-      if not self.dp_sig_sport_on_seen and not self.dp_sig_econ_on_seen:
-        self.dp_toyota_ap_btn_link = False
-        Params().put_bool('dp_toyota_ap_btn_link', False)
       else:
         sport_on = cp.vl["GEAR_PACKET"][sport_on_sig] if self.dp_sig_sport_on_seen else 0
         econ_on = cp.vl["GEAR_PACKET"]['ECON_ON'] if self.dp_sig_econ_on_seen else 0
 
-        if sport_on == 0 and econ_on == 0:
-          self.dp_accel_profile = DP_ACCEL_NORMAL
-        elif sport_on == 1:
-          self.dp_accel_profile = DP_ACCEL_SPORT
-        elif econ_on == 1:
-          self.dp_accel_profile = DP_ACCEL_ECO
+      if sport_on == 0 and econ_on == 0:
+        self.dp_accel_profile = DP_ACCEL_NORMAL
+      elif sport_on == 1:
+        self.dp_accel_profile = DP_ACCEL_SPORT
+      elif econ_on == 1:
+        self.dp_accel_profile = DP_ACCEL_ECO
 
-        # if init is false, we sync profile with whatever mode we have on car
-        if not self.dp_accel_profile_init or self.dp_accel_profile != self.dp_accel_profile_prev:
-          put_nonblocking('dp_accel_profile', str(self.dp_accel_profile))
-          put_nonblocking('dp_last_modified',str(floor(time.time())))
-          self.dp_accel_profile_init = True
-        self.dp_accel_profile_prev = self.dp_accel_profile
+      # if init is false, we sync profile with whatever mode we have on car
+      if not self.dp_accel_profile_init or self.dp_accel_profile != self.dp_accel_profile_prev:
+        put_nonblocking('dp_accel_profile', str(self.dp_accel_profile))
+        put_nonblocking('dp_last_modified',str(floor(time.time())))
+        self.dp_accel_profile_init = True
+      self.dp_accel_profile_prev = self.dp_accel_profile
 
     #dp
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
