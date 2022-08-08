@@ -62,7 +62,6 @@ class CarInterface(CarInterfaceBase):
     if candidate == CAR.ACCORD and 0x191 in fingerprint[1]:
       ret.transmissionType = TransmissionType.cvt
 
-    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     # Certain Hondas have an extra steering sensor at the bottom of the steering rack,
     # which improves controls quality as it removes the steering column torsion from feedback.
     # Tire stiffness factor fictitiously lower if it includes the steering column torsion effect.
@@ -330,6 +329,7 @@ class CarInterface(CarInterfaceBase):
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 0.8
 
+    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     return ret
 
   @staticmethod

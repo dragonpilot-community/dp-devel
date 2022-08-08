@@ -42,7 +42,6 @@ class CarInterface(CarInterfaceBase):
 
     # Global lateral tuning defaults, can be overridden per-vehicle
 
-    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 0.4
     ret.steerRatio = 15.6  # Let the params learner figure this out
@@ -155,6 +154,7 @@ class CarInterface(CarInterfaceBase):
     ret.centerToFront = ret.wheelbase * 0.45
     ret.tireStiffnessFront, ret.tireStiffnessRear = scale_tire_stiffness(ret.mass, ret.wheelbase, ret.centerToFront,
                                                                          tire_stiffness_factor=tire_stiffness_factor)
+    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     return ret
 
   # returns a car.CarState

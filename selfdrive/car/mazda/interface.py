@@ -28,7 +28,6 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 0.70   # not optimized yet
 
-    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
     if candidate in (CAR.CX5, CAR.CX5_2022):
@@ -62,6 +61,7 @@ class CarInterface(CarInterfaceBase):
     ret.tireStiffnessFront, ret.tireStiffnessRear = scale_tire_stiffness(ret.mass, ret.wheelbase, ret.centerToFront,
                                                                          tire_stiffness_factor=tire_stiffness_factor)
 
+    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     return ret
 
   # returns a car.CarState
