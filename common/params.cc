@@ -227,6 +227,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_lateral_lqr", PERSISTENT},
     {"dp_auto_shutdown", PERSISTENT},
     {"dp_auto_shutdown_in", PERSISTENT},
+    {"dp_mazda_steer_alert", PERSISTENT},
 };
 
 } // namespace
