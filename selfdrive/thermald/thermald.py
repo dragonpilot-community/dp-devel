@@ -192,7 +192,7 @@ def thermald_thread(end_event, hw_queue):
   fan_controller = None
 
   dp_auto_shutdown = params.get_bool("dp_auto_shutdown")
-  dp_auto_shtudown_in = int(params.get("dp_auto_shutdown_in", encoding='utf8')) * 60
+  dp_auto_shutdown_in = int(params.get("dp_auto_shutdown_in", encoding='utf8')) * 60
 
   while not end_event.is_set():
     sm.update(PANDA_STATES_TIMEOUT)
@@ -356,8 +356,9 @@ def thermald_thread(end_event, hw_queue):
     # Check if we need to disable charging (handled by boardd)
     msg.deviceState.chargingDisabled = power_monitor.should_disable_charging(onroad_conditions["ignition"], in_car, off_ts)
 
-    # Check if we need to shut down
-    if (not started_seen) and dp_auto_shutdown and (started_ts is None) and (sec_since_boot() - off_ts > dp_auto_shtudown_in):
+    # Check if we need to auto shut down
+    # we only enable it when it's been on-road once.
+    if started_seen and dp_auto_shutdown and off_ts is not None and (sec_since_boot() - off_ts > dp_auto_shutdown_in):
       msg.deviceState.chargingDisabled = True
       # give a sec for panda to disable charging
       time.sleep(1)
