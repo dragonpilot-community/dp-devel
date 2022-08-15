@@ -252,15 +252,12 @@ class MapD():
 
     # dp - cache road name to avoid name display blinking
     if current_road_name == "":
-      if self._road_name_last == "":
-        # can't do anything as we do not have any road name history
-        pass
-      else:
-        if self._road_name_last_timed_out == 0.:
-          self._road_name_last_timed_out = sec_since_boot() + ROAD_NAME_TIMEOUT
-        else:
-          if sec_since_boot() <= self._road_name_last_timed_out:
-            current_road_name = self._road_name_last
+      sec = sec_since_boot()
+      if self._road_name_last_timed_out == 0.:
+        self._road_name_last_timed_out = sec + ROAD_NAME_TIMEOUT
+
+      if sec < self._road_name_last_timed_out:
+        current_road_name = self._road_name_last
     else:
       self._road_name_last_timed_out = 0.
       self._road_name_last = current_road_name
