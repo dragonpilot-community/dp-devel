@@ -228,6 +228,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_auto_shutdown", PERSISTENT},
     {"dp_auto_shutdown_in", PERSISTENT},
     {"dp_mazda_steer_alert", PERSISTENT},
+    {"dp_honda_eps_mod", PERSISTENT},
 };
 
 } // namespace

@@ -329,6 +329,23 @@ class CarInterface(CarInterfaceBase):
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 0.8
 
+    if Params().get_bool('dp_honda_eps_mod'):
+      if candidate == CAR.CIVIC:
+        # tuned by a-tao
+        ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 4096, 8000], [0, 4096, 4096]]
+      elif candidate in (CAR.CIVIC_BOSCH, CAR.CIVIC_BOSCH_DIESEL):
+        ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 2564, 8000], [0, 2564, 3840]]
+        ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.3], [0.09]] #2.5 default mod #Tuned by TMG
+      elif candidate in (CAR.ACCORD, CAR.ACCORDH):
+        ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.3], [0.09]]
+      elif candidate == CAR.CRV_5G:
+        ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 2560, 10000], [0, 2560, 3840]] #tuned by Titanminer (8000)
+        ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.21], [0.07]]
+      elif candidate == CAR.CRV_HYBRID:
+        ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0x0, 0xB5, 0x161, 0x2D6, 0x4C0, 0x70D, 0xC42, 0x1058, 0x2C00], [0x0, 0x160, 0x1F0, 0x2E0, 0x378, 0x4A0, 0x5F0, 0x804, 0xF00]]
+        ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.21], [0.07]] #still needs to finish tuning for the new car
+        ret.lateralTuning.pid.kf = 0.00004
+
     CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     return ret
 

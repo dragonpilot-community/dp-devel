@@ -128,7 +128,7 @@ confs = [
   # # hyundai
   # {'name': 'dp_hkg_smart_mdps', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # honda
-  # {'name': 'dp_honda_eps_mod', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_honda_eps_mod', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_honda_kmh_display', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # volkswagen
   # # {'name': 'dp_vw_panda', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
