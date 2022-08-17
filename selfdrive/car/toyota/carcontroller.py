@@ -32,10 +32,12 @@ class CarController:
 
     # dp
     self.dp_toyota_sng = False
+    self.dp_atl = 0
 
   def update(self, CC, CS, dragonconf):
     if dragonconf is not None:
       self.dp_toyota_sng = dragonconf.dpToyotaSng
+      self.dp_atl = dragonconf.dpAtl
     actuators = CC.actuators
     hud_control = CC.hudControl
     pcm_cancel_cmd = CC.cruiseControl.cancel
@@ -78,6 +80,11 @@ class CarController:
     elif self.steer_rate_counter >= MAX_STEER_RATE_FRAMES:
       apply_steer_req = 0
       self.steer_rate_counter = 0
+
+    # dp - try to avoid steering fault
+    if self.dp_atl > 0 and abs(CS.out.steeringAngleDeg) > 500:
+      apply_steer = 0
+      apply_steer_req = 0
 
     # TODO: probably can delete this. CS.pcm_acc_status uses a different signal
     # than CS.cruiseState.enabled. confirm they're not meaningfully different
