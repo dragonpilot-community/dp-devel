@@ -1,8 +1,9 @@
-#!/usr/bin/env sh
+#!/bin/bash
 xgettext -d base -o ../selfdrive/assets/locales/events.pot ../selfdrive/controls/lib/events.py
-msgmerge --update ../selfdrive/assets/locales/zh-TW/LC_MESSAGES/events.po ../selfdrive/assets/locales/events.pot
-msgfmt -o ../selfdrive/assets/locales/zh-TW/LC_MESSAGES/events.mo ../selfdrive/assets/locales/zh-TW/LC_MESSAGES/events
+declare -a langs=("zh-TW" "zh-CN" "ja-JP" "ko-KR")
 
-lupdate ../selfdrive/ui/ui.pro
-linguist ../selfdrive/ui/translations/zh-TW.ts
-lrelease ../selfdrive/ui/ui.pro
+for i in "${langs[@]}"
+do
+  msgmerge --update ../selfdrive/assets/locales/$i/LC_MESSAGES/events.po ../selfdrive/assets/locales/events.pot
+  msgfmt -o ../selfdrive/assets/locales/$i/LC_MESSAGES/events.mo ../selfdrive/assets/locales/$i/LC_MESSAGES/events
+done
