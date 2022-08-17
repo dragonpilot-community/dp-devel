@@ -38,6 +38,7 @@ cp -pR --parents $(cat $FILES_SRC) $BUILD_DIR/
 cd $BUILD_DIR
 
 rm -f panda/board/obj/panda.bin.signed
+rm -f panda/board/obj/panda_h7.bin.signed
 
 VERSION=$(date '+%Y.%m.%d')
 echo "#define COMMA_VERSION \"$VERSION\"" > common/version.h
@@ -51,6 +52,7 @@ git branch --set-upstream-to=origin/$RELEASE_BRANCH
 pushd panda/
 scons -u .
 mv board/obj/panda.bin.signed /tmp/panda.bin.signed
+mv board/obj/panda_h7.bin.signed /tmp/panda_h7.bin.signed
 popd
 
 # Build
@@ -82,6 +84,7 @@ rm -fr selfdrive/ui/replay/
 # Move back signed panda fw
 mkdir -p panda/board/obj
 mv /tmp/panda.bin.signed panda/board/obj/panda.bin.signed
+mv /tmp/panda_h7.bin.signed panda/board/obj/panda_h7.bin.signed
 
 # Restore third_party
 git checkout third_party/

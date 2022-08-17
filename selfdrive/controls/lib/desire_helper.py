@@ -48,7 +48,7 @@ class DesireHelper:
     self.dp_lc_auto_min_mph = LANE_CHANGE_SPEED_MIN + 10
     self.dp_lc_auto_delay = 3 # secs
 
-  def update(self, carstate, active, lane_change_prob, dragonconf):
+  def update(self, carstate, lateral_active, lane_change_prob, dragonconf):
     # dp - sync with dragonConf
     self.dp_lateral_mode = dragonconf.dpLateralMode
     self.dp_lc_min_mph = dragonconf.dpLcMinMph * CV.MPH_TO_MS
@@ -61,7 +61,7 @@ class DesireHelper:
     below_lane_change_speed = v_ego < self.dp_lc_min_mph
     below_alc_speed = v_ego < self.dp_lc_auto_min_mph
 
-    if not active or self.lane_change_timer > LANE_CHANGE_TIME_MAX:
+    if not lateral_active or self.lane_change_timer > LANE_CHANGE_TIME_MAX:
       self.lane_change_state = LaneChangeState.off
       self.lane_change_direction = LaneChangeDirection.none
     else:
