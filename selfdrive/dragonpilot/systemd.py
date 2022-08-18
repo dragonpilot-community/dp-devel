@@ -38,6 +38,7 @@ from common.realtime import Ratekeeper
 import threading
 from selfdrive.dragonpilot.gpx_uploader import gpx_uploader_thread
 from typing import Dict, Any
+import capnp
 
 PARAM_PATH = params.get_param_path() + "/"
 
@@ -250,7 +251,11 @@ def set_message(msg, conf):
       struct_val = min(struct_val, conf.get('max'))
   if orig_val != struct_val:
     params.put(conf['name'], str(struct_val))
-  setattr(msg.dragonConf, get_struct_name(conf['name']), struct_val)
+  try:
+    setattr(msg.dragonConf, get_struct_name(conf['name']), struct_val)
+  except capnp.lib.capnp.KjException:
+    pass
+
   return msg
 
 def check_dependencies(msg, conf):
