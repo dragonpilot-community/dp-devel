@@ -711,7 +711,7 @@ class Controls:
 
     speeds = self.sm['longitudinalPlan'].speeds
     if len(speeds):
-      if self.sm['dragonConf'].dpAtl == 1:
+      if self.sm['dragonConf'].dpAtl == 1 and self.sm['longitudinalPlan'].hasLead:
         CC.cruiseControl.resume = CS.cruiseActualEnabled and CS.cruiseState.standstill and speeds[-1] > 0.1
       else:
         CC.cruiseControl.resume = self.enabled and CS.cruiseState.standstill and speeds[-1] > 0.1
