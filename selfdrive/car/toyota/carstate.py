@@ -168,7 +168,8 @@ class CarState(CarStateBase):
       self.acc_type = cp_acc.vl["ACC_CONTROL"]["ACC_TYPE"]
       ret.stockFcw = bool(cp_acc.vl["ACC_HUD"]["FCW"])
 
-      # KRKeegan - Add support for toyota distance button
+    # KRKeegan - Add support for toyota distance button
+    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       self.distance_btn = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
       ret.distanceLines = cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"]
 
