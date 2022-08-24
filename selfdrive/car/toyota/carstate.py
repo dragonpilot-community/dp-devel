@@ -407,7 +407,7 @@ class CarState(CarStateBase):
   @staticmethod
   def get_cam_can_parser(CP):
     # Include traffic singal signals.
-    signals += [
+    signals = [
       ("TSGN1", "RSA1", 0),
       ("SPDVAL1", "RSA1", 0),
       ("SPLSGN1", "RSA1", 0),
@@ -421,14 +421,10 @@ class CarState(CarStateBase):
 
     # use steering message to check if panda is connected to frc
     checks = [
-      ("STEERING_LKA", 42),
       ("RSA1", 0),
       ("RSA2", 0),
-      ("PRE_COLLISION", 0), # TODO: figure out why freq is inconsistent
     ]
-    
-    signals = []
-    checks = []
+
 
     if CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       signals += [
