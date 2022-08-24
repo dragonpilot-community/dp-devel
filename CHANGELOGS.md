@@ -1,6 +1,6 @@
 dragonpilot [latest]
 ========================
-* Synced with openpilot master 2022.08.2 commits.
+* Synced with openpilot master 2022.08.23 commits.
 
 dragonpilot 2022.07.01
 ========================

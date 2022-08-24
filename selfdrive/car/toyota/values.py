@@ -6,7 +6,7 @@ from typing import Dict, List, Union
 from cereal import car
 from common.conversions import Conversions as CV
 from selfdrive.car import dbc_dict
-from selfdrive.car.docs_definitions import CarFootnote, CarInfo, Column, Harness, Star
+from selfdrive.car.docs_definitions import CarFootnote, CarInfo, Column, Harness
 
 Ecu = car.CarParams.Ecu
 MIN_ACC_SPEED = 19. * CV.MPH_TO_MS
@@ -90,7 +90,7 @@ class Footnote(Enum):
   DSU = CarFootnote(
     "When the Driver Support Unit (DSU) is disconnected, openpilot Adaptive Cruise Control (ACC) will replace " +
     "stock Adaptive Cruise Control (ACC). <b><i>NOTE: disconnecting the DSU disables Automatic Emergency Braking (AEB).</i></b>",
-    Column.LONGITUDINAL, star=Star.HALF)
+    Column.LONGITUDINAL)
   CAMRY = CarFootnote(
     "openpilot operates above 28mph for Camry 4CYL L, 4CYL LE and 4CYL SE which don't have Full-Speed Range Dynamic Radar Cruise Control.",
     Column.FSR_LONGITUDINAL)
@@ -115,7 +115,7 @@ CAR_INFO: Dict[str, Union[ToyotaCarInfo, List[ToyotaCarInfo]]] = {
   CAR.AVALON_TSS2: ToyotaCarInfo("Toyota Avalon 2022"),
   CAR.AVALONH_TSS2: ToyotaCarInfo("Toyota Avalon Hybrid 2022"),
   CAR.CAMRY: ToyotaCarInfo("Toyota Camry 2018-20", video_link="https://www.youtube.com/watch?v=fkcjviZY9CM", footnotes=[Footnote.CAMRY]),
-  CAR.CAMRYH: ToyotaCarInfo("Toyota Camry Hybrid 2018-20", video_link="https://www.youtube.com/watch?v=Q2DYY0AWKgk", footnotes=[Footnote.CAMRY]),
+  CAR.CAMRYH: ToyotaCarInfo("Toyota Camry Hybrid 2018-20", video_link="https://www.youtube.com/watch?v=Q2DYY0AWKgk"),
   CAR.CAMRY_TSS2: ToyotaCarInfo("Toyota Camry 2021-22", footnotes=[Footnote.CAMRY]),
   CAR.CAMRYH_TSS2: ToyotaCarInfo("Toyota Camry Hybrid 2021-22"),
   CAR.CHR: ToyotaCarInfo("Toyota C-HR 2017-21"),
@@ -688,6 +688,7 @@ FW_VERSIONS = {
       b'\x01896630ZP2000\x00\x00\x00\x00',
       b'\x01896630ZQ5000\x00\x00\x00\x00',
       b'\x01896630ZU9000\x00\x00\x00\x00',
+      b'\x01896630ZX4000\x00\x00\x00\x00',
       b'\x018966312L8000\x00\x00\x00\x00',
       b'\x018966312M0000\x00\x00\x00\x00',
       b'\x018966312M9000\x00\x00\x00\x00',
@@ -783,6 +784,7 @@ FW_VERSIONS = {
       b'\x01896637626000\x00\x00\x00\x00',
       b'\x01896637648000\x00\x00\x00\x00',
       b'\x01896637643000\x00\x00\x00\x00',
+      b'\x02896630A21000\x00\x00\x00\x008966A4703000\x00\x00\x00\x00',
       b'\x02896630ZJ5000\x00\x00\x00\x008966A4703000\x00\x00\x00\x00',
       b'\x02896630ZN8000\x00\x00\x00\x008966A4703000\x00\x00\x00\x00',
       b'\x02896630ZQ3000\x00\x00\x00\x008966A4703000\x00\x00\x00\x00',
@@ -827,6 +829,7 @@ FW_VERSIONS = {
       b'F152612A10\x00\x00\x00\x00\x00\x00',
       b'F152612D00\x00\x00\x00\x00\x00\x00',
       b'F152616011\x00\x00\x00\x00\x00\x00',
+      b'F152616060\x00\x00\x00\x00\x00\x00',
       b'F152642540\x00\x00\x00\x00\x00\x00',
       b'F152676293\x00\x00\x00\x00\x00\x00',
       b'F152676303\x00\x00\x00\x00\x00\x00',
