@@ -43,6 +43,9 @@ class LateralPlanner:
     v_ego = sm['carState'].vEgo
     measured_curvature = sm['controlsState'].curvature
 
+    # dp - update camera offset
+    self.LP.update_offsets(sm['dragonConf'].dpCameraOffset)
+
     # Parse model predictions
     md = sm['modelV2']
     self.LP.parse_model(md)
