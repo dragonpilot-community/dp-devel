@@ -5,6 +5,7 @@ import sys
 import json
 import time
 from math import floor
+from selfdrive.controls.lib.lane_planner import CAMERA_OFFSET
 
 '''
 * type: Bool, Int8, UInt8, UInt16, Float32
@@ -67,15 +68,15 @@ confs = [
   {'name': 'dp_accel_profile', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 2, 'depends': [{'name': 'dp_accel_profile_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_toyota_ap_btn_link', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_toyota_cruise_override', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_toyota_cruise_override_speed', 'default': 30, 'type': 'UInt8', 'min': 5, 'max': 60, 'conf_type': ['param', 'struct']},
+  {'name': 'dp_toyota_cruise_override_speed', 'default': 30, 'type': 'UInt8', 'min': 5, 'max': 60, 'depends': [{'name': 'dp_accel_profile_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
 
   {'name': 'dp_use_lanelines', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_mapd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   {'name': 'dp_lateral_lqr', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
 
-  # # dashcam related
-  # {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  # dashcam related
+  {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # # auto shutdown
   {'name': 'dp_auto_shutdown', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_auto_shutdown_in', 'default': 90, 'type': 'UInt16', 'min': 0, 'max': 600, 'depends': [{'name': 'dp_auto_shutdown', 'vals': [True]}], 'conf_type': ['param']},
@@ -87,7 +88,7 @@ confs = [
   # {'name': 'dp_athenad', 'default': False, 'type': 'Bool', 'depends': [{'name': 'dp_atl', 'vals': [False]}], 'conf_type': ['param', 'struct'], 'update_once': True},
   # {'name': 'dp_uploader', 'default': False, 'type': 'Bool', 'depends': [{'name': 'dp_atl', 'vals': [False]}], 'conf_type': ['param', 'struct'], 'update_once': True},
   # # {'name': 'dp_gpxd', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
-  # {'name': 'dp_hotspot_on_boot', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_hotspot_on_boot', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # lat ctrl
   # {'name': 'dp_lane_less_mode_ctrl', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_lane_less_mode', 'default': 2, 'type': 'UInt8', 'min': 0, 'max': 2, 'depends': [{'name': 'dp_lane_less_mode_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
@@ -136,7 +137,7 @@ confs = [
   # {'name': 'dp_ip_addr', 'default': '', 'type': 'Text', 'conf_type': ['struct']},
   # {'name': 'dp_fan_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 2, 'conf_type': ['param']},
   # {'name': 'dp_last_modified', 'default': str(floor(time.time())), 'type': 'Text', 'conf_type': ['param']},
-  # {'name': 'dp_camera_offset', 'default': 6 if EON else -4 if TICI else 0, 'type': 'Int8', 'min': -100, 'max': 100, 'conf_type': ['param', 'struct']},
+  {'name': 'dp_camera_offset', 'default': CAMERA_OFFSET, 'type': 'Int8', 'min': -100, 'max': 100, 'conf_type': ['param', 'struct']},
   # {'name': 'dp_path_offset', 'default': 0 if EON else -4 if TICI else 0, 'type': 'Int8', 'min': -100, 'max': 100, 'conf_type': ['param', 'struct']},
   #
   # {'name': 'dp_reg', 'default': False, 'type': 'Bool', 'conf_type': ['param']},

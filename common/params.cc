@@ -226,10 +226,13 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_use_lanelines", PERSISTENT},
     {"dp_mapd", PERSISTENT},
     {"dp_lateral_lqr", PERSISTENT},
+    {"dp_dashcamd", PERSISTENT},
     {"dp_auto_shutdown", PERSISTENT},
     {"dp_auto_shutdown_in", PERSISTENT},
     {"dp_mazda_steer_alert", PERSISTENT},
+    {"dp_hotspot_on_boot", PERSISTENT},
     {"dp_honda_eps_mod", PERSISTENT},
+    {"dp_camera_offset", PERSISTENT},
 };
 
 } // namespace
