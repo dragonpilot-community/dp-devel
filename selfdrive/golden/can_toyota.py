@@ -52,21 +52,21 @@ def can_function(pm, speed, angle, idx, cruise_button=0, is_engaged=False):
   msg.append(packer.make_can_msg("PRE_COLLISION", 2, {}))
   msg.append(packer.make_can_msg("STEERING_LKA", 2, {}))
 
-  if idx % 10 == 0 :
-    # radar
-    i = 0
-    for i in range(16):
-      msg.append(rpacker.make_can_msg("TRACK_A_%d" % i, 1, {"VALID":60, "LONG_DIST": 255.5}))
+  i = 0
+  for i in range(16):
+    msg.append(rpacker.make_can_msg("TRACK_A_%d" % i, 1, {"VALID":60, "LONG_DIST": 255.5}))
 
-    j = 0
-    for j in range(16):
-      msg.append(rpacker.make_can_msg("TRACK_B_%d" % j, 1, {"SCORE":100}))
+  j = 0
+  for j in range(16):
+    msg.append(rpacker.make_can_msg("TRACK_B_%d" % j, 1, {"SCORE":100}))
   # fill in the rest for fingerprint
-  #done = set([x[0] for x in msg])
-  #for k, v in FINGERPRINTS[CAR.HIGHLANDER][0].items():
-    #if k not in done and k not in [0xFFF]:
-     # msg.append([k, 0, b'\x00'*v, 0])
-  pm.send('can', can_list_to_can_capnp(msg))
+  done = set([x[0] for x in msg])
+  for k, v in FW_VERSIONS[CAR.HIGHLANDER].items():
+    if k not in done and k not in [0xFFF]:
+      #msg.append([k, 0, b'\x00'*v, 0])
+      #print(msg)
+      pm.send('can', can_list_to_can_capnp(msg))
+  #pm.send('can', can_list_to_can_capnp(msg))
 
 def sendcan_function(sendcan):
   sc = messaging.drain_sock_raw(sendcan)
