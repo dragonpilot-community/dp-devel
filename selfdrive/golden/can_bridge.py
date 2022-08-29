@@ -30,7 +30,7 @@ def shutdown():
 
   keyboard_shutdown()
 
-  #params.delete("CalibrationParams")
+  #params.remove("CalibrationParams")
 
   dat = messaging.new_message('pandaStates', 1)
   dat.valid = True
@@ -53,8 +53,8 @@ def main():
   global params
   global pm
 
-  params.delete("Offroad_ConnectivityNeeded")
-  #params.delete("CalibrationParams")
+  params.remove("Offroad_ConnectivityNeeded")
+  #params.remove("CalibrationParams")
   #params.put("CalibrationParams", '{"calib_radians": [0,0,0], "valid_blocks": 20}')
 
   os.system('rm /tmp/op_git_updated')

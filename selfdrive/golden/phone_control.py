@@ -240,11 +240,11 @@ def process_phone_data(sync_data):
 def clear_params(op_params):
     global params
 
-    params.delete("Offroad_ConnectivityNeeded")
-    params.delete("Offroad_ConnectivityNeededPrompt")
+    params.remove("Offroad_ConnectivityNeeded")
+    params.remove("Offroad_ConnectivityNeededPrompt")
 
     if os.path.exists(OP_CARLIBRATION):
-      params.delete("CalibrationParams")
+      params.remove("CalibrationParams")
       os.system('rm ' + OP_CARLIBRATION)
 
     now = datetime.datetime.now()
