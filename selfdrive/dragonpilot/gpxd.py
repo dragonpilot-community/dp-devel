@@ -42,7 +42,7 @@ LOST_SIGNAL_COUNT_LENGTH = 10 # secs, output log file if we lost signal for this
 LOST_SIGNAL_COUNT_MAX = LOST_SIGNAL_COUNT_LENGTH * LOG_HERTZ # secs,
 LOGS_PER_FILE = LOG_LENGTH * 60 * LOG_HERTZ # e.g. 10 * 60 * 10 = 6000 points per file
 
-_DEBUG = True
+_DEBUG = False
 _CLOUDLOG_DEBUG = True
 
 
