@@ -49,6 +49,8 @@ class CarController:
     if dragonconf is not None:
       self.dp_toyota_sng = dragonconf.dpToyotaSng
       self.dp_atl = dragonconf.dpAtl
+      self.dp_toyota_auto_lock = dragonconf.dpToyotaAutoLock
+      self.dp_toyota_auto_unlock = dragonconf.dpToyotaAutoUnlock
     actuators = CC.actuators
     hud_control = CC.hudControl
     pcm_cancel_cmd = CC.cruiseControl.cancel

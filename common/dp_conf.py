@@ -69,6 +69,8 @@ confs = [
   {'name': 'dp_toyota_ap_btn_link', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_toyota_cruise_override', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_toyota_cruise_override_speed', 'default': 30, 'type': 'UInt8', 'min': 5, 'max': 60, 'depends': [{'name': 'dp_accel_profile_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_toyota_auto_lock', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_toyota_auto_unlock', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   {'name': 'dp_use_lanelines', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_mapd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
