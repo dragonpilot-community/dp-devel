@@ -236,6 +236,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_hotspot_on_boot", PERSISTENT},
     {"dp_honda_eps_mod", PERSISTENT},
     {"dp_camera_offset", PERSISTENT},
+    {"dp_dm", PERSISTENT},
 };
 
 } // namespace
