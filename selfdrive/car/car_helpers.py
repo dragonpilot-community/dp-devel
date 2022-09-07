@@ -91,7 +91,7 @@ def fingerprint(logcan, sendcan):
     fixed_fingerprint = car_selected
 
   if not fixed_fingerprint and not skip_fw_query:
-    # Vin query only reliably works thorugh OBDII
+    # Vin query only reliably works through OBDII
     bus = 1
 
     cached_params = Params().get("CarParamsCache")

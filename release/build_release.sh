@@ -78,9 +78,8 @@ find . -name '__pycache__' -delete
 find selfdrive/ui/ -name '*.h' -delete
 rm -rf panda/board panda/certs panda/crypto
 rm -rf .sconsign.dblite Jenkinsfile release/
-rm selfdrive/modeld/models/supercombo.dlc
-#rm models/supercombo_badweights.thneed
-rm -fr selfdrive/ui/replay/
+rm selfdrive/modeld/models/supercombo.onnx
+
 # Move back signed panda fw
 mkdir -p panda/board/obj
 mv /tmp/panda.bin.signed panda/board/obj/panda.bin.signed

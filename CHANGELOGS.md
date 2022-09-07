@@ -1,6 +1,30 @@
 dragonpilot [latest]
 ========================
-* Synced with openpilot master 2022.08.23 commits.
+* Synced with openpilot master 2022.09.01 commits.
+* Refactor: Dynamic Follow has been removerd temporary. Needs a refactor. (wip)
+* ADDED: Auto Toyota door lock/unlock **only works on some car**
+* READDED: Camera offset toggle.
+* Improvement: gpxd now uses liveLocationKalman better performance.
+* bug fix and improvement.
+
+dragonpilot [2022.08.07]
+========================
+Synced to openpilot master 2022.08.07 commits.
+NEW: Added back auto shutdown toggle.
+NEW: Added back LQR tune toggle.
+NEW: MAZDA - Ability to enable/disable below steer speed alert. (Thanks to @TheCrowd)
+TWEAKED: Panda Recovery should kill boardd process first.
+FIXED: Fixed stop working issue when mapd crashed.
+
+dragonpilot 2022.07.27
+========================
+NEW: Synced to openpilot 2022.07.27 commits.
+NEW: Included Mazda vehicles.
+TWEAK: Only show road name bar when it's not empty.
+TWEAK: Enlarged lead car distance text.
+TWEAK: TOYOTA - Updated lowest speed override feature.
+FIXED: Fixed Panda Flash/Recovery buttons.
+FIXED: Included dp_patcher.py execution.
 
 dragonpilot 2022.07.01
 ========================

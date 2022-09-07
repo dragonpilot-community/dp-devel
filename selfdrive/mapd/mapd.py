@@ -12,7 +12,6 @@ from selfdrive.mapd.config import QUERY_RADIUS, MIN_DISTANCE_FOR_NEW_QUERY, FULL
 from system.swaglog import cloudlog
 
 # dp
-import math
 from common.params import Params
 import json
 
@@ -87,46 +86,17 @@ class MapD():
 
     log = sm[sock]
     self.last_gps = log
-    skip_gps_query = False
-    location_valid = False
 
     # ignore the message if the fix is invalid
     if log.flags % 2 == 0:
-      skip_gps_query = True
-
-    if not skip_gps_query:
-      self.last_gps_fix_timestamp = log.unixTimestampMillis  # Unix TS. Milliseconds since January 1, 1970.
-      self.location_rad = np.radians(np.array([log.latitude, log.longitude], dtype=float))
-      self.location_deg = (log.latitude, log.longitude)
-      self.bearing_rad = np.radians(log.bearingDeg, dtype=float)
-      self.gps_speed = log.speed
-      self.location_stdev = log.accuracy  # log accuracies are presumably 1 standard deviation.
-
-    sock = 'liveLocationKalman'
-    if sm.updated[sock] and sm.valid[sock]:
-      location = sm[sock]
-      location_valid = location.positionGeodetic.valid
-
-      if location_valid:
-        _debug("Mapd: Using liveLocationKalman")
-        lat = float(location.positionGeodetic.value[0])
-        lon = float(location.positionGeodetic.value[1])
-        bearing = math.degrees(location.calibratedOrientationNED.value[2])
-
-        self.last_gps_fix_timestamp = location.unixTimestampMillis  # Unix TS. Milliseconds since January 1, 1970.
-        self.location_rad = np.radians(np.array([lat, lon], dtype=float))
-        self.location_deg = (lat, lon)
-        self.bearing_rad = np.radians(bearing, dtype=float)
-        self.gps_speed = sm['carState'].vEgo
-        self.location_stdev = 1.0 if log.accuracy > 5 else log.accuracy
-
-        # self.last_gps.latitude = lat
-        # self.last_gps.longitude = lon
-        # self.last_gps.speed = self.gps_speed
-        # self.last_gps.bearingDeg = bearing
-
-    if skip_gps_query and not location_valid:
       return
+
+    self.last_gps_fix_timestamp = log.unixTimestampMillis  # Unix TS. Milliseconds since January 1, 1970.
+    self.location_rad = np.radians(np.array([log.latitude, log.longitude], dtype=float))
+    self.location_deg = (log.latitude, log.longitude)
+    self.bearing_rad = np.radians(log.bearingDeg, dtype=float)
+    self.gps_speed = log.speed
+    self.location_stdev = log.accuracy  # log accuracies are presumably 1 standard deviation.
 
     _debug('Mapd: ********* Got GPS fix'
            + f'Pos: {self.location_deg} +/- {self.location_stdev * 2.} mts.\n'
@@ -305,7 +275,7 @@ def mapd_thread(sm=None, pm=None):
 
   # *** setup messaging
   if sm is None:
-    sm = messaging.SubMaster(['gpsLocationExternal', 'controlsState', 'liveLocationKalman', 'carState'])
+    sm = messaging.SubMaster(['gpsLocationExternal', 'controlsState'])
   if pm is None:
     pm = messaging.PubMaster(['liveMapData'])
 
