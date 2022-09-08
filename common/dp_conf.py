@@ -72,7 +72,6 @@ confs = [
   {'name': 'dp_toyota_auto_lock', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_toyota_auto_unlock', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
-  {'name': 'dp_use_lanelines', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_mapd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   {'name': 'dp_lateral_lqr', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
