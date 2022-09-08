@@ -200,6 +200,7 @@ STATIC_DSU_MSGS = [
 ]
 
 FW_VERSIONS = {
+  CAR.CHR_TSS2: {(Ecu.eps, 0xfff, None): [b'\x00']},
   CAR.AVALON: {
     (Ecu.abs, 0x7b0, None): [
       b'F152607060\x00\x00\x00\x00\x00\x00',
