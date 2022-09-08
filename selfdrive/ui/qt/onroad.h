@@ -42,9 +42,9 @@ class NvgWindow : public CameraViewWidget {
   Q_PROPERTY(bool rightHandDM MEMBER rightHandDM);
   Q_PROPERTY(int status MEMBER status);
   //dp
-  Q_PROPERTY(bool showVTC MEMBER showVTC);
-  Q_PROPERTY(QString vtcSpeed MEMBER vtcSpeed);
-  Q_PROPERTY(QColor vtcColor MEMBER vtcColor);
+  //Q_PROPERTY(bool showVTC MEMBER showVTC);
+  //Q_PROPERTY(QString vtcSpeed MEMBER vtcSpeed);
+  //Q_PROPERTY(QColor vtcColor MEMBER vtcColor);
   Q_PROPERTY(bool showDebugUI MEMBER showDebugUI);
 
   Q_PROPERTY(QString roadName MEMBER roadName);
@@ -70,8 +70,8 @@ private:
   void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity);
   void drawText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
   void drawCenteredText(QPainter &p, int x, int y, const QString &text, QColor color);
-  void drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, const QColor &color, const QString &speed,
-                                  int alpha);
+  //void drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, const QColor &color, const QString &speed,
+  //                                int alpha);
   void drawCircle(QPainter &p, int x, int y, int r, QBrush bg);
   void drawTurnSpeedSign(QPainter &p, QRect rc, const QString &speed, const QString &sub_text, int curv_sign, bool is_active);
 
@@ -98,9 +98,9 @@ private:
   bool v_ego_cluster_seen = false;
   int status = STATUS_DISENGAGED;
   //dp
-  bool showVTC = false;
-  QString vtcSpeed;
-  QColor vtcColor;
+  //bool showVTC = false;
+  //QString vtcSpeed;
+  //QColor vtcColor;
 
   bool showDebugUI = false;
 
