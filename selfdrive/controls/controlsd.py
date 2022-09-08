@@ -720,11 +720,11 @@ class Controls:
     if self.joystick_mode and self.sm.rcv_frame['testJoystick'] > 0 and self.sm['testJoystick'].buttons[0]:
       CC.cruiseControl.cancel = True
 
-    speeds = self.sm['longitudinalPlan'].speeds
-    if len(speeds):
-      if self.sm['dragonConf'].dpAtl == 1 and self.sm['longitudinalPlan'].hasLead:
-        CC.cruiseControl.resume = CS.cruiseActualEnabled and CS.cruiseState.standstill and speeds[-1] > 0.1
-      else:
+    if self.sm['dragonConf'].dpAtl == 1:
+      CC.cruiseControl.resume = CS.cruiseActualEnabled and CS.cruiseState.standstill
+    else:
+      speeds = self.sm['longitudinalPlan'].speeds
+      if len(speeds):
         CC.cruiseControl.resume = self.enabled and CS.cruiseState.standstill and speeds[-1] > 0.1
 
     hudControl = CC.hudControl
