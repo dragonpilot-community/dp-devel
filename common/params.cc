@@ -168,7 +168,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"Timezone", PERSISTENT},
     {"TrainingVersion", PERSISTENT},
     {"TurnSpeedControl", PERSISTENT},
-    {"TurnVisionControl", PERSISTENT},
+    //{"TurnVisionControl", PERSISTENT},
     {"UpdateAvailable", CLEAR_ON_MANAGER_START},
     {"UpdateFailedCount", CLEAR_ON_MANAGER_START},
     {"Version", PERSISTENT},
@@ -237,7 +237,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_mazda_steer_alert", PERSISTENT},
     {"dp_hotspot_on_boot", PERSISTENT},
     {"dp_honda_eps_mod", PERSISTENT},
-    {"dp_camera_offset", PERSISTENT},
     {"dp_dm", PERSISTENT},
 };
 
