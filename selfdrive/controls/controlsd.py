@@ -117,9 +117,6 @@ class Controls:
 
     # dp
     self.sm['dragonConf'].dpAtl = int(Params().get('dp_atl', encoding='utf8'))
-    self.sm['dragonConf'].dpCameraOffset =  CAMERA_OFFSET * 100 # 0.04 x 100 = 4
-    self.dp_camera_offset_last = None
-    self.camera_offset = CAMERA_OFFSET
 
     # set alternative experiences from parameters
     self.disengage_on_accelerator = params.get_bool("DisengageOnAccelerator")
@@ -701,9 +698,6 @@ class Controls:
         self.button_timers[b.type.raw] = 1 if b.pressed else 0
 
   def publish_logs(self, CS, start_time, CC, lac_log):
-    if self.sm['dragonConf'].dpCameraOffset != self.dp_camera_offset_last:
-      self.camera_offset = self.sm['dragonConf'].dpCameraOffset * 0.01
-      self.dp_camera_offset_last = self.sm['dragonConf'].dpCameraOffset
 
     """Send actuators and hud commands to the car, send controlsstate and MPC logging"""
 
@@ -749,8 +743,8 @@ class Controls:
       r_lane_change_prob = desire_prediction[Desire.laneChangeRight - 1]
 
       lane_lines = model_v2.laneLines
-      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + self.camera_offset))
-      r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - self.camera_offset))
+      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET))
+      r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
 
       hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
       hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)
