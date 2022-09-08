@@ -5,7 +5,6 @@ import sys
 import json
 import time
 from math import floor
-from selfdrive.controls.lib.lane_planner import CAMERA_OFFSET
 
 '''
 * type: Bool, Int8, UInt8, UInt16, Float32
