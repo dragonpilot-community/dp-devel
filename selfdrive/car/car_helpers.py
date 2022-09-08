@@ -213,11 +213,11 @@ def get_car(logcan, sendcan):
   x = threading.Thread(target=crash_log, args=(candidate,))
   x.start()
 
-  disable_radar = Params().get_bool("DisableRadar")
+  experimental_long = Params().get_bool("ExperimentalLongitudinalEnabled")
 
   try:
     CarInterface, CarController, CarState = interfaces[candidate]
-    CP = CarInterface.get_params(candidate, fingerprints, car_fw, disable_radar)
+    CP = CarInterface.get_params(candidate, fingerprints, car_fw, experimental_long)
     CP.carVin = vin
     CP.carFw = car_fw
     CP.fingerprintSource = source
