@@ -580,6 +580,9 @@ common/i18n.py
 selfdrive/assets/fonts/NotoSansCJKtc-Bold.otf
 selfdrive/assets/fonts/NotoSansCJKtc-Medium.otf
 selfdrive/assets/fonts/NotoSansCJKtc-Regular.otf
+installer/custom/install_osm.sh
+installer/custom/install_osm_db.sh
+selfdrive/manager/local_osm_install.py
 selfdrive/assets/locales/ja-JP/LC_MESSAGES/events.mo
 selfdrive/assets/locales/ko-KR/LC_MESSAGES/events.mo
 selfdrive/assets/locales/zh-CN/LC_MESSAGES/events.mo
