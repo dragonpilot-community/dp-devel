@@ -348,13 +348,14 @@ class LongitudinalMpc:
       y_dist = [1.1, 1.15, 1.25,  1.3,   1.3368, 1.3368, 1.3, 1.24,  1.16,  1.2,  1.21, 1.22,  1.23,  1.24,   1.25,  1.26,  1.27]
       self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
     elif carstate.distanceLines == 2: # Relaxed
-      x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 25.0, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
-      y_dist = [1.2, 1.33, 1.376, 1.4,    1.413, 1.418, 1.44,  1.48,  1.5,   1.5,   1.5,  1.53,  1.56,  1.6,  1.64,  1.68,  1.72]
-      self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
-    else:
       x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
       y_dist = [1.3, 1.38, 1.45,   1.5045, 1.535, 1.59,  1.642, 1.683, 1.726, 1.76,  1.83,  1.9,   1.99,  2.1,   2.23,  2.4]
       self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
+    else:
+      #x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
+      #y_dist = [1.3, 1.38, 1.45,   1.5045, 1.535, 1.59,  1.642, 1.683, 1.726, 1.76,  1.83,  1.9,   1.99,  2.1,   2.23,  2.4]
+      #self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
+      self.desired_TF = T_FOLLOW
 
   def update(self, carstate, radarstate, v_cruise, x, v, a, j, prev_accel_constraint):
     v_ego = self.x0[1]
