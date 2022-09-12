@@ -225,7 +225,7 @@ class CarInterfaceBase(ABC):
       events.add(EventName.stockFcw)
     if cs_out.stockAeb:
       events.add(EventName.stockAeb)
-    if cs_out.vEgo > MAX_CTRL_SPEED:
+    if self.dragonconf.dpSpeedCheck and cs_out.vEgo > MAX_CTRL_SPEED:
       events.add(EventName.speedTooHigh)
     if self.dragonconf.dpAtl != 1 and cs_out.cruiseState.nonAdaptive:
       events.add(EventName.wrongCruiseMode)

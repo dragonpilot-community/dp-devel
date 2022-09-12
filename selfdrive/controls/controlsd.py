@@ -117,6 +117,7 @@ class Controls:
 
     # dp
     self.sm['dragonConf'].dpAtl = int(Params().get('dp_atl', encoding='utf8'))
+    self.dp_temp_check = Params().get_bool('dp_temp_check')
 
     # set alternative experiences from parameters
     self.disengage_on_accelerator = params.get_bool("DisengageOnAccelerator")
@@ -271,7 +272,7 @@ class Controls:
       self.events.add_from_msg(CS.events)
 
     # Create events for temperature, disk space, and memory
-    if self.sm['deviceState'].thermalStatus >= ThermalStatus.red:
+    if self.dp_temp_check and self.sm['deviceState'].thermalStatus >= ThermalStatus.red:
       self.events.add(EventName.overheat)
     if self.sm['deviceState'].freeSpacePercent < 7 and not SIMULATION:
       # under 7% of space free no enable allowed
