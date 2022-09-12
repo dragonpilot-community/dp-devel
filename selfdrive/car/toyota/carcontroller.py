@@ -21,7 +21,7 @@ MAX_USER_TORQUE = 500
 GearShifter = car.CarState.GearShifter
 UNLOCK_CMD = b'\x40\x05\x30\x11\x00\x40\x00\x00'
 LOCK_CMD = b'\x40\x05\x30\x11\x00\x80\x00\x00'
-LOCK_AT_SPEED = 25 * CV.KPH_TO_MS
+LOCK_AT_SPEED = 10 * CV.KPH_TO_MS
 
 class CarController:
   def __init__(self, dbc_name, CP, VM):
