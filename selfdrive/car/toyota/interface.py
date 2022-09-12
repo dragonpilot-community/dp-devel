@@ -191,8 +191,6 @@ class CarInterface(CarInterfaceBase):
       # set_lat_tune(ret.lateralTuning, LatTunes.PID_N)
       set_lat_tune(ret.lateralTuning, LatTunes.INDI_PRIUS_TSS2)
       ret.steerActuatorDelay = 0.3
-      #ret.steerRateCost = 1.25
-      ret.steerLimitTimer = 0.5
 
     elif candidate == CAR.MIRAI:
       stop_and_go = True
@@ -259,7 +257,7 @@ class CarInterface(CarInterfaceBase):
       ret.vEgoStopping = 0.2  # car is near 0.1 to 0.2 when car starts requesting stopping accel
       ret.vEgoStarting = 0.2  # needs to be > or == vEgoStopping
       ret.stopAccel = -2.0  # Toyota requests -0.4 when stopped
-      ret.stoppingDecelRate = 0.8  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
+      ret.stoppingDecelRate = 0.3  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
       ret.longitudinalActuatorDelayLowerBound = 0.3
       ret.longitudinalActuatorDelayUpperBound = 0.3
     else:

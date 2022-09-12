@@ -33,10 +33,10 @@ def set_long_tune(tune, name):
   if name == LongTunes.TSS2 or name == LongTunes.PEDAL:
     tune.deadzoneBP = [0., 8.05]
     tune.deadzoneV = [.0, .14]
-    tune.kpBP = [0., 5., 20.]
-    tune.kpV = [1.3, 1.0, 0.7]
-    tune.kiBP = [0., 5., 12., 20., 27.]
-    tune.kiV = [.35, .23, .20, .17, .1]
+    tune.kpBP = [0., 5., 20., 30.]
+    tune.kpV = [1.3, 1.0, 0.7, 0.1]
+    tune.kiBP = [0., 0.07, 8, 13., 18., 20., 24., 25., 27., 33.]
+    tune.kiV = [.01, .1, .15, .21, .175, .18, .2, .01, .001, .0001]
   # Default longitudinal tune
   elif name == LongTunes.TSS:
     tune.deadzoneBP = [0., 9.]
@@ -54,14 +54,22 @@ def set_lat_tune(tune, name, MAX_LAT_ACCEL=2.5, FRICTION=0.01, steering_angle_de
 
   if name == LatTunes.INDI_PRIUS_TSS2:
     tune.init('indi')
-    tune.indi.innerLoopGainBP = [20, 24, 30]
-    tune.indi.innerLoopGainV = [7.25, 7.5, 9]
-    tune.indi.outerLoopGainBP = [20, 24, 30]
-    tune.indi.outerLoopGainV = [6, 7.25, 6]
-    tune.indi.timeConstantBP = [20, 24]
-    tune.indi.timeConstantV = [2.0, 2.2]
-    tune.indi.actuatorEffectivenessBP = [20, 24]
-    tune.indi.actuatorEffectivenessV = [2, 3]
+    #tune.indi.innerLoopGainBP = [20, 24, 30]
+    #tune.indi.innerLoopGainV = [7.25, 7.5, 9]
+    #tune.indi.outerLoopGainBP = [20, 24, 30]
+    #tune.indi.outerLoopGainV = [6, 7.25, 6]
+    #tune.indi.timeConstantBP = [20, 24]
+    #tune.indi.timeConstantV = [2.0, 2.2]
+    #tune.indi.actuatorEffectivenessBP = [20, 24]
+    #tune.indi.actuatorEffectivenessV = [2, 3]
+    tune.indi.innerLoopGainBP = [0.]
+    tune.indi.innerLoopGainV = [15]
+    tune.indi.outerLoopGainBP = [0.]
+    tune.indi.outerLoopGainV = [17]
+    tune.indi.timeConstantBP = [0.]
+    tune.indi.timeConstantV = [4.5]
+    tune.indi.actuatorEffectivenessBP = [0.]
+    tune.indi.actuatorEffectivenessV = [15]
   elif 'PID' in str(name):
     tune.init('pid')
     tune.pid.kiBP = [0.0]
