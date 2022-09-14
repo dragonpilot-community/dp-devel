@@ -118,7 +118,6 @@ private:
   QString mtscSubText;
   bool mtscActive = false;
   int curveSign = 0;
-  int speedLimitStyle;
 
 protected:
   void paintGL() override;
