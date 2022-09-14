@@ -332,7 +332,7 @@ void NvgWindow::drawHud(QPainter &p) {
   int default_rect_width = 172;
   int rect_width = default_rect_width;
   if (is_metric || has_eu_speed_limit) rect_width = 200;
-  if ((speedLimitStrSlc.size() >= 3) || (has_us_speed_limit && speedLimitStr.size() >= 3)) rect_width = 223;
+  if (has_us_speed_limit && speedLimitStr.size() >= 3) rect_width = 223;
 
   int rect_height = 204;
   if (has_us_speed_limit) rect_height = 432;
