@@ -244,6 +244,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_dm", PERSISTENT},
     {"dp_speed_check", PERSISTENT},
     {"dp_temp_check", PERSISTENT},
+    {"dp_vag_resume_fix", PERSISTENT},
 };
 
 } // namespace

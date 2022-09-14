@@ -118,6 +118,7 @@ class Controls:
     # dp
     self.sm['dragonConf'].dpAtl = int(Params().get('dp_atl', encoding='utf8'))
     self.dp_temp_check = Params().get_bool('dp_temp_check')
+    self.dp_vag_resume_fix = Params().get_bool('dp_vag_resume_fix')
 
     # set alternative experiences from parameters
     self.disengage_on_accelerator = params.get_bool("DisengageOnAccelerator")
@@ -715,7 +716,7 @@ class Controls:
     if self.joystick_mode and self.sm.rcv_frame['testJoystick'] > 0 and self.sm['testJoystick'].buttons[0]:
       CC.cruiseControl.cancel = True
 
-    if self.sm['dragonConf'].dpAtl == 1:
+    if self.dp_vag_resume_fix or self.sm['dragonConf'].dpAtl == 1:
       CC.cruiseControl.resume = CS.cruiseActualEnabled and CS.cruiseState.standstill
     else:
       speeds = self.sm['longitudinalPlan'].speeds

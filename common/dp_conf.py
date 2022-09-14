@@ -95,6 +95,7 @@ confs = [
   {'name': 'dp_dm', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_speed_check', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_temp_check', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_vag_resume_fix', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # lat ctrl
   # {'name': 'dp_lane_less_mode_ctrl', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_lane_less_mode', 'default': 2, 'type': 'UInt8', 'min': 0, 'max': 2, 'depends': [{'name': 'dp_lane_less_mode_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
