@@ -250,16 +250,15 @@ class CarInterface(CarInterfaceBase):
     # to a negative value, so it won't matter.
     ret.minEnableSpeed = -1. if (stop_and_go or ret.enableGasInterceptor) else MIN_ACC_SPEED
 
-    if ret.enableGasInterceptor:
-      set_long_tune(ret.longitudinalTuning, LongTunes.PEDAL)
-    elif candidate in TSS2_CAR:
+    if candidate in TSS2_CAR or ret.enableGasInterceptor:
       set_long_tune(ret.longitudinalTuning, LongTunes.TSS2)
-      ret.vEgoStopping = 0.2  # car is near 0.1 to 0.2 when car starts requesting stopping accel
-      ret.vEgoStarting = 0.2  # needs to be > or == vEgoStopping
-      ret.stopAccel = -2.0  # Toyota requests -0.4 when stopped
-      ret.stoppingDecelRate = 0.3  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
-      ret.longitudinalActuatorDelayLowerBound = 0.3
-      ret.longitudinalActuatorDelayUpperBound = 0.3
+      if candidate in TSS2_CAR:
+        ret.vEgoStopping = 0.2  # car is near 0.1 to 0.2 when car starts requesting stopping accel
+        ret.vEgoStarting = 0.2  # needs to be > or == vEgoStopping
+        ret.stopAccel = -2.0  # Toyota requests -0.4 when stopped
+        ret.stoppingDecelRate = 0.3  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
+        ret.longitudinalActuatorDelayLowerBound = 0.3
+        ret.longitudinalActuatorDelayUpperBound = 0.3
     else:
       set_long_tune(ret.longitudinalTuning, LongTunes.TSS)
 

@@ -32,14 +32,13 @@ void PairingQRWidget::hideEvent(QHideEvent *event) {
 }
 
 void PairingQRWidget::refresh() {
-  if (isVisible()) {
-    QString pairToken = CommaApi::create_jwt({{"pair", true}});
-    QString qrString = "https://connect.comma.ai/?pair=" + pairToken;
-    if (Params().getBool("dp_api_custom")) {
-      qrString = QString::fromStdString(Params().get("IMEI")) + "--" + QString::fromStdString(Params().get("HardwareSerial")) + "--" + pairToken;
-    }
-    this->updateQrCode(qrString);
+  QString pairToken = CommaApi::create_jwt({{"pair", true}});
+  QString qrString = "https://connect.comma.ai/?pair=" + pairToken;
+  if (Params().getBool("dp_api_custom")) {
+    qrString = QString::fromStdString(Params().get("IMEI")) + "--" + QString::fromStdString(Params().get("HardwareSerial")) + "--" + pairToken;
   }
+  this->updateQrCode(qrString);
+  update();
 }
 
 void PairingQRWidget::updateQrCode(const QString &text) {
