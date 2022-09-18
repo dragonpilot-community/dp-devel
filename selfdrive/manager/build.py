@@ -43,7 +43,8 @@ def build(spinner: Spinner, dirty: bool = False) -> None:
       prefix = b'progress: '
       if line.startswith(prefix):
         i = int(line[len(prefix):])
-        spinner.update_progress(MAX_BUILD_PROGRESS * min(1., i / TOTAL_SCONS_NODES), 100.)
+        #spinner.update_progress(MAX_BUILD_PROGRESS * min(1., i / TOTAL_SCONS_NODES), 100.)
+        spinner.update(f"compiling {round(MAX_BUILD_PROGRESS * ( i /  TOTAL_SCONS_NODES))}%")
       elif len(line):
         compile_output.append(line)
         print(line.decode('utf8', 'replace'))
