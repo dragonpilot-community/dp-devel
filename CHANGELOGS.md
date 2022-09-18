@@ -2,7 +2,8 @@ dragonpilot [latest]
 ========================
 * Synced with openpilot master 2022.09.19 commits.
 * READD: refactored dyanmaic follow. support all car with op long.
-* ADDED: PRIUS_TSS2 (2020-2022) now uses torque as default and auto learns. 
+* ADDED: PRIUS_TSS2 (2020-2022) now uses torque as default and auto learns.
+* bug fix and improvement
 
 dragonpilot [2022.09.09]
 ========================

@@ -18,6 +18,7 @@ OVERPY_SPEC = importlib.util.find_spec('overpy')
 MAX_BUILD_PROGRESS = 100
 TMP_DIR = '/data/tmp'
 PYEXTRA_DIR = '/data/openpilot/pyextra'
+DP_PYEXTRA_DIR = '/data/dp_pyextra'
 
 
 def wait_for_internet_connection(return_on_failure=False):
@@ -37,7 +38,7 @@ def wait_for_internet_connection(return_on_failure=False):
 def install_dep(spinner):
   wait_for_internet_connection()
 
-  TOTAL_PIP_STEPS = 2986
+  TOTAL_PIP_STEPS = 21
 
   try:
     os.makedirs(TMP_DIR)
@@ -65,7 +66,10 @@ def install_dep(spinner):
       break
     if output:
       steps += 1
-      spinner.update_progress(MAX_BUILD_PROGRESS * min(1., steps / TOTAL_PIP_STEPS), 100.)
+      if steps == 21:
+        spinner.update(f"Downloaded {round(MAX_BUILD_PROGRESS * (steps / TOTAL_PIP_STEPS))}%")
+      else:
+        spinner.update(f"Downloading... {round(MAX_BUILD_PROGRESS * (steps / TOTAL_PIP_STEPS))}%")
       print(output.decode('utf8', 'replace'))
 
   shutil.rmtree(TMP_DIR)
@@ -77,8 +81,18 @@ def install_dep(spinner):
       shutil.rmtree(directory)
     shutil.rmtree(f'{PYEXTRA_DIR}/bin')
 
+  dup = 'cp -rf /data/openpilot/pyextra /data/dp_pyextra'
+  process_dup = subprocess.Popen(dup, stdout=subprocess.PIPE, shell=True)
+
 
 if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):
   spinner = Spinner()
-  spinner.update_progress(0, 100)
-  install_dep(spinner)
+  if os.path.exists(DP_PYEXTRA_DIR):
+    spinner.update("Loading dependencies")
+    command = 'rm -rf /data/openpilot/pyextra; cp -rf /data/dp_pyextra /data/openpilot/pyextra'
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+    print("dp: Removed directory /data/openpilot/pyextra")
+    print("dp: Copied /data/dp_pyextra to /data/openpilot/pyextra")
+  else:
+    spinner.update("Waiting for internet")
+    install_dep(spinner)
