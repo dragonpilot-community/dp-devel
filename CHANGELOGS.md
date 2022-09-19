@@ -1,11 +1,17 @@
 dragonpilot [latest]
 ========================
+* Synced with openpilot master 2022.09.017 commits.
+* READD: refactored dyanmaic follow. support all car with op long.
+
+dragonpilot [2022.09.09]
+========================
 * Synced with openpilot master 2022.09.09 commits.
 * ADDED: us-west coast can now use mapd without data. See toggle description for more detail.
 * READD: Temp check toggl e, max speed toggle and couple other UI toggles.
 * bug fix and improvement
 
 dragonpilot [2022.09.04]
+========================
 * Synced with openpilot master 2022.09.01 commits.
 * Refactor: Dynamic Follow has been removerd temporary. Needs a refactor. (wip)
 * ADDED: Auto Toyota door lock/unlock **only works on some car**
