@@ -1,6 +1,6 @@
 dragonpilot [latest]
 ========================
-* Synced with openpilot master 2022.09.017 commits.
+* Synced with openpilot master 2022.09.19 commits.
 * READD: refactored dyanmaic follow. support all car with op long.
 
 dragonpilot [2022.09.09]
