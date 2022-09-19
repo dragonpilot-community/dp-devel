@@ -239,6 +239,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_toyota_cruise_override_speed", PERSISTENT},
     {"dp_toyota_auto_lock", PERSISTENT},
     {"dp_toyota_auto_unlock", PERSISTENT},
+    {"dp_toyota_fp_btn_link", PERSISTENT},
     {"dp_mapd", PERSISTENT},
     {"dp_local_db", PERSISTENT},
     {"dp_lateral_lqr", PERSISTENT},
@@ -252,6 +253,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_speed_check", PERSISTENT},
     {"dp_temp_check", PERSISTENT},
     {"dp_vag_resume_fix", PERSISTENT},
+    {"dp_following_profile_ctrl", PERSISTENT},
+    {"dp_following_profile", PERSISTENT},
 };
 
 } // namespace

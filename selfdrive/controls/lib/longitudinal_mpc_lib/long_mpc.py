@@ -202,6 +202,8 @@ class LongitudinalMpc:
     self.desired_TF = T_FOLLOW
     self.reset()
     self.source = SOURCES[2]
+    self.dp_following_profile_ctrl = False
+    self.dp_following_profile = 2
 
   def reset(self):
     # self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
@@ -320,31 +322,29 @@ class LongitudinalMpc:
     self.cruise_min_a = min_a
     self.cruise_max_a = max_a
 
-  def update_TF(self, carstate):
-    if carstate.distanceLines == 1: # Traffic
-      # At slow speeds more time, decrease time up to 60mph
-      # in mph ~= 5     10   15   20  25     30    35     40  45     50    55     60  65     70    75     80  85     90
-      x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 25.0, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
-      y_dist = [1.1, 1.15, 1.25,  1.3,   1.3368, 1.3368, 1.3, 1.24,  1.16,  1.2,  1.21, 1.22,  1.23,  1.24,   1.25,  1.26,  1.27]
-      self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
-    elif carstate.distanceLines == 2: # Relaxed
-      x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
-      y_dist = [1.3, 1.38, 1.45,   1.5045, 1.535, 1.59,  1.642, 1.683, 1.726, 1.76,  1.83,  1.9,   1.99,  2.1,   2.23,  2.4]
-      self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
-    else:
-      #x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
-      #y_dist = [1.3, 1.38, 1.45,   1.5045, 1.535, 1.59,  1.642, 1.683, 1.726, 1.76,  1.83,  1.9,   1.99,  2.1,   2.23,  2.4]
-      #self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
-      self.desired_TF = T_FOLLOW
+  def update_TF(self, sm, carstate):
+    if self.dp_following_profile_ctrl and self.mode == 'acc':
+      if self.dp_following_profile == 0:
+        # At slow speeds more time, decrease time up to 60mph
+        # in mph ~= 5     10   15   20  25     30    35     40  45     50    55     60  65     70    75     80  85     90
+        x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 25.0, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
+        y_dist = [1.1, 1.15, 1.25,  1.3,   1.3368, 1.3368, 1.3, 1.24,  1.16,  1.2,  1.21, 1.22,  1.23,  1.24,   1.25,  1.26,  1.27]
+        self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
+      if self.dp_following_profile == 1:
+        x_vel = [0.0,  1,    2.78,  5.56,   8.33,  11.11, 13.89, 16.67, 19.44, 22.22, 27.78, 30.56, 33.33, 36.11, 38.89, 41.67]
+        y_dist = [1.3, 1.38, 1.45,   1.5045, 1.535, 1.59,  1.642, 1.683, 1.726, 1.76,  1.83,  1.9,   1.99,  2.1,   2.23,  2.4]
+        self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
+      if self.dp_following_profile == 2:
+        self.desired_TF = T_FOLLOW
 
-  def update(self, carstate, radarstate, v_cruise, x, v, a, j, prev_accel_constraint):
+  def update(self, sm, carstate, radarstate, v_cruise, x, v, a, j, prev_accel_constraint):
     v_ego = self.x0[1]
     self.status = radarstate.leadOne.status or radarstate.leadTwo.status
 
     lead_xv_0 = self.process_lead(radarstate.leadOne)
     lead_xv_1 = self.process_lead(radarstate.leadTwo)
 
-    self.update_TF(carstate)
+    self.update_TF(sm, carstate)
     self.set_weights(prev_accel_constraint)
 
     # To estimate a safe distance from a moving lead, we calculate how much stopping

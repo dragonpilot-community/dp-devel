@@ -49,8 +49,10 @@ class CarState(CarStateBase):
     self.dp_accel_profile_prev = None
     self.dp_accel_profile_init = False
     self.dp_toyota_ap_btn_link = Params().get_bool('dp_toyota_ap_btn_link')
-    # KRKeegan - Add support for toyota distance button
-    self.distance_btn = 0
+    self.read_distance_lines = 0
+    self.read_distance_lines_init = False
+    self.distance = 0
+    self.dp_toyota_fp_btn_link = Params().get_bool('dp_toyota_fp_btn_link')
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -140,6 +142,14 @@ class CarState(CarStateBase):
         self.dp_accel_profile_init = True
       self.dp_accel_profile_prev = self.dp_accel_profile
 
+    #dp: Thank you Arne (distance button)
+    if self.dp_toyota_fp_btn_link:
+      if not self.read_distance_lines_init or self.read_distance_lines != cp.vl["PCM_CRUISE_SM"]['DISTANCE_LINES']:
+        self.read_distance_lines_init = True
+        self.read_distance_lines = cp.vl["PCM_CRUISE_SM"]['DISTANCE_LINES']
+        put_nonblocking('dp_following_profile', str(int(max(self.read_distance_lines - 1, 0)))) # Skipping one profile toyota mid is weird.
+        put_nonblocking('dp_last_modified',str(floor(time.time())))
+
     #dp
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
 
@@ -176,11 +186,6 @@ class CarState(CarStateBase):
       self.acc_type = cp_acc.vl["ACC_CONTROL"]["ACC_TYPE"]
       ret.stockFcw = bool(cp_acc.vl["ACC_HUD"]["FCW"])
 
-    # KRKeegan - Add support for toyota distance button
-    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
-      self.distance_btn = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
-      ret.distanceLines = cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"]
-
     # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
     # these cars are identified by an ACC_TYPE value of 2.
     # TODO: it is possible to avoid the lockout and gain stop and go if you
@@ -210,6 +215,8 @@ class CarState(CarStateBase):
       ret.rightBlindspot = (cp.vl["BSM"]["R_ADJACENT"] == 1) or (cp.vl["BSM"]["R_APPROACHING"] == 1)
 
     ret.cruiseActualEnabled = ret.cruiseState.enabled
+    # distance button
+    self.distance = cp_cam.vl["ACC_CONTROL"]['DISTANCE']
     self._update_traffic_signals(cp_cam)
     ret.cruiseState.speedLimit = self._calculate_speed_limit()
 
@@ -403,7 +410,6 @@ class CarState(CarStateBase):
         ("ACC_HUD", 1),
       ]
 
-    # KRKeegan - Add support for toyota distance button
     if CP.carFingerprint in TSS2_CAR:
       signals.append(("DISTANCE_LINES", "PCM_CRUISE_SM"))
       checks.append(("PCM_CRUISE_SM", 0))
@@ -421,7 +427,7 @@ class CarState(CarStateBase):
 
   @staticmethod
   def get_cam_can_parser(CP):
-    # Include traffic singal signals.
+    # Include traffic signal, single
     signals = [
       ("TSGN1", "RSA1", 0),
       ("SPDVAL1", "RSA1", 0),
@@ -454,7 +460,6 @@ class CarState(CarStateBase):
         ("ACC_HUD", 1),
       ]
 
-      # KRKeegan - Add support for toyota distance button
       signals.append(("DISTANCE", "ACC_CONTROL", 0))
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2)
