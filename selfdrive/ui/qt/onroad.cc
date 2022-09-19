@@ -764,7 +764,7 @@ void NvgWindow::paintGL() {
 
     drawLaneLines(painter, s);
 
-    if (s->scene.longitudinal_control) {
+    if (true) {
       const auto leads = model.getLeadsV3();
       if (leads[0].getProb() > .5) {
         drawLead(painter, leads[0], s->scene.lead_vertices[0]);
