@@ -977,7 +977,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   # dp - use for atl alert
   EventName.communityFeatureDisallowedDEPRECATED: {
-    ET.OVERRIDE: Alert(
+    ET.OVERRIDE_LATERAL: Alert(
       "",
       "",
       AlertStatus.normal, AlertSize.none,

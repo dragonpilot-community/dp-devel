@@ -203,7 +203,7 @@ void NvgWindow::updateState(const UIState &s) {
   const SubMaster &sm = *(s.sm);
 
   const bool cs_alive = sm.alive("controlsState");
-  const bool nav_alive = sm.alive("navInstruction") && sm["navInstruction"].getValid();
+  const bool nav_alive = sm.alive("navInstruction") && sm["navInstruction"].getValid() || sm["dragonConf"].getDragonConf().getDpMapd();
 
   const auto cs = sm["controlsState"].getControlsState();
 
