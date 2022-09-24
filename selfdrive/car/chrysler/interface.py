@@ -74,6 +74,8 @@ class CarInterface(CarInterfaceBase):
     else:
       raise ValueError(f"Unsupported car: {candidate}")
 
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
+
     ret.centerToFront = ret.wheelbase * 0.44
 
     # starting with reasonable value for civic and scaling by mass and wheelbase

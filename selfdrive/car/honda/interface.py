@@ -329,8 +329,8 @@ class CarInterface(CarInterfaceBase):
         ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0x0, 0xB5, 0x161, 0x2D6, 0x4C0, 0x70D, 0xC42, 0x1058, 0x2C00], [0x0, 0x160, 0x1F0, 0x2E0, 0x378, 0x4A0, 0x5F0, 0x804, 0xF00]]
         ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.21], [0.07]] #still needs to finish tuning for the new car
         ret.lateralTuning.pid.kf = 0.00004
-
-    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
+    else:
+      CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
     return ret
 
   @staticmethod

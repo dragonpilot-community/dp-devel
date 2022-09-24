@@ -208,6 +208,8 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 4305. * CV.LB_TO_KG + STD_CARGO_KG
       set_lat_tune(ret.lateralTuning, LatTunes.PID_J)
 
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
+
     ret.centerToFront = ret.wheelbase * 0.44
 
     # TODO: get actual value, for now starting with reasonable value for
@@ -262,7 +264,6 @@ class CarInterface(CarInterfaceBase):
     else:
       set_long_tune(ret.longitudinalTuning, LongTunes.TSS)
 
-    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     return ret
 
   # returns a car.CarState

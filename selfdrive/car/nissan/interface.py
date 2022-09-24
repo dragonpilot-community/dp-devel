@@ -35,6 +35,8 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.824
       ret.centerToFront = ret.wheelbase * 0.44
 
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
+
     ret.steerControlType = car.CarParams.SteerControlType.angle
     ret.radarOffCan = True
 

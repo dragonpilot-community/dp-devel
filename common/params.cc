@@ -257,6 +257,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_vag_resume_fix", PERSISTENT},
     {"dp_following_profile_ctrl", PERSISTENT},
     {"dp_following_profile", PERSISTENT},
+    {"dp_lateral_torque", PERSISTENT},
+    {"dp_lateral_torque_live_tune", PERSISTENT},
 };
 
 } // namespace
