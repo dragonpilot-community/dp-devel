@@ -250,15 +250,15 @@ void NvgWindow::updateState(const UIState &s) {
 
     //dp
     const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
-    //const auto vtcState = lp.getVisionTurnControllerState();
-    //const float vtc_speed = lp.getVisionTurnSpeed() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
-    //const auto lpSoruce = lp.getLongitudinalPlanSource();
-    //QColor vtc_color = tcs_colors[int(vtcState)];
-    //vtc_color.setAlpha(lpSoruce == cereal::LongitudinalPlan::LongitudinalPlanSource::TURN ? 255 : 100);
+    const auto vtcState = lp.getVisionTurnControllerState();
+    const float vtc_speed = lp.getVisionTurnSpeed() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    const auto lpSoruce = lp.getLongitudinalPlanSource();
+    QColor vtc_color = tcs_colors[int(vtcState)];
+    vtc_color.setAlpha(lpSoruce == cereal::LongitudinalPlan::LongitudinalPlanSource::TURN ? 255 : 100);
 
-    //setProperty("showVTC", vtcState > cereal::LongitudinalPlan::VisionTurnControllerState::DISABLED);
-    //setProperty("vtcSpeed", QString::number(std::nearbyint(vtc_speed)));
-    //setProperty("vtcColor", vtc_color);
+    setProperty("showVTC", vtcState > cereal::LongitudinalPlan::VisionTurnControllerState::DISABLED);
+    setProperty("vtcSpeed", QString::number(std::nearbyint(vtc_speed)));
+    setProperty("vtcColor", vtc_color);
     setProperty("showDebugUI", s.scene.show_debug_ui);
 
     const auto lmd = sm["liveMapData"].getLiveMapData();
@@ -491,15 +491,13 @@ void NvgWindow::drawHud(QPainter &p) {
 
   // engage-ability icon
   if (engageable) {
-    drawIcon(p, rect().right() - radius / 2 - bdr_s * 2, radius / 2 + int(bdr_s * 1.5),
-             engage_img, bg_colors[status], 1.0);
-    //if (showDebugUI && showVTC) {
-    //  drawVisionTurnControllerUI(p, rect().right() - 184 - bdr_s, int(bdr_s * 1.5), 184, vtcColor, vtcSpeed, 100);
-    //} else {
+    if (showDebugUI && showVTC) {
+      drawVisionTurnControllerUI(p, rect().right() - 184 - bdr_s, int(bdr_s * 1.5), 184, vtcColor, vtcSpeed, 100);
+    } else {
       // engage-ability icon
-    //  drawIcon(p, rect().right() - radius / 2 - bdr_s * 2, radius / 2 + int(bdr_s * 1.5),
-    //           engage_img, bg_colors[status], 1.0);
-    //}
+      drawIcon(p, rect().right() - radius / 2 - bdr_s * 2, radius / 2 + int(bdr_s * 1.5),
+               engage_img, bg_colors[status], 1.0);
+    }
 
     // Turn Speed Sign
     if (showTurnSpeedLimit) {
@@ -554,17 +552,17 @@ void NvgWindow::drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, flo
   p.drawPixmap(x - img_size / 2, y - img_size / 2, img);
 }
 
-//void NvgWindow::drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, const QColor &color,
-//                                           const QString &vision_speed, int alpha) {
-//  QRect rvtc(x, y, size, size);
-//  p.setPen(QPen(color, 10));
-//  p.setBrush(QColor(0, 0, 0, alpha));
-//  p.drawRoundedRect(rvtc, 20, 20);
-//  p.setPen(Qt::NoPen);
+void NvgWindow::drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, const QColor &color,
+                                           const QString &vision_speed, int alpha) {
+  QRect rvtc(x, y, size, size);
+  p.setPen(QPen(color, 10));
+  p.setBrush(QColor(0, 0, 0, alpha));
+  p.drawRoundedRect(rvtc, 20, 20);
+  p.setPen(Qt::NoPen);
 
-//  configFont(p, "Inter", 56, "SemiBold");
-//  drawCenteredText(p, rvtc.center().x(), rvtc.center().y(), vision_speed, color);
-//}
+  configFont(p, "Inter", 56, "SemiBold");
+  drawCenteredText(p, rvtc.center().x(), rvtc.center().y(), vision_speed, color);
+}
 
 void NvgWindow::drawCircle(QPainter &p, int x, int y, int r, QBrush bg) {
   p.setPen(Qt::NoPen);

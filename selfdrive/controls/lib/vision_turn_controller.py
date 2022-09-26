@@ -5,7 +5,7 @@ from common.numpy_fast import interp
 from common.params import Params
 from common.realtime import sec_since_boot
 from common.conversions import Conversions as CV
-from selfdrive.controls.lib.lane_planner import TRAJECTORY_SIZE
+from selfdrive.controls.lib.lateral_planner import TRAJECTORY_SIZE
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX
 
 
