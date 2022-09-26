@@ -46,6 +46,8 @@ class CarInterface(CarInterfaceBase):
     if candidate not in (CAR.CX5_2022, ):
       ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MS
 
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
+
     ret.centerToFront = ret.wheelbase * 0.41
 
     # TODO: get actual value, for now starting with reasonable value for
@@ -57,7 +59,6 @@ class CarInterface(CarInterfaceBase):
     ret.tireStiffnessFront, ret.tireStiffnessRear = scale_tire_stiffness(ret.mass, ret.wheelbase, ret.centerToFront,
                                                                          tire_stiffness_factor=tire_stiffness_factor)
 
-    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     return ret
 
   # returns a car.CarState

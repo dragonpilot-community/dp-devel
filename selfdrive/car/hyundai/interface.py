@@ -292,6 +292,8 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.16], [0.01]]
 
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
+
     # panda safety config
     if candidate in CANFD_CAR:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.noOutput),
@@ -341,7 +343,6 @@ class CarInterface(CarInterfaceBase):
     if int(Params().get("dp_atl").decode('utf-8')) == 1:
       ret.openpilotLongitudinalControl = False
 
-    CarInterfaceBase.configure_lqr_tune(ret.lateralTuning)
     return ret
 
   @staticmethod

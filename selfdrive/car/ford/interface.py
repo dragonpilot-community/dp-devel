@@ -45,6 +45,8 @@ class CarInterface(CarInterfaceBase):
     else:
       raise ValueError(f"Unsupported car: ${candidate}")
 
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
+
     # Auto Transmission: 0x732 ECU or Gear_Shift_by_Wire_FD1
     found_ecus = [fw.ecu for fw in car_fw]
     if Ecu.shiftByWire in found_ecus or 0x5A in fingerprint[0]:
