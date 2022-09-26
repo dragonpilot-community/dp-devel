@@ -450,13 +450,15 @@ class CarState(CarStateBase):
         ("FORCE", "PRE_COLLISION"),
         ("ACC_TYPE", "ACC_CONTROL"),
         ("FCW", "ACC_HUD"),
-        ("DISTANCE_LINES", "PCM_CRUISE_SM")
+        #dp
+        ("DISTANCE_LINES", "PCM_CRUISE_SM"),
+        ("DISTANCE", "ACC_CONTROL"),
       ]
       checks += [
         ("PRE_COLLISION", 33),
         ("ACC_CONTROL", 33),
         ("ACC_HUD", 1),
-        ("PCM_CRUISE_SM", 0)
+        ("PCM_CRUISE_SM", 0),
       ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2)
