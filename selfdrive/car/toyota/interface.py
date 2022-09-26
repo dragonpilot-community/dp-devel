@@ -51,10 +51,14 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.6371   # hand-tune
       ret.mass = 3045. * CV.LB_TO_KG + STD_CARGO_KG
       # Only give steer angle deadzone to for bad angle sensor prius
-      for fw in car_fw:
-        if fw.ecu == "eps" and not fw.fwVersion == b'8965B47060\x00\x00\x00\x00\x00\x00':
-          steering_angle_deadzone_deg = 1.0
-          CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
+      if Params().get_bool("dp_toyota_prius_bad_angle_tune"):
+        steering_angle_deadzone_deg = 1.0
+        CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
+      else:
+        for fw in car_fw:
+          if fw.ecu == "eps" and not fw.fwVersion == b'8965B47060\x00\x00\x00\x00\x00\x00':
+            steering_angle_deadzone_deg = 1.0
+            CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
 
     elif candidate == CAR.PRIUS_V:
       stop_and_go = True
@@ -131,10 +135,13 @@ class CarInterface(CarInterfaceBase):
 
       # 2019+ RAV4 TSS2 uses two different steering racks and specific tuning seems to be necessary.
       # See https://github.com/commaai/openpilot/pull/21429#issuecomment-873652891
-      for fw in car_fw:
-        if fw.ecu == "eps" and (fw.fwVersion.startswith(b'\x02') or fw.fwVersion in [b'8965B42181\x00\x00\x00\x00\x00\x00']):
-          set_lat_tune(ret.lateralTuning, LatTunes.PID_I)
-          break
+      if Params().get_bool("dp_toyota_rav4_tss2_tune"):
+        set_lat_tune(ret.lateralTuning, LatTunes.PID_I)
+      else:
+        for fw in car_fw:
+          if fw.ecu == "eps" and (fw.fwVersion.startswith(b'\x02') or fw.fwVersion in [b'8965B42181\x00\x00\x00\x00\x00\x00']):
+            set_lat_tune(ret.lateralTuning, LatTunes.PID_I)
+            break
 
     elif candidate in (CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2):
       stop_and_go = True
