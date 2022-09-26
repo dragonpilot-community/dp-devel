@@ -3,6 +3,11 @@ dragonpilot [latest]
 * Synced with openpilot master 2022.09.19 commits.
 * READD: refactored dyanmaic follow. support all car with op long.
 * ADDED: PRIUS_TSS2 (2020-2022) now uses torque as default and auto learns.
+* ADDED: Added a TSS2 RAV4 Special PID Tune toggle.
+* ADDED: Added a PRIUS 2017 Special Torque Tune toggle.
+* ADDED: Toggle to turn on and off Torque controller.
+* ADDED: Toggle to turn on and off auto tune torque controller.
+* ADDED: Vision Turn Controller.
 * bug fix and improvement
 
 dragonpilot [2022.09.09]
