@@ -338,6 +338,7 @@ class CarState(CarStateBase):
       ("ECON_ON", "GEAR_PACKET"),
       ("RPM", "ENGINE_RPM"),
       ("BRAKE_LIGHTS_ACC", "ESP_CONTROL"),
+      ("DISTANCE_LINES", "PCM_CRUISE_SM"),
     ]
 
     checks = [
@@ -410,10 +411,6 @@ class CarState(CarStateBase):
         ("ACC_HUD", 1),
       ]
 
-    if CP.carFingerprint in TSS2_CAR:
-      signals.append(("DISTANCE_LINES", "PCM_CRUISE_SM"))
-      checks.append(("PCM_CRUISE_SM", 0))
-
     if CP.carFingerprint not in (TSS2_CAR - RADAR_ACC_CAR) and not CP.enableDsu:
       signals += [
         ("FORCE", "PRE_COLLISION"),
@@ -453,13 +450,13 @@ class CarState(CarStateBase):
         ("FORCE", "PRE_COLLISION"),
         ("ACC_TYPE", "ACC_CONTROL"),
         ("FCW", "ACC_HUD"),
+        ("DISTANCE_LINES", "PCM_CRUISE_SM")
       ]
       checks += [
         ("PRE_COLLISION", 33),
         ("ACC_CONTROL", 33),
         ("ACC_HUD", 1),
+        ("PCM_CRUISE_SM", 0)
       ]
-
-      signals.append(("DISTANCE", "ACC_CONTROL", 0))
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2)
