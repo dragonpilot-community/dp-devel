@@ -108,7 +108,7 @@ class CarState(CarStateBase):
 
     #dp: Thank you Arne (acceleration)
     if self.dp_toyota_ap_btn_link:
-      sport_on_sig = 'SPORT_ON_2' if CAR.RAV4_TSS2 else 'SPORT_ON'
+      sport_on_sig = 'SPORT_ON_2' if self.CP.carFingerprint == CAR.RAV4_TSS2 else 'SPORT_ON'
       # check signal once
       if not self.dp_sig_check:
         self.dp_sig_check = True
