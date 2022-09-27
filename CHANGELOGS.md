@@ -1,4 +1,12 @@
 dragonpilot [latest]
+=======================
+* Synced with openpilot master 2022.09.27 commits.
+* ADDED: Always On Lateral toggle under dp-controls!
+* ADDED: Live torque fix pr#25868
+* ADDED: RAV4 and HIGHLANDER with sdsu can use follow distance button on the wheel.
+* bug fix and improvement
+
+dragonpilot [2022.09.19]
 ========================
 * Synced with openpilot master 2022.09.19 commits.
 * READD: refactored dyanmaic follow. support all car with op long.
