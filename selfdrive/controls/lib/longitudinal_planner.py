@@ -111,8 +111,28 @@ class LongitudinalPlanner:
     self.events = Events()
     self.turn_speed_controller = TurnSpeedController()
 
+    # dp - conditional e2e
+    self.dp_e2e_conditional = False
+    self.dp_e2e_conditional_at_speed = 0
+    self.dp_e2e_v_cruise_kph = 0
+    self.dp_e2e_has_lead = False
+
   def read_param(self):
     e2e = self.params.get_bool('EndToEndLong') and self.CP.openpilotLongitudinalControl
+    # dp - conditional e2e
+    # we fall back to normal mode when:
+    # 1. there is a lead car ahead or
+    # 2. acc set speed is below dp_e2e_conditional_at_speed.
+    # notes. when dp_e2e_conditional_at_speed is 0, we don't use speed condition.
+    # example:
+    # * when speed condition is 60 and I set acc to 50 and there is no lead car, I would like to use e2e (e.g. traffic light)
+    # * when speed condition is 60 and I set acc to 80 and there is no lead car, I would like to use acc.
+    # * when speed condition is 60 I set acc to 50 and there is a lead car, I would like to use acc.
+    # * when speed condition is 0 and I set acc to 60 and there is a lead car, I would like to use acc.
+    # * when speed condition is 0 and I set acc to 60 and there is no lead car, I would like to use e2e.
+    if e2e and self.dp_e2e_conditional:
+      if self.dp_e2e_has_lead or (self.dp_e2e_conditional_at_speed > 0 and self.dp_e2e_v_cruise_kph <= self.dp_e2e_conditional_at_speed):
+        e2e = False
     self.mpc.mode = 'blended' if e2e else 'acc'
 
   def parse_model(self, model_msg):
@@ -141,6 +161,10 @@ class LongitudinalPlanner:
     # dp
     self.dp_accel_profile_ctrl = sm['dragonConf'].dpAccelProfileCtrl
     self.dp_accel_profile = sm['dragonConf'].dpAccelProfile
+    self.dp_e2e_conditional = sm['dragonConf'].dpE2eConditional
+    self.dp_e2e_conditional_at_speed = sm['dragonConf'].dpE2eConditionalAtSpeed
+    self.dp_e2e_v_cruise_kph = sm['controlsState'].vCruise
+    self.dp_e2e_has_lead = sm['radarState'].leadOne.status
 
     v_ego = sm['carState'].vEgo
     v_cruise_kph = sm['controlsState'].vCruise
