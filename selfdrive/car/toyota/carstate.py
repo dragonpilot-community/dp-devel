@@ -154,6 +154,8 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       self.distance = cp_cam.vl["ACC_CONTROL"]['DISTANCE']
+    elif self.CP.carFingerprint in [CAR.RAV4H, CAR.HIGHLANDER]:
+      self.distance = cp.vl["SDSU"]['FD_BUTTON']
 
     #dp
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
@@ -368,7 +370,9 @@ class CarState(CarStateBase):
     else:
       signals.append(("GAS_PEDAL", "GAS_PEDAL"))
       checks.append(("GAS_PEDAL", 33))
-
+    #arne
+    if CP.carFingerprint in [CAR.RAV4H, CAR.HIGHLANDER]:
+      signals.append(("FD_BUTTON", "SDSU", 0))
     #dp acceleration
     if CP.carFingerprint == CAR.RAV4_TSS2:
       signals.append(("SPORT_ON_2", "GEAR_PACKET"))
