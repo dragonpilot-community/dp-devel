@@ -142,6 +142,8 @@ class CarState(CarStateBase):
         self.dp_accel_profile_init = True
       self.dp_accel_profile_prev = self.dp_accel_profile
 
+    # distance button
+
     #dp: Thank you Arne (distance button)
     if self.dp_toyota_fp_btn_link:
       if not self.read_distance_lines_init or self.read_distance_lines != cp.vl["PCM_CRUISE_SM"]['DISTANCE_LINES']:
@@ -149,6 +151,9 @@ class CarState(CarStateBase):
         self.read_distance_lines = cp.vl["PCM_CRUISE_SM"]['DISTANCE_LINES']
         put_nonblocking('dp_following_profile', str(int(max(self.read_distance_lines - 1, 0)))) # Skipping one profile toyota mid is weird.
         put_nonblocking('dp_last_modified',str(floor(time.time())))
+
+    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+      self.distance = cp_cam.vl["ACC_CONTROL"]['DISTANCE']
 
     #dp
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
@@ -215,9 +220,6 @@ class CarState(CarStateBase):
       ret.rightBlindspot = (cp.vl["BSM"]["R_ADJACENT"] == 1) or (cp.vl["BSM"]["R_APPROACHING"] == 1)
 
     ret.cruiseActualEnabled = ret.cruiseState.enabled
-    # distance button
-    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
-      self.distance = cp_cam.vl["ACC_CONTROL"]['DISTANCE']
     self._update_traffic_signals(cp_cam)
     ret.cruiseState.speedLimit = self._calculate_speed_limit()
 
