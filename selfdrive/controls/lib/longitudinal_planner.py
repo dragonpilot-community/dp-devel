@@ -84,6 +84,12 @@ def limit_accel_in_turns(v_ego, angle_steers, a_target, CP):
 
 class LongitudinalPlanner:
   def __init__(self, CP, init_v=0.0, init_a=0.0):
+    # dp - conditional e2e
+    self.dp_e2e_conditional = False
+    self.dp_e2e_conditional_at_speed = 0
+    self.dp_e2e_v_cruise_kph = 0
+    self.dp_e2e_has_lead = False
+
     self.CP = CP
     self.params = Params()
     self.param_read_counter = 0
@@ -110,12 +116,6 @@ class LongitudinalPlanner:
     self.speed_limit_controller = SpeedLimitController()
     self.events = Events()
     self.turn_speed_controller = TurnSpeedController()
-
-    # dp - conditional e2e
-    self.dp_e2e_conditional = False
-    self.dp_e2e_conditional_at_speed = 0
-    self.dp_e2e_v_cruise_kph = 0
-    self.dp_e2e_has_lead = False
 
   def read_param(self):
     e2e = self.params.get_bool('EndToEndLong') and self.CP.openpilotLongitudinalControl
