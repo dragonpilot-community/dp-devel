@@ -125,13 +125,14 @@ class LongitudinalPlanner:
     # 2. acc set speed is below dp_e2e_conditional_at_speed.
     # notes. when dp_e2e_conditional_at_speed is 0, we don't use speed condition.
     # example:
-    # * when speed condition is 60 and I set acc to 50 and there is no lead car, I would like to use e2e (e.g. traffic light)
-    # * when speed condition is 60 and I set acc to 80 and there is no lead car, I would like to use acc.
-    # * when speed condition is 60 I set acc to 50 and there is a lead car, I would like to use acc.
-    # * when speed condition is 0 and I set acc to 60 and there is a lead car, I would like to use acc.
-    # * when speed condition is 0 and I set acc to 60 and there is no lead car, I would like to use e2e.
+    # * when speed condition is 60 and I set acc to 50 and - lead, use e2e (e.g. traffic light)
+    # * when speed condition is 60 and I set acc to 80 and - lead, use acc.
+    # * when speed condition is 60 I set acc to 50 and  + lead, use acc.
+    # * when speed condition is 60 I set acc to 80 and + lead, use acc.
+    # * when speed condition is 0 and I set acc to 60 and + lead, use acc.
+    # * when speed condition is 0 and I set acc to 60 and - lead, use e2e.
     if e2e and self.dp_e2e_conditional:
-      if self.dp_e2e_has_lead or (self.dp_e2e_conditional_at_speed > 0 and self.dp_e2e_v_cruise_kph <= self.dp_e2e_conditional_at_speed):
+      if self.dp_e2e_has_lead or (0 < self.dp_e2e_conditional_at_speed <= self.dp_e2e_v_cruise_kph):
         e2e = False
     self.mpc.mode = 'blended' if e2e else 'acc'
 
