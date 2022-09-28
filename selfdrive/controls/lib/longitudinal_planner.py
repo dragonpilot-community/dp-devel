@@ -125,12 +125,12 @@ class LongitudinalPlanner:
     # 2. acc set speed is below dp_e2e_conditional_at_speed.
     # notes. when dp_e2e_conditional_at_speed is 0, we don't use speed condition.
     # example:
-    # * when speed condition is 60 and I set acc to 50 and - lead, use e2e (e.g. traffic light)
-    # * when speed condition is 60 and I set acc to 80 and - lead, use acc.
-    # * when speed condition is 60 I set acc to 50 and  + lead, use acc.
-    # * when speed condition is 60 I set acc to 80 and + lead, use acc.
-    # * when speed condition is 0 and I set acc to 60 and + lead, use acc.
-    # * when speed condition is 0 and I set acc to 60 and - lead, use e2e.
+    # * when speed condition is 60 kph and I set acc to 50 kph and - lead, use e2e (e.g. traffic light)
+    # * when speed condition is 60 kph and I set acc to 80 kph and - lead, use acc.
+    # * when speed condition is 60 kph and I set acc to 50 kph and  + lead, use acc.
+    # * when speed condition is 60 kph and I set acc to 80 kph and + lead, use acc.
+    # * when speed condition is 0 kph and I set acc to 60 kph and + lead, use acc.
+    # * when speed condition is 0 kph and I set acc to 60 kph and - lead, use e2e.
     if e2e and self.dp_e2e_conditional:
       if self.dp_e2e_has_lead or (0 < self.dp_e2e_conditional_at_speed <= self.dp_e2e_v_cruise_kph):
         e2e = False
@@ -162,8 +162,8 @@ class LongitudinalPlanner:
     # dp
     self.dp_accel_profile_ctrl = sm['dragonConf'].dpAccelProfileCtrl
     self.dp_accel_profile = sm['dragonConf'].dpAccelProfile
-    self.dp_e2e_conditional = sm['dragonConf'].dpE2eConditional
-    self.dp_e2e_conditional_at_speed = sm['dragonConf'].dpE2eConditionalAtSpeed
+    self.dp_e2e_conditional = sm['dragonConf'].dpE2EConditional
+    self.dp_e2e_conditional_at_speed = sm['dragonConf'].dpE2EConditionalAtSpeed
     self.dp_e2e_v_cruise_kph = sm['controlsState'].vCruise
     self.dp_e2e_has_lead = sm['radarState'].leadOne.status
 
