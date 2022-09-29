@@ -161,6 +161,7 @@ class LongitudinalPlanner:
       if self.dp_e2e_mode != self.dp_e2e_mode_last:
         put_bool_nonblocking('EndToEndLong', True if self.dp_e2e_mode == 'blended' else False)
         self.mpc.mode = self.dp_e2e_mode
+      self.dp_e2e_mode = self.dp_e2e_mode_last
 
   def parse_model(self, model_msg):
     if (len(model_msg.position.x) == 33 and
