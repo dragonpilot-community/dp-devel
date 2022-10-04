@@ -186,8 +186,9 @@ class LongitudinalPlanner:
     self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
     x, v, a, j = self.parse_model(sm['modelV2'])
+
     desired_tf = T_FOLLOW
-    if sm['dragonConf'].dpFollowingProfileCtrl:
+    if self.mpc.mode == 'acc' and sm['dragonConf'].dpFollowingProfileCtrl:
       if sm['dragonConf'].dpFollowingProfile == 0:
         desired_tf = 1.2
       elif sm['dragonConf'].dpFollowingProfile == 2:

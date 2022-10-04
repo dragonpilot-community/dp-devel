@@ -349,7 +349,7 @@ class LongitudinalMpc:
     lead_xv_0 = self.process_lead(radarstate.leadOne)
     lead_xv_1 = self.process_lead(radarstate.leadTwo)
 
-    self.desired_TF = desired_tf if self.mode == 'acc' else T_FOLLOW
+    self.desired_TF = desired_tf
     self.set_weights(prev_accel_constraint=prev_accel_constraint, v_lead0=lead_xv_0[0,1], v_lead1=lead_xv_1[0,1])
 
     # To estimate a safe distance from a moving lead, we calculate how much stopping
