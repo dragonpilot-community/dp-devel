@@ -189,13 +189,30 @@ static void update_state(UIState *s) {
     scene.light_sensor = std::clamp<float>(1.0 - (ev / max_ev), 0.0, 1.0);
   }
   scene.started = sm["deviceState"].getDeviceState().getStarted() && scene.ignition;
+  if (sm.updated("dragonConf")) {
+    auto dragonConf = sm["dragonConf"].getDragonConf();
+    scene.dpUiDisplayMode = dragonConf.getDpUiDisplayMode();
+    scene.dpIpAddr = dragonConf.getDpIpAddr();
+    scene.dpLocale = dragonConf.getDpLocale();
+    scene.dpFollowingProfileCtrl = dragonConf.getDpFollowingProfileCtrl();
+    scene.dpFollowingProfile = dragonConf.getDpFollowingProfile();
+    scene.dpAccelProfileCtrl = dragonConf.getDpAccelProfileCtrl();
+    scene.dpAccelProfile = dragonConf.getDpAccelProfile();
+    scene.dpUiBrightness = dragonConf.getDpUiBrightness();
+    scene.dpE2EConditional = dragonConf.getDpE2EConditional();
+    if (scene.dpE2EConditional) {
+      s->scene.end_to_end_long = sm["longitudinalPlan"].getLongitudinalPlan().getDpE2EIsBlended();
+    }
+  }
 }
 
 void ui_update_params(UIState *s) {
   auto params = Params();
   s->scene.is_metric = params.getBool("IsMetric");
   s->scene.map_on_left = params.getBool("NavSettingLeftSide");
-  s->scene.end_to_end_long = params.getBool("EndToEndLong");
+  if (!s->scene.dpE2EConditional) {
+    s->scene.end_to_end_long = params.getBool("EndToEndLong");
+  }
 }
 
 void UIState::updateStatus() {
@@ -233,7 +250,7 @@ UIState::UIState(QObject *parent) : QObject(parent) {
   sm = std::make_unique<SubMaster, const std::initializer_list<const char *>>({
     "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "roadCameraState",
     "pandaStates", "carParams", "driverMonitoringState", "sensorEvents", "carState", "liveLocationKalman",
-    "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "gnssMeasurements",
+    "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "gnssMeasurements", "dragonConf",
     "longitudinalPlan", "liveMapData",
   });
 

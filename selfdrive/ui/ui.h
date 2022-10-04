@@ -121,6 +121,18 @@ typedef struct UIScene {
   float light_sensor, accel_sensor, gyro_sensor;
   bool started, ignition, is_metric, map_on_left, longitudinal_control, end_to_end_long;
   uint64_t started_frame;
+
+  //dp
+  std::string dpIpAddr;
+  std::string dpLocale;
+  bool dpFollowingProfileCtrl;
+  int dpFollowingProfile;
+  bool dpAccelProfileCtrl;
+  int dpAccelProfile;
+  int dpUiBrightness;
+  int dpUiDisplayMode;
+  int brightness;
+  bool dpE2EConditional;
 } UIScene;
 
 class UIState : public QObject {
