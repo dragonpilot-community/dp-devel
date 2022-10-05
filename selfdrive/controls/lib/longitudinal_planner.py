@@ -12,7 +12,7 @@ from selfdrive.modeld.constants import T_IDXS
 from selfdrive.controls.lib.longcontrol import LongCtrlState
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import LongitudinalMpc, T_FOLLOW
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDXS as T_IDXS_MPC
-from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, CONTROL_N
+from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, CONTROL_N, V_CRUISE_INITIAL
 from system.swaglog import cloudlog
 from selfdrive.controls.lib.vision_turn_controller import VisionTurnController
 from selfdrive.controls.lib.speed_limit_controller import SpeedLimitController, SpeedLimitResolver
@@ -129,7 +129,7 @@ class LongitudinalPlanner:
     self.mpc.mode = 'blended' if e2e else 'acc'
 
   # dp - conditional e2e
-  def conditional_e2e(self, standstill, within_speed_condition, e2e_lead):
+  def conditional_e2e(self, standstill, within_speed_condition, e2e_lead, lead_rel_speed):
     reset_state = False
 
     # lead counter
@@ -150,8 +150,10 @@ class LongitudinalPlanner:
     if standstill:
       dp_e2e_mode = 'blended'
     else:
-      # when set speed is below condition speed and we do not have a lead, use e2e.
-      if within_speed_condition and not self.dp_e2e_has_lead:
+      # when set speed is below condition speed:
+      # * we do not have a lead, use e2e.
+      # * lead car is barely moving (stopped), use e2e.
+      if within_speed_condition and (lead_rel_speed <= 0.5 or self.dp_e2e_has_lead):
         dp_e2e_mode = 'blended'
 
     if dp_e2e_mode != self.dp_e2e_mode_last:
@@ -165,8 +167,8 @@ class LongitudinalPlanner:
 
   def parse_model(self, model_msg):
     if (len(model_msg.position.x) == 33 and
-       len(model_msg.velocity.x) == 33 and
-       len(model_msg.acceleration.x) == 33):
+      len(model_msg.velocity.x) == 33 and
+      len(model_msg.acceleration.x) == 33):
       x = np.interp(T_IDXS_MPC, T_IDXS, model_msg.position.x)
       v = np.interp(T_IDXS_MPC, T_IDXS, model_msg.velocity.x)
       a = np.interp(T_IDXS_MPC, T_IDXS, model_msg.acceleration.x)
@@ -211,8 +213,10 @@ class LongitudinalPlanner:
 
     if sm['dragonConf'].dpE2EConditional:
       e2e_lead = sm['radarState'].leadOne.status and sm['radarState'].leadOne.dRel <= _DP_E2E_LEAD_DIST
-      within_speed_condition = sm['controlsState'].vCruise <= sm['dragonConf'].dpE2EConditionalAtSpeed
-      if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead):
+      set_speed = sm['carState'].vEgo * CV.MS_TO_KPH if sm['controlsState'].vCruise == V_CRUISE_INITIAL else sm['controlsState'].vCruise
+      within_speed_condition = set_speed <= sm['dragonConf'].dpE2EConditionalAtSpeed
+      lead_rel_speed = sm['radarState'].leadOne.vRel + sm['carState'].vEgo
+      if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead, lead_rel_speed):
         self.v_desired_filter.x = sm['carState'].vEgo
         self.a_desired = 0.0
     else:
