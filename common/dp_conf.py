@@ -130,7 +130,7 @@ confs = [
   {'name': 'dp_toyota_rav4_tss2_tune', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_toyota_prius_bad_angle_tune', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_e2e_conditional', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_e2e_conditional_at_speed', 'default': 60, 'type': 'UInt8', 'min': 0, 'max': 100, 'depends': [{'name': 'dp_e2e_conditional', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_e2e_conditional_at_speed', 'default': 60, 'type': 'UInt8', 'min': 30, 'max': 80, 'depends': [{'name': 'dp_e2e_conditional', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   # {'name': 'dp_toyota_no_min_acc_limit', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_toyota_ldw', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_toyota_zss', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
