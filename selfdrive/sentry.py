@@ -22,7 +22,7 @@ class SentryProject(Enum):
   # native project
   SELFDRIVE_NATIVE = "https://980a0cba712a4c3593c33c78a12446e1@o273754.ingest.sentry.io/1488600"
 
-CRASHES_DIR = '/data/community/crashes'
+CRASHES_DIR = '/data/media/0/crash_logs'
 
 ret = car.CarParams.new_message()
 candidate = ret.carFingerprint
@@ -68,7 +68,7 @@ def save_exception(exc_text):
   if not os.path.exists(CRASHES_DIR):
     os.makedirs(CRASHES_DIR)
 
-  log_file = '{}/{}'.format(CRASHES_DIR, datetime.now().strftime('%m-%d-%Y--%I:%M.%S-%p.log'))
+  log_file = '{}/{}'.format(CRASHES_DIR, datetime.now().strftime('%Y-%m-%d-%H-%M-%S.log'))
   with open(log_file, 'w') as f:
     f.write(exc_text)
   print('Logged current crash to {}'.format(log_file))
