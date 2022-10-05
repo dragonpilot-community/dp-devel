@@ -200,9 +200,9 @@ static void update_state(UIState *s) {
     scene.dpAccelProfile = dragonConf.getDpAccelProfile();
     scene.dpUiBrightness = dragonConf.getDpUiBrightness();
     scene.dpE2EConditional = dragonConf.getDpE2EConditional();
-    if (scene.dpE2EConditional) {
-      s->scene.end_to_end_long = sm["longitudinalPlan"].getLongitudinalPlan().getDpE2EIsBlended();
-    }
+  }
+  if (scene.dpE2EConditional) {
+    s->scene.end_to_end_long = sm["longitudinalPlan"].getLongitudinalPlan().getDpE2EIsBlended();
   }
 }
 

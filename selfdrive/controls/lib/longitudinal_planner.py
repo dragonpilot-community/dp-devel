@@ -130,27 +130,27 @@ class LongitudinalPlanner:
   def conditional_e2e(self, standstill, within_speed_condition, e2e_lead):
     reset_state = False
 
-    # reset counter when the lead status changed
-    if standstill or e2e_lead != self.dp_e2e_lead_last:
+    # lead counter
+    # to avoid lead comes and go too quickly causing mode switching too fast
+    # we count _DP_E2E_LEAD_COUNT before we update lead existence.
+    if e2e_lead != self.dp_e2e_lead_last:
       self.dp_e2e_lead_count = 0
     else:
       self.dp_e2e_lead_count += 1
 
       # when lead status count > _DP_E2E_LEAD_COUNT, we update actual lead status
-      if self.dp_e2e_lead_count > _DP_E2E_LEAD_COUNT:
+      if self.dp_e2e_lead_count >= _DP_E2E_LEAD_COUNT:
         self.dp_e2e_has_lead = e2e_lead
 
     dp_e2e_mode = 'acc'
-    if self.CP.openpilotLongitudinalControl:
-
-      # set mode to e2e and has_lead to true when the vehicle is standstill,
-      # so if a lead suddenly moved away, we still use e2e to control the vehicle.
-      if standstill:
+    # set mode to e2e when the vehicle is standstill,
+    # so if a lead suddenly moved away, we still use e2e to control the vehicle.
+    if standstill:
+      dp_e2e_mode = 'blended'
+    else:
+      # when set speed is below condition speed and we do not have a lead, use e2e.
+      if within_speed_condition and not self.dp_e2e_has_lead:
         dp_e2e_mode = 'blended'
-      else:
-        # when set speed is below condition speed
-        if within_speed_condition and not self.dp_e2e_has_lead:
-          dp_e2e_mode = 'blended'
 
     if dp_e2e_mode != self.dp_e2e_mode_last:
       self.mpc.mode = dp_e2e_mode
