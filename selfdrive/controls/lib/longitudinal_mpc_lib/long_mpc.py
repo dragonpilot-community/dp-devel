@@ -210,8 +210,6 @@ class LongitudinalMpc:
     self.desired_TF = T_FOLLOW
     self.reset()
     self.source = SOURCES[2]
-    self.dp_following_profile_ctrl = False
-    self.dp_following_profile = 2
 
   def reset(self):
     # self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
@@ -342,40 +340,14 @@ class LongitudinalMpc:
     self.cruise_min_a = min_a
     self.cruise_max_a = max_a
 
-  def update_TF(self, dragonConf, carstate):
-    if self.dp_following_profile_ctrl and self.mode == 'acc':
-      if self.dp_following_profile == 0:
-        # At slow speeds more time, decrease time up to 60mph
-        # in kph ~= 0     20     40      50      70     80     90     150
-        x_vel = [0,      5.56,   11.11,  13.89,  19.4,  22.2,  25.0,  41.67]
-        y_dist = [1.06,   1.2,   1.34,    1.34,   1.2,  1.25,  1.25,   1.33]
-        self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
-        #self.desired_TF = 1.2
-      elif self.dp_following_profile == 1:
-        # in kph ~= 0     20     40      50      70      90     150
-        x_vel = [0,      5.56,   1.11,   13.89,  19.4,   25.0,  41.67]
-        y_dist = [1.3,   1.4,   1.45,    1.5,    1.5,    1.6,  1.8]
-        self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
-        #self.desired_TF = T_FOLLOW
-      elif self.dp_following_profile == 2:
-        # in kph ~= 0     20      40       50      90     150
-        x_vel = [0,      5.56,    11.11,   13.89,  25.0,  41.67]
-        y_dist = [1.4,   1.55,    1.75,    1.95,    2.2,   2.4]
-        self.desired_TF = np.interp(carstate.vEgo, x_vel, y_dist)
-    else:
-      self.desired_TF = T_FOLLOW
-
-  def update(self, dragonConf, carstate, radarstate, v_cruise, x, v, a, j, prev_accel_constraint):
-    #dp
-    self.dp_following_profile_ctrl = dragonConf.dpFollowingProfileCtrl
-    self.dp_following_profile = dragonConf.dpFollowingProfile
+  def update(self, carstate, radarstate, v_cruise, x, v, a, j, prev_accel_constraint, desired_tf=T_FOLLOW):
     v_ego = self.x0[1]
     self.status = radarstate.leadOne.status or radarstate.leadTwo.status
 
     lead_xv_0 = self.process_lead(radarstate.leadOne)
     lead_xv_1 = self.process_lead(radarstate.leadTwo)
 
-    self.update_TF(dragonConf, carstate)
+    self.desired_TF = desired_tf
     self.set_weights(prev_accel_constraint=prev_accel_constraint, v_lead0=lead_xv_0[0,1], v_lead1=lead_xv_1[0,1])
 
     # To estimate a safe distance from a moving lead, we calculate how much stopping

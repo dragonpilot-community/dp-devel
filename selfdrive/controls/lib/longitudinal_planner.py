@@ -10,7 +10,7 @@ from common.params import Params
 from common.realtime import DT_MDL
 from selfdrive.modeld.constants import T_IDXS
 from selfdrive.controls.lib.longcontrol import LongCtrlState
-from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import LongitudinalMpc
+from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import LongitudinalMpc, T_FOLLOW
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDXS as T_IDXS_MPC
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, CONTROL_N
 from system.swaglog import cloudlog
@@ -116,6 +116,8 @@ class LongitudinalPlanner:
     # dp
     self.dp_accel_profile_ctrl = False
     self.dp_accel_profile = DP_ACCEL_ECO
+    self.dp_following_profile_ctrl = False
+    self.dp_following_profile = 0
     self.cruise_source = 'cruise'
     self.vision_turn_controller = VisionTurnController(CP)
     self.speed_limit_controller = SpeedLimitController()
@@ -179,10 +181,33 @@ class LongitudinalPlanner:
       j = np.zeros(len(T_IDXS_MPC))
     return x, v, a, j
 
+  def get_df(self, v_ego):
+    desired_tf = T_FOLLOW
+    if self.dp_following_profile_ctrl and self.mpc.mode == 'acc':
+      if self.dp_following_profile == 0:
+        # At slow speeds more time, decrease time up to 60mph
+        # in kph ~= 0     20     40      50      70     80     90     150
+        x_vel = [0,      5.56,   11.11,  13.89,  19.4,  22.2,  25.0,  41.67]
+        y_dist = [1.06,   1.2,   1.34,    1.34,   1.2,  1.25,  1.25,   1.33]
+        desired_tf = np.interp(v_ego, x_vel, y_dist)
+      elif self.dp_following_profile == 1:
+        # in kph ~= 0     20     40      50      70      90     150
+        x_vel = [0,      5.56,   1.11,   13.89,  19.4,   25.0,  41.67]
+        y_dist = [1.3,   1.4,   1.45,    1.5,    1.5,    1.6,  1.8]
+        desired_tf = np.interp(v_ego, x_vel, y_dist)
+      elif self.dp_following_profile == 2:
+        # in kph ~= 0     20      40       50      90     150
+        x_vel = [0,      5.56,    11.11,   13.89,  25.0,  41.67]
+        y_dist = [1.4,   1.55,    1.75,    1.95,    2.2,   2.4]
+        desired_tf = np.interp(v_ego, x_vel, y_dist)
+    return desired_tf
+
   def update(self, sm):
     # dp
     self.dp_accel_profile_ctrl = sm['dragonConf'].dpAccelProfileCtrl
     self.dp_accel_profile = sm['dragonConf'].dpAccelProfile
+    self.dp_following_profile_ctrl = sm['dragonConf'].dpFollowingProfileCtrl
+    self.dp_following_profile = sm['dragonConf'].dpFollowingProfile
 
     if sm['dragonConf'].dpE2EConditional:
       e2e_lead = sm['radarState'].leadOne.status and sm['radarState'].leadOne.dRel <= _DP_E2E_LEAD_DIST
@@ -239,7 +264,7 @@ class LongitudinalPlanner:
     self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
     x, v, a, j = self.parse_model(sm['modelV2'])
-    self.mpc.update(sm['dragonConf'], sm['carState'], sm['radarState'], v_cruise_sol, x, v, a, j, prev_accel_constraint)
+    self.mpc.update(sm['carState'], sm['radarState'], v_cruise_sol, x, v, a, j, prev_accel_constraint, self.get_df(v_ego))
 
     self.v_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.v_solution)
     self.a_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.a_solution)
