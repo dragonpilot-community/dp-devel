@@ -51,6 +51,11 @@ _DP_CRUISE_MAX_V_ECO = [2.7, 1.4, 1.2, 0.7, 0.48, 0.35, 0.25, 0.15, 0.12, 0.06]
 _DP_CRUISE_MAX_V_SPORT = [3.5, 3.5, 2.5, 1.5, 2.0, 2.0, 2.0, 1.5, 1.0, 0.5]
 _DP_CRUISE_MAX_BP = [0., 3, 6., 8., 11., 15., 20., 25., 30., 55.]
 
+# count n times before we decide a lead is there or not
+_DP_E2E_LEAD_COUNT = 150
+# lead distance
+_DP_E2E_LEAD_DIST = 50
+
 def dp_calc_cruise_accel_limits(v_ego, dp_profile):
   if dp_profile == DP_ACCEL_ECO:
     a_cruise_min = interp(v_ego, _DP_CRUISE_MIN_BP, _DP_CRUISE_MIN_V_ECO)
@@ -84,6 +89,12 @@ def limit_accel_in_turns(v_ego, angle_steers, a_target, CP):
 
 class LongitudinalPlanner:
   def __init__(self, CP, init_v=0.0, init_a=0.0):
+    # dp - conditional e2e
+    self.dp_e2e_has_lead = False
+    self.dp_e2e_lead_last = False
+    self.dp_e2e_lead_count = 0
+    self.dp_e2e_mode_last = 'acc'
+
     self.CP = CP
     self.params = Params()
     self.param_read_counter = 0
@@ -115,6 +126,41 @@ class LongitudinalPlanner:
     e2e = self.params.get_bool('EndToEndLong') and self.CP.openpilotLongitudinalControl
     self.mpc.mode = 'blended' if e2e else 'acc'
 
+  # dp - conditional e2e
+  def conditional_e2e(self, standstill, within_speed_condition, e2e_lead):
+    reset_state = False
+
+    # lead counter
+    # to avoid lead comes and go too quickly causing mode switching too fast
+    # we count _DP_E2E_LEAD_COUNT before we update lead existence.
+    if e2e_lead != self.dp_e2e_lead_last:
+      self.dp_e2e_lead_count = 0
+    else:
+      self.dp_e2e_lead_count += 1
+
+      # when lead status count > _DP_E2E_LEAD_COUNT, we update actual lead status
+      if self.dp_e2e_lead_count >= _DP_E2E_LEAD_COUNT:
+        self.dp_e2e_has_lead = e2e_lead
+
+    dp_e2e_mode = 'acc'
+    # set mode to e2e when the vehicle is standstill,
+    # so if a lead suddenly moved away, we still use e2e to control the vehicle.
+    if standstill:
+      dp_e2e_mode = 'blended'
+    else:
+      # when set speed is below condition speed and we do not have a lead, use e2e.
+      if within_speed_condition and not self.dp_e2e_has_lead:
+        dp_e2e_mode = 'blended'
+
+    if dp_e2e_mode != self.dp_e2e_mode_last:
+      self.mpc.mode = dp_e2e_mode
+      reset_state = True
+
+    self.dp_e2e_lead_last = e2e_lead
+    self.dp_e2e_mode_last = dp_e2e_mode
+
+    return reset_state
+
   def parse_model(self, model_msg):
     if (len(model_msg.position.x) == 33 and
        len(model_msg.velocity.x) == 33 and
@@ -134,13 +180,20 @@ class LongitudinalPlanner:
     return x, v, a, j
 
   def update(self, sm):
-    if self.param_read_counter % 50 == 0:
-      self.read_param()
-    self.param_read_counter += 1
-
     # dp
     self.dp_accel_profile_ctrl = sm['dragonConf'].dpAccelProfileCtrl
     self.dp_accel_profile = sm['dragonConf'].dpAccelProfile
+
+    if sm['dragonConf'].dpE2EConditional:
+      e2e_lead = sm['radarState'].leadOne.status and sm['radarState'].leadOne.dRel <= _DP_E2E_LEAD_DIST
+      within_speed_condition = sm['controlsState'].vCruise <= sm['dragonConf'].dpE2EConditionalAtSpeed
+      if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead):
+        self.v_desired_filter.x = sm['carState'].vEgo
+        self.a_desired = 0.0
+    else:
+      if self.param_read_counter % 50 == 0:
+        self.read_param()
+      self.param_read_counter += 1
 
     v_ego = sm['carState'].vEgo
     v_cruise_kph = sm['controlsState'].vCruise
@@ -236,6 +289,8 @@ class LongitudinalPlanner:
     longitudinalPlan.turnSpeed = float(self.turn_speed_controller.speed_limit)
     longitudinalPlan.distToTurn = float(self.turn_speed_controller.distance)
     longitudinalPlan.turnSign = int(self.turn_speed_controller.turn_sign)
+
+    longitudinalPlan.dpE2EIsBlended = self.mpc.mode == 'blended'
 
     pm.send('longitudinalPlan', plan_send)
 

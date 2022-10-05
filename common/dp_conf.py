@@ -60,6 +60,9 @@ confs = [
   {'name': 'dp_ui_volume', 'default': -5, 'type': 'Int8', 'min': -5, 'max': 100, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_brightness', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 100, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_display_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 1, 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_speed', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_event', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_face', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   #toyota
   {'name': 'dp_toyota_sng', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
@@ -126,6 +129,8 @@ confs = [
   # # toyota
   {'name': 'dp_toyota_rav4_tss2_tune', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_toyota_prius_bad_angle_tune', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_e2e_conditional', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_e2e_conditional_at_speed', 'default': 60, 'type': 'UInt8', 'min': 0, 'max': 100, 'depends': [{'name': 'dp_e2e_conditional', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   # {'name': 'dp_toyota_no_min_acc_limit', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_toyota_ldw', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_toyota_zss', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
