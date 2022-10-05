@@ -210,8 +210,6 @@ class LongitudinalMpc:
     self.desired_TF = T_FOLLOW
     self.reset()
     self.source = SOURCES[2]
-    self.dp_following_profile_ctrl = False
-    self.dp_following_profile = 2
 
   def reset(self):
     # self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
@@ -343,9 +341,6 @@ class LongitudinalMpc:
     self.cruise_max_a = max_a
 
   def update(self, carstate, radarstate, v_cruise, x, v, a, j, prev_accel_constraint, desired_tf=T_FOLLOW):
-    #dp
-    # self.dp_following_profile_ctrl = dragonConf.dpFollowingProfileCtrl
-    # self.dp_following_profile = dragonConf.dpFollowingProfile
     v_ego = self.x0[1]
     self.status = radarstate.leadOne.status or radarstate.leadTwo.status
 
