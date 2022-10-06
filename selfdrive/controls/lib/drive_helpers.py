@@ -41,12 +41,6 @@ LIMIT_SPEED_OFFSET_TH = -1.   # m/s Maximum offset between speed limit and curre
 LIMIT_MAX_MAP_DATA_AGE = 10.  # s Maximum time to hold to map data, then consider it invalid inside limits controllers.
 
 
-class MPC_COST_LAT:
-  PATH = 1.0
-  HEADING = 1.0
-  STEER_RATE = 1.0
-
-
 def apply_deadzone(error, deadzone):
   if error > deadzone:
     error -= deadzone

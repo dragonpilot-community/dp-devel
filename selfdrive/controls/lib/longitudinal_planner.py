@@ -106,7 +106,6 @@ class LongitudinalPlanner:
 
     self.a_desired = init_a
     self.v_desired_filter = FirstOrderFilter(init_v, 2.0, DT_MDL)
-    self.t_uniform = np.arange(0.0, T_IDXS_MPC[-1] + 0.5, 0.5)
 
     self.v_desired_trajectory = np.zeros(CONTROL_N)
     self.a_desired_trajectory = np.zeros(CONTROL_N)
@@ -170,10 +169,7 @@ class LongitudinalPlanner:
       x = np.interp(T_IDXS_MPC, T_IDXS, model_msg.position.x)
       v = np.interp(T_IDXS_MPC, T_IDXS, model_msg.velocity.x)
       a = np.interp(T_IDXS_MPC, T_IDXS, model_msg.acceleration.x)
-      # Uniform interp so gradient is less noisy
-      a_sparse = np.interp(self.t_uniform, T_IDXS, model_msg.acceleration.x)
-      j_sparse = np.gradient(a_sparse, self.t_uniform)
-      j = np.interp(T_IDXS_MPC, self.t_uniform, j_sparse)
+      j = np.zeros(len(T_IDXS_MPC))
     else:
       x = np.zeros(len(T_IDXS_MPC))
       v = np.zeros(len(T_IDXS_MPC))
@@ -202,7 +198,7 @@ class LongitudinalPlanner:
         desired_tf = np.interp(v_ego, x_vel, y_dist)
     return desired_tf
 
-  def update(self, sm):
+  def update(self, sm, read=True):
     # dp
     self.dp_accel_profile_ctrl = sm['dragonConf'].dpAccelProfileCtrl
     self.dp_accel_profile = sm['dragonConf'].dpAccelProfile
@@ -216,7 +212,7 @@ class LongitudinalPlanner:
         self.v_desired_filter.x = sm['carState'].vEgo
         self.a_desired = 0.0
     else:
-      if self.param_read_counter % 50 == 0:
+      if self.param_read_counter % 50 == 0 and read:
         self.read_param()
       self.param_read_counter += 1
 
