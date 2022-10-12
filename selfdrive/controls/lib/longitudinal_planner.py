@@ -54,7 +54,9 @@ _DP_CRUISE_MAX_BP = [0., 3, 6., 8., 11., 15., 20., 25., 30., 55.]
 # count n times before we decide a lead is there or not
 _DP_E2E_LEAD_COUNT = 50
 # lead distance
-_DP_E2E_LEAD_DIST = 50
+_DP_E2E_LEAD_DIST = 60
+
+_DP_E2E_SNG_COUNT = 300
 
 def dp_calc_cruise_accel_limits(v_ego, dp_profile):
   if dp_profile == DP_ACCEL_ECO:
@@ -94,6 +96,9 @@ class LongitudinalPlanner:
     self.dp_e2e_lead_last = False
     self.dp_e2e_lead_count = 0
     self.dp_e2e_mode_last = 'acc'
+    self.dp_e2e_standstill_last = False
+    self.dp_e2e_sng_count = 0
+    self.dp_e2e_sng = False
 
     self.CP = CP
     self.params = Params()
@@ -129,7 +134,7 @@ class LongitudinalPlanner:
     self.mpc.mode = 'blended' if e2e else 'acc'
 
   # dp - conditional e2e
-  def conditional_e2e(self, standstill, within_speed_condition, e2e_lead, lead_rel_speed):
+  def conditional_e2e(self, standstill, within_speed_condition, e2e_lead, lead_speed):
     reset_state = False
 
     # lead counter
@@ -140,21 +145,33 @@ class LongitudinalPlanner:
     else:
       self.dp_e2e_lead_count += 1
 
-      # when lead status count > _DP_E2E_LEAD_COUNT, we update actual lead status
+      # when lead status count >= _DP_E2E_LEAD_COUNT, we update actual lead status
       if self.dp_e2e_lead_count >= _DP_E2E_LEAD_COUNT:
         self.dp_e2e_has_lead = e2e_lead
 
+    if not standstill and self.dp_e2e_standstill_last:
+      self.dp_e2e_sng = True
+
+    # we remove sng stats when dp_e2e_sng_count >= _DP_E2E_SNG_COUNT
+    if self.dp_e2e_sng:
+      self.dp_e2e_sng_count += 1
+      if self.dp_e2e_sng_count >= _DP_E2E_SNG_COUNT:
+        self.dp_e2e_sng = False
+        self.dp_e2e_sng_count = 0
+
     dp_e2e_mode = 'acc'
-    # set mode to e2e when the vehicle is standstill,
-    # so if a lead suddenly moved away, we still use e2e to control the vehicle.
+    # standstill uses e2e, to prevent lead suddenly move away.
     if standstill:
       dp_e2e_mode = 'blended'
-    else:
-      # when set speed is below condition speed:
-      # * we do not have a lead, use e2e.
-      # * lead car is barely moving (stopped), use e2e.
-      if within_speed_condition and ((self.dp_e2e_has_lead and lead_rel_speed <= 2.) or not self.dp_e2e_has_lead):
-        dp_e2e_mode = 'blended'
+    # sng uses e2e for 3 secs (_DP_E2E_SNG_COUNT = 300)
+    elif self.dp_e2e_sng:
+      dp_e2e_mode = 'blended'
+    # lead speed below 30 km/h
+    elif self.dp_e2e_has_lead and lead_speed <= 8.3:
+      dp_e2e_mode = 'blended'
+    # within speed condition and does not have a lead
+    elif not self.dp_e2e_has_lead and within_speed_condition:
+      dp_e2e_mode = 'blended'
 
     self.mpc.mode = dp_e2e_mode
     if dp_e2e_mode != self.dp_e2e_mode_last:
@@ -162,6 +179,7 @@ class LongitudinalPlanner:
 
     self.dp_e2e_lead_last = e2e_lead
     self.dp_e2e_mode_last = dp_e2e_mode
+    self.dp_e2e_standstill_last = standstill
 
     return reset_state
 
@@ -215,8 +233,8 @@ class LongitudinalPlanner:
     if sm['dragonConf'].dpE2EConditional:
       e2e_lead = sm['radarState'].leadOne.status and sm['radarState'].leadOne.dRel <= _DP_E2E_LEAD_DIST
       within_speed_condition = sm['controlsState'].vCruise <= sm['dragonConf'].dpE2EConditionalAtSpeed
-      lead_rel_speed = sm['radarState'].leadOne.vRel + sm['carState'].vEgo
-      if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead, lead_rel_speed):
+      lead_speed = sm['radarState'].leadOne.vRel + sm['carState'].vEgo
+      if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead, lead_speed):
         dp_reset_state = True
     else:
       if self.param_read_counter % 50 == 0:
