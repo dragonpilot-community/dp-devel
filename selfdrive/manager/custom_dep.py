@@ -18,7 +18,7 @@ OVERPY_SPEC = importlib.util.find_spec('overpy')
 MAX_BUILD_PROGRESS = 100
 TMP_DIR = '/data/tmp'
 PYEXTRA_DIR = '/data/openpilot/pyextra'
-DP_PYEXTRA_DIR = '/data/dp_pyextra'
+DP_PYEXTRA_DIR = '/data/pyextra_community'
 
 
 def wait_for_internet_connection(return_on_failure=False):
@@ -79,9 +79,10 @@ def install_dep(spinner):
   if OPSPLINE_SPEC is None:
     for directory in glob(f'{PYEXTRA_DIR}/numpy*'):
       shutil.rmtree(directory)
-    shutil.rmtree(f'{PYEXTRA_DIR}/bin')
+    if os.path.exists(f'{PYEXTRA_DIR}/bin'):
+      shutil.rmtree(f'{PYEXTRA_DIR}/bin')
 
-  dup = 'cp -rf /data/openpilot/pyextra /data/dp_pyextra'
+  dup = 'cp -rf /data/openpilot/pyextra /data/pyextra_community'
   process_dup = subprocess.Popen(dup, stdout=subprocess.PIPE, shell=True)
 
 
@@ -89,10 +90,10 @@ if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):
   spinner = Spinner()
   if os.path.exists(DP_PYEXTRA_DIR):
     spinner.update("Loading dependencies")
-    command = 'rm -rf /data/openpilot/pyextra; cp -rf /data/dp_pyextra /data/openpilot/pyextra'
+    command = 'rm -rf /data/openpilot/pyextra; cp -rf /data/pyextra_community /data/openpilot/pyextra'
     process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
     print("dp: Removed directory /data/openpilot/pyextra")
-    print("dp: Copied /data/dp_pyextra to /data/openpilot/pyextra")
+    print("dp: Copied /data/pyextra_community to /data/openpilot/pyextra")
   else:
     spinner.update("Waiting for internet")
     install_dep(spinner)
