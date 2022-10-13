@@ -56,6 +56,8 @@ _DP_E2E_LEAD_COUNT = 50
 # lead distance
 _DP_E2E_LEAD_DIST = 50
 
+_DP_E2E_SNG_COUNT = 250
+
 def dp_calc_cruise_accel_limits(v_ego, dp_profile):
   if dp_profile == DP_ACCEL_ECO:
     a_cruise_min = interp(v_ego, _DP_CRUISE_MIN_BP, _DP_CRUISE_MIN_V_ECO)
@@ -94,6 +96,9 @@ class LongitudinalPlanner:
     self.dp_e2e_lead_last = False
     self.dp_e2e_lead_count = 0
     self.dp_e2e_mode_last = 'acc'
+    self.dp_e2e_sng = False
+    self.dp_e2e_sng_count = 0
+    self.dp_e2e_standstill_last = False
 
     self.CP = CP
     self.params = Params()
@@ -144,21 +149,27 @@ class LongitudinalPlanner:
       if self.dp_e2e_lead_count >= _DP_E2E_LEAD_COUNT:
         self.dp_e2e_has_lead = e2e_lead
 
+    if not standstill and self.dp_e2e_standstill_last:
+      self.dp_e2e_sng = True
+
+    if self.dp_e2e_sng:
+      self.dp_e2e_sng_count += 1
+      if self.dp_e2e_sng_count >= _DP_E2E_SNG_COUNT:
+        self.dp_e2e_sng = False
+        self.dp_e2e_sng = 0
+
     dp_e2e_mode = 'acc'
     # set mode to e2e when the vehicle is standstill,
     # so if a lead suddenly moved away, we still use e2e to control the vehicle.
     if standstill:
       dp_e2e_mode = 'blended'
-    else:
-      # when lead car is barely moving (stopped), use e2e.
-      if not within_speed_condition:
-        if self.dp_e2e_has_lead and lead_rel_speed <= 2.:
-          dp_e2e_mode = 'blended'
-      else:
-        # when set speed is below condition speed:
-        # * we do not have a lead, use e2e.
-        if not self.dp_e2e_has_lead:
-          dp_e2e_mode = 'blended'
+    # when we transit from standstill to moving, use e2e for few secs (dp_e2e_lead_count >= _DP_E2E_LEAD_COUNT)
+    elif self.dp_e2e_sng:
+      dp_e2e_mode = 'blended'
+    # when set speed is below condition speed and we do not have a lead, use e2e.
+    elif within_speed_condition:
+      if not self.dp_e2e_has_lead:
+        dp_e2e_mode = 'blended'
 
     self.mpc.mode = dp_e2e_mode
     if dp_e2e_mode != self.dp_e2e_mode_last:
@@ -166,6 +177,7 @@ class LongitudinalPlanner:
 
     self.dp_e2e_lead_last = e2e_lead
     self.dp_e2e_mode_last = dp_e2e_mode
+    self.dp_e2e_standstill_last = standstill
 
     return reset_state
 
