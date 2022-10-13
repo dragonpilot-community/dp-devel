@@ -162,6 +162,8 @@ class LongitudinalPlanner:
     # set mode to e2e when the vehicle is standstill,
     # so if a lead suddenly moved away, we still use e2e to control the vehicle.
     if standstill:
+      self.dp_e2e_sng = 0
+      self.dp_e2e_sng = False
       dp_e2e_mode = 'blended'
     # when we transit from standstill to moving, use e2e for few secs (dp_e2e_lead_count >= _DP_E2E_LEAD_COUNT)
     elif self.dp_e2e_sng:
