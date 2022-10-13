@@ -150,11 +150,15 @@ class LongitudinalPlanner:
     if standstill:
       dp_e2e_mode = 'blended'
     else:
-      # when set speed is below condition speed:
-      # * we do not have a lead, use e2e.
-      # * lead car is barely moving (stopped), use e2e.
-      if within_speed_condition and ((self.dp_e2e_has_lead and lead_rel_speed <= 2.) or not self.dp_e2e_has_lead):
-        dp_e2e_mode = 'blended'
+      # when lead car is barely moving (stopped), use e2e.
+      if not within_speed_condition:
+        if self.dp_e2e_has_lead and lead_rel_speed <= 2.:
+          dp_e2e_mode = 'blended'
+      else:
+        # when set speed is below condition speed:
+        # * we do not have a lead, use e2e.
+        if not self.dp_e2e_has_lead:
+          dp_e2e_mode = 'blended'
 
     self.mpc.mode = dp_e2e_mode
     if dp_e2e_mode != self.dp_e2e_mode_last:
