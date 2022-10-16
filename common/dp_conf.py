@@ -5,6 +5,7 @@ import sys
 import json
 import time
 from math import floor
+from system.hardware import TICI
 
 '''
 * type: Bool, Int8, UInt8, UInt16, Float32
@@ -51,6 +52,9 @@ confs = [
   {'name': 'dp_lc_min_mph', 'default': 15, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [1, 2]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_lc_auto_min_mph', 'default': 40, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_lc_auto_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_lanelines', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_camera_offset', 'default': 4 if TICI else -6, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_path_offset', 'default': 4 if TICI else 0, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
 
   #ui
   {'name': 'dp_ip_addr', 'default': '', 'type': 'Text', 'conf_type': ['struct']},
