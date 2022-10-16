@@ -314,8 +314,6 @@ class CarInterface(CarInterfaceBase):
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.noOutput),
                            get_safety_config(car.CarParams.SafetyModel.hyundaiCanfd)]
 
-      if ret.openpilotLongitudinalControl:
-        ret.safetyConfigs[1].safetyParam |= Panda.FLAG_HYUNDAI_CANFD_LONG
       if ret.flags & HyundaiFlags.CANFD_HDA2:
         ret.safetyConfigs[1].safetyParam |= Panda.FLAG_HYUNDAI_CANFD_HDA2
       if ret.flags & HyundaiFlags.CANFD_ALT_BUTTONS:
@@ -329,17 +327,15 @@ class CarInterface(CarInterfaceBase):
       else:
         ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundai, 0)]
 
-      # set appropriate safety param for gas signal
-      if candidate in HYBRID_CAR:
-        ret.safetyConfigs[0].safetyParam = 2
-      elif candidate in EV_CAR:
-        ret.safetyConfigs[0].safetyParam = 1
-
-      if ret.openpilotLongitudinalControl:
-        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_LONG
-
       if candidate in CAMERA_SCC_CAR:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_CAMERA_SCC
+
+    if ret.openpilotLongitudinalControl:
+      ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_LONG
+    if candidate in HYBRID_CAR:
+      ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_HYBRID_GAS
+    elif candidate in EV_CAR:
+      ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_EV_GAS
 
     ret.centerToFront = ret.wheelbase * 0.4
 
