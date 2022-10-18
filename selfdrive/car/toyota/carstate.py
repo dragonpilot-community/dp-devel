@@ -415,11 +415,6 @@ class CarState(CarStateBase):
       signals.append(("LOW_SPEED_LOCKOUT", "PCM_CRUISE_2"))
       checks.append(("PCM_CRUISE_2", 33))
 
-    # dp - add zss signal check
-    if Params().get_bool('dp_toyota_zss'):
-      signals += [("ZORRO_STEER", "SECONDARY_STEER_ANGLE", 0)]
-      checks += [("SECONDARY_STEER_ANGLE", 0)]
-
     # add gas interceptor reading if we are using it
     if CP.enableGasInterceptor:
       signals.append(("INTERCEPTOR_GAS", "GAS_SENSOR"))
@@ -453,6 +448,11 @@ class CarState(CarStateBase):
       checks += [
         ("PRE_COLLISION", 33),
       ]
+
+    # dp - add zss signal check
+    if Params().get_bool('dp_toyota_zss'):
+      signals += [("ZORRO_STEER", "SECONDARY_STEER_ANGLE", 0)]
+      checks += [("SECONDARY_STEER_ANGLE", 0)]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 

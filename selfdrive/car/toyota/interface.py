@@ -50,10 +50,6 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 15.74   # unknown end-to-end spec
       tire_stiffness_factor = 0.6371   # hand-tune
       ret.mass = 3045. * CV.LB_TO_KG + STD_CARGO_KG
-      if not Params().get_bool('dp_toyota_zss'):
-        ret.steerRatio = 15.0   # unknown end-to-end spec
-        ret.mass = 3370. * CV.LB_TO_KG + STD_CARGO_KG
-
       # Only give steer angle deadzone to for bad angle sensor prius
       if Params().get_bool("dp_toyota_prius_bad_angle_tune"):
         steering_angle_deadzone_deg = 1.0
