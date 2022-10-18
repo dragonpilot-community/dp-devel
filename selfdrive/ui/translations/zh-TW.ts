@@ -1122,7 +1122,7 @@ location set</source>
         <translation>清除</translation>
     </message>
     <message>
-        <source>Get turn-by-turn directions displayed and more with a comma 
+        <source>Get turn-by-turn directions displayed and more with a comma
 prime subscription. Sign up now: https://connect.comma.ai</source>
         <translation>成為 comma 高級會員來使用導航功能，立即註冊：https://connect.comma.ai</translation>
     </message>
@@ -1162,7 +1162,7 @@ prime subscription. Sign up now: https://connect.comma.ai</source>
     </message>
 </context>
 <context>
-    <name>NvgWindow</name>
+    <name>AnnotatedCameraWidget</name>
     <message>
         <source>FOLLOW</source>
         <translation type="vanished">車距</translation>
