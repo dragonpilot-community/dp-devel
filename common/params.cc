@@ -268,6 +268,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_lateral_lanelines", PERSISTENT},
     {"dp_lateral_camera_offset", PERSISTENT},
     {"dp_lateral_path_offset", PERSISTENT},
+    {"dp_toyota_zss", PERSISTENT},
 };
 
 } // namespace
