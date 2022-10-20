@@ -9,6 +9,7 @@ from selfdrive.car.interfaces import CarInterfaceBase
 from selfdrive.car.disable_ecu import disable_ecu
 from common.params import Params
 
+Ecu = car.CarParams.Ecu
 ButtonType = car.CarState.ButtonEvent.Type
 EventName = car.CarEvent.EventName
 ENABLE_BUTTONS = (Buttons.RES_ACCEL, Buttons.SET_DECEL, Buttons.CANCEL)
@@ -34,8 +35,8 @@ class CarInterface(CarInterfaceBase):
     ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, CAR.ELANTRA_GT_I30}
 
     if candidate in CANFD_CAR:
-      # detect HDA2 with LKAS message
-      if 0x50 in fingerprint[6]:
+      # detect HDA2 with ADAS Driving ECU
+      if Ecu.adas in [fw.ecu for fw in car_fw]:
         ret.flags |= HyundaiFlags.CANFD_HDA2.value
       else:
         # non-HDA2
@@ -247,6 +248,11 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 3.0
       ret.steerRatio = 16.
       tire_stiffness_factor = 0.65
+      CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
+    elif candidate == CAR.KIA_SPORTAGE_HYBRID_5TH_GEN:
+      ret.mass = 1767. + STD_CARGO_KG  # SX Prestige trim support only
+      ret.wheelbase = 2.756
+      ret.steerRatio = 13.6
       CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
     # Genesis
