@@ -4,6 +4,7 @@ from common.conversions import Conversions as CV
 from selfdrive.car.mazda.values import CAR, LKAS_LIMITS
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
 from selfdrive.car.interfaces import CarInterfaceBase
+from common.params import Params
 
 ButtonType = car.CarState.ButtonEvent.Type
 EventName = car.CarEvent.EventName
@@ -18,7 +19,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.mazda)]
     ret.radarOffCan = True
 
-    ret.dashcamOnly = candidate not in (CAR.CX5_2022, CAR.CX9_2021)
+    ret.dashcamOnly = Params().get_bool('dp_mazda_dashcam_bypass')
 
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 0.8

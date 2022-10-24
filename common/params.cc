@@ -226,6 +226,9 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_lc_min_mph", PERSISTENT},
     {"dp_lc_auto_min_mph", PERSISTENT},
     {"dp_lc_auto_delay", PERSISTENT},
+    {"dp_lateral_lanelines", PERSISTENT},
+    {"dp_lateral_camera_offset", PERSISTENT},
+    {"dp_lateral_path_offset", PERSISTENT},
     {"dp_quiet_drive", PERSISTENT},
     {"dp_ui_top", PERSISTENT},
     {"dp_ui_side", PERSISTENT},
@@ -235,6 +238,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_ui_speed", PERSISTENT},
     {"dp_ui_event", PERSISTENT},
     {"dp_ui_face", PERSISTENT},
+    {"dp_ui_lead_info", PERSISTENT},
     {"dp_toyota_sng", PERSISTENT},
     {"dp_accel_profile_ctrl", PERSISTENT},
     {"dp_accel_profile", PERSISTENT},
@@ -251,6 +255,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_auto_shutdown", PERSISTENT},
     {"dp_auto_shutdown_in", PERSISTENT},
     {"dp_mazda_steer_alert", PERSISTENT},
+    {"dp_mazda_dashcam_bypass", PERSISTENT},
     {"dp_hotspot_on_boot", PERSISTENT},
     {"dp_honda_eps_mod", PERSISTENT},
     {"dp_dm", PERSISTENT},
@@ -265,9 +270,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_toyota_prius_bad_angle_tune", PERSISTENT},
     {"dp_e2e_conditional", PERSISTENT},
     {"dp_e2e_conditional_at_speed", PERSISTENT},
-    {"dp_lateral_lanelines", PERSISTENT},
-    {"dp_lateral_camera_offset", PERSISTENT},
-    {"dp_lateral_path_offset", PERSISTENT},
 };
 
 } // namespace
