@@ -69,6 +69,7 @@ class Controls:
     self.branch = get_short_branch("")
 
     # dp
+    self.params = Params()
     self.dp_jetson = self.params.get_bool('dp_jetson')
 
     # Setup sockets
@@ -88,7 +89,6 @@ class Controls:
 
     self.log_sock = messaging.sub_sock('androidLog')
 
-    self.params = Params()
     self.sm = sm
     if self.sm is None:
       ignore = ['testJoystick']
@@ -115,7 +115,7 @@ class Controls:
 
     self.joystick_mode = self.params.get_bool("JoystickDebugMode") or (self.CP.notCar and sm is None)
     # dp
-    self.sm['dragonConf'].dpAtl = int(params.get('dp_atl', encoding='utf8'))
+    self.sm['dragonConf'].dpAtl = int(self.params.get('dp_atl', encoding='utf8'))
     self.dp_temp_check = self.params.get_bool('dp_temp_check')
     self.dp_vag_resume_fix = self.params.get_bool('dp_vag_resume_fix')
 
@@ -172,9 +172,9 @@ class Controls:
     self.VM = VehicleModel(self.CP)
 
     self.LaC: LatControl
-    if params.get_bool("dp_lateral_torque") and self.CP.lateralTuning.which() == 'torque':
+    if self.params.get_bool("dp_lateral_torque") and self.CP.lateralTuning.which() == 'torque':
       self.LaC = LatControlTorque(self.CP, self.CI)
-    elif params.get_bool("dp_lateral_lqr") and self.CP.lateralTuning.which() == 'lqr':
+    elif self.params.get_bool("dp_lateral_lqr") and self.CP.lateralTuning.which() == 'lqr':
       self.LaC = LatControlLQR(self.CP, self.CI)
     elif self.CP.steerControlType == car.CarParams.SteerControlType.angle:
       self.LaC = LatControlAngle(self.CP, self.CI)

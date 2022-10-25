@@ -108,7 +108,7 @@ class CarState(CarStateBase):
 
     #dp: Thank you Arne (acceleration)
     if self.dp_toyota_ap_btn_link:
-      sport_on_sig = 'SPORT_ON_2' if self.CP.carFingerprint in (CAR.RAV4_TSS2, LEXUS_ES_TSS2) else 'SPORT_ON'
+      sport_on_sig = 'SPORT_ON_2' if self.CP.carFingerprint in (CAR.RAV4_TSS2, CAR.LEXUS_ES_TSS2) else 'SPORT_ON'
       # check signal once
       if not self.dp_sig_check:
         self.dp_sig_check = True
@@ -374,7 +374,7 @@ class CarState(CarStateBase):
     if CP.carFingerprint in [CAR.RAV4H, CAR.HIGHLANDER]:
       signals.append(("FD_BUTTON", "SDSU", 0))
     #dp acceleration
-    if CP.carFingerprint in (CAR.RAV4_TSS2, LEXUS_ES_TSS2):
+    if CP.carFingerprint in (CAR.RAV4_TSS2, CAR.LEXUS_ES_TSS2):
       signals.append(("SPORT_ON_2", "GEAR_PACKET"))
 
     if CP.carFingerprint in (CAR.ALPHARD_TSS2, CAR.ALPHARDH_TSS2, CAR.AVALON_TSS2, CAR.AVALONH_TSS2, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2, CAR.CHR_TSS2, CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2, CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2, CAR.PRIUS_TSS2, CAR.RAV4H_TSS2, CAR.MIRAI, CAR.LEXUS_ES_TSS2, CAR.LEXUS_ESH_TSS2, CAR.LEXUS_NX_TSS2, CAR.LEXUS_NXH_TSS2, CAR.LEXUS_RX_TSS2, CAR.LEXUS_RXH_TSS2, CAR.CHRH):
