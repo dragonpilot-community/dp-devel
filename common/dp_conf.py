@@ -178,6 +178,8 @@ confs = [
   #
   # {'name': 'dp_no_offroad_fix', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_ftpd', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_lateral_version', 'default': 0, 'min': 0, 'max': 2, 'type': 'UInt8', 'conf_type': ['param']},
+  {'name': 'dp_lateral_steer_rate_cost', 'default': 1.0, 'min': 0.5, 'max': 2.0, 'type': 'Float32', 'conf_type': ['param']},
 ]
 
 def get_definition(name):
