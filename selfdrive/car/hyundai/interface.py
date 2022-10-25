@@ -32,7 +32,7 @@ class CarInterface(CarInterfaceBase):
     # These cars have been put into dashcam only due to both a lack of users and test coverage.
     # These cars likely still work fine. Once a user confirms each car works and a test route is
     # added to selfdrive/car/tests/routes.py, we can remove it from this list.
-    ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, CAR.ELANTRA_GT_I30}
+    ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, }
 
     if candidate in CANFD_CAR:
       # detect HDA2 with ADAS Driving ECU
@@ -76,7 +76,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 15.6 * 1.15
       tire_stiffness_factor = 0.63
       CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
-    elif candidate in (CAR.ELANTRA, CAR.ELANTRA_GT_I30):
+    elif candidate == CAR.ELANTRA:
       ret.lateralTuning.pid.kf = 0.00006
       ret.mass = 1275. + STD_CARGO_KG
       ret.wheelbase = 2.7
@@ -312,6 +312,13 @@ class CarInterface(CarInterfaceBase):
     ret.vEgoStarting = 0.1
     ret.startAccel = 2.0
 
+    # *** feature detection ***
+    if candidate in CANFD_CAR:
+      bus = 5 if ret.flags & HyundaiFlags.CANFD_HDA2 else 4
+      ret.enableBsm = 0x1e5 in fingerprint[bus]
+    else:
+      ret.enableBsm = 0x58b in fingerprint[0]
+
     # *** panda safety config ***
     CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
 
@@ -325,8 +332,6 @@ class CarInterface(CarInterfaceBase):
       if ret.flags & HyundaiFlags.CANFD_ALT_BUTTONS:
         ret.safetyConfigs[1].safetyParam |= Panda.FLAG_HYUNDAI_CANFD_ALT_BUTTONS
     else:
-      ret.enableBsm = 0x58b in fingerprint[0]
-
       if candidate in LEGACY_SAFETY_MODE_CAR:
         # these cars require a special panda safety mode due to missing counters and checksums in the messages
         ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
