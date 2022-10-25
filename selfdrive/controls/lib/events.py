@@ -837,7 +837,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.NO_ENTRY: NoEntryAlert(_("Cruise Faulted")),
   },
 
-  EventName.gmAccFaultedTemp: {
+  EventName.accFaultedTemp: {
     ET.NO_ENTRY: NoEntryAlert("Cruise Temporarily Faulted"),
   },
 

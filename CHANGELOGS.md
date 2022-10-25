@@ -1,5 +1,14 @@
 dragonpilot [latest]
 =======================
+* Synced with openpilot master 2022.10.18 commits.
+* ADDED: Laneline toggle.
+* ADDED: Turn and BSM indicator. (turn = green, turn + bsm = yellow, bsm = red)
+* Improvement: Dynamic End to End tune.
+* bug fix and improvement
+
+
+dragonpilot [2022.10.04]
+=======================
 * Synced with openpilot master 2022.10.04 commits.
 * ADDED: Dynamic End to End long. For more detail read the setting description.
 * ADDED: Mpad now support's Stop Sign, Yield, Speed Bump, Sharp Curve. (For best experience map you area. https://www.openstreetmap.org/)
