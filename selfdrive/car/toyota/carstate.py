@@ -54,6 +54,12 @@ class CarState(CarStateBase):
     self.distance = 0
     self.dp_toyota_fp_btn_link = Params().get_bool('dp_toyota_fp_btn_link')
 
+    # zss
+    self.dp_toyota_zss = Params().get_bool('dp_toyota_zss')
+    self.dp_zss_compute = False
+    self.dp_zss_cruise_active_last = False
+    self.dp_zss_angle_offset = 0.
+
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
 
@@ -100,6 +106,22 @@ class CarState(CarStateBase):
       if self.angle_offset.initialized:
         ret.steeringAngleOffsetDeg = self.angle_offset.x
         ret.steeringAngleDeg = torque_sensor_angle_deg - self.angle_offset.x
+
+    # dp - toyota zss
+    if self.dp_toyota_zss:
+      zorro_steer = cp.vl["SECONDARY_STEER_ANGLE"]["ZORRO_STEER"]
+      # only compute zss offset when acc is active
+      if bool(cp.vl["PCM_CRUISE"]["CRUISE_ACTIVE"]) and not self.dp_zss_cruise_active_last:
+        self.dp_zss_compute = True # cruise was just activated, so allow offset to be recomputed
+      self.dp_zss_cruise_active_last = bool(cp.vl["PCM_CRUISE"]["CRUISE_ACTIVE"])
+
+      # compute zss offset
+      if self.dp_zss_compute:
+        if abs(ret.steeringAngleDeg) > 1e-3 and abs(zorro_steer) > 1e-3:
+          self.dp_toyota_zss = False
+          self.dp_zss_angle_offset = zorro_steer - ret.steeringAngleDeg
+      # apply offset
+      ret.steeringAngleDeg = zorro_steer - self.dp_zss_angle_offset
 
     ret.steeringRateDeg = cp.vl["STEER_ANGLE_SENSOR"]["STEER_RATE"]
 
@@ -426,6 +448,11 @@ class CarState(CarStateBase):
       checks += [
         ("PRE_COLLISION", 33),
       ]
+
+    # dp - add zss signal check
+    if Params().get_bool('dp_toyota_zss'):
+      signals += [("ZORRO_STEER", "SECONDARY_STEER_ANGLE", 0)]
+      checks += [("SECONDARY_STEER_ANGLE", 0)]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
