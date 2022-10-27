@@ -4,9 +4,10 @@ dragonpilot [latest]
 * COMMA: Torque controller used on all Toyota, Lexus, Hyundai, Kia, and Genesis models.
 * COMMA: New Model with much improved e2e long.
 * ADDED: Mapd Database selector menu to use mapd offline located in software. When installing Database it will take some time. It is not stuck just be patience run `tmux a` for more info. DO NOT RESTART When database is being installed.
-* ADDED: Better TSS2 logn and DF tune. @cgw1968-5779
+* ADDED: Better TSS2 Long and DF tune. @cgw1968-5779
+* ADDED: Toggle to bypass dashcam mode for Mazda.
 * Improvement: Dynamic End to End tune.
-* Improvement: Better Optimisation for Vision Turn Controller with laneline mode.
+* Improvement: Better Optimization for Vision Turn Controller with laneline mode.
 * bug fix and improvement
 
 dragonpilot [2022.10.18]
