@@ -19,7 +19,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.mazda)]
     ret.radarOffCan = True
 
-    ret.dashcamOnly = Params().get_bool('dp_mazda_dashcam_bypass')
+    ret.dashcamOnly = candidate not in (CAR.CX5_2022, CAR.CX9_2021) and not Params().get_bool('dp_mazda_dashcam_bypass')
 
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 0.8
