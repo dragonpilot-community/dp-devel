@@ -1,5 +1,25 @@
 dragonpilot [latest]
 =======================
+* Synced with openpilot master 2022.10.26 commits.
+* COMMA: Torque controller used on all Toyota, Lexus, Hyundai, Kia, and Genesis models.
+* COMMA: New Model with much improved e2e long.
+* ADDED: Mapd Database selector menu to use mapd offline located in software. When installing Database it will take some time. It is not stuck just be patience run `tmux a` for more info. DO NOT RESTART When database is being installed.
+* ADDED: Better TSS2 logn and DF tune. @cgw1968-5779
+* Improvement: Dynamic End to End tune.
+* Improvement: Better Optimisation for Vision Turn Controller with laneline mode.
+* bug fix and improvement
+
+dragonpilot [2022.10.18]
+=======================
+* Synced with openpilot master 2022.10.18 commits.
+* ADDED: Laneline toggle.
+* ADDED: Turn and BSM indicator. (turn = green, turn + bsm = yellow, bsm = red)
+* Improvement: Dynamic End to End tune.
+* bug fix and improvement
+
+
+dragonpilot [2022.10.04]
+=======================
 * Synced with openpilot master 2022.10.04 commits.
 * ADDED: Dynamic End to End long. For more detail read the setting description.
 * ADDED: Mpad now support's Stop Sign, Yield, Speed Bump, Sharp Curve. (For best experience map you area. https://www.openstreetmap.org/)

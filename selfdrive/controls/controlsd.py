@@ -69,7 +69,8 @@ class Controls:
     self.branch = get_short_branch("")
 
     # dp
-    self.dp_jetson = Params().get_bool('dp_jetson')
+    self.params = Params()
+    self.dp_jetson = self.params.get_bool('dp_jetson')
 
     # Setup sockets
     self.pm = pm
@@ -88,54 +89,52 @@ class Controls:
 
     self.log_sock = messaging.sub_sock('androidLog')
 
-    if CI is None:
-      # wait for one pandaState and one CAN packet
-      print("Waiting for CAN messages...")
-      get_one_can(self.can_sock)
-
-      self.CI, self.CP = get_car(self.can_sock, self.pm.sock['sendcan'])
-    else:
-      self.CI, self.CP = CI, CI.CP
-
-    params = Params()
-    self.joystick_mode = params.get_bool("JoystickDebugMode") or (self.CP.notCar and sm is None)
-    joystick_packet = ['testJoystick'] if self.joystick_mode else []
-
     self.sm = sm
     if self.sm is None:
-      ignore = []
+      ignore = ['testJoystick']
       if SIMULATION:
         ignore += ['driverCameraState', 'managerState']
-      if params.get_bool('WideCameraOnly'):
+      if self.params.get_bool('WideCameraOnly'):
         ignore += ['roadCameraState']
       if self.dp_jetson:
         ignore += ['driverCameraState', 'driverMonitoringState']
       self.sm = messaging.SubMaster(['deviceState', 'pandaStates', 'peripheralState', 'modelV2', 'liveCalibration',
                                      'driverMonitoringState', 'longitudinalPlan', 'lateralPlan', 'liveLocationKalman',
-                                     'managerState', 'liveParameters', 'radarState', 'liveTorqueParameters', 'dragonConf'] + self.camera_packets + joystick_packet,
-                                    ignore_alive=ignore, ignore_avg_freq=['radarState', 'longitudinalPlan', 'dragonConf'])
+                                     'managerState', 'liveParameters', 'radarState', 'liveTorqueParameters', 'dragonConf', 'testJoystick'] + self.camera_packets,
+                                    ignore_alive=ignore, ignore_avg_freq=['radarState', 'longitudinalPlan','testJoystick', 'dragonConf'])
 
+    if CI is None:
+      # wait for one pandaState and one CAN packet
+      print("Waiting for CAN messages...")
+      get_one_can(self.can_sock)
+
+      num_pandas = len(messaging.recv_one_retry(self.sm.sock['pandaStates']).pandaStates)
+      self.CI, self.CP = get_car(self.can_sock, self.pm.sock['sendcan'], num_pandas)
+    else:
+      self.CI, self.CP = CI, CI.CP
+
+    self.joystick_mode = self.params.get_bool("JoystickDebugMode") or (self.CP.notCar and sm is None)
     # dp
-    self.sm['dragonConf'].dpAtl = int(Params().get('dp_atl', encoding='utf8'))
-    self.dp_temp_check = Params().get_bool('dp_temp_check')
-    self.dp_vag_resume_fix = Params().get_bool('dp_vag_resume_fix')
+    self.sm['dragonConf'].dpAtl = int(self.params.get('dp_atl', encoding='utf8'))
+    self.dp_temp_check = self.params.get_bool('dp_temp_check')
+    self.dp_vag_resume_fix = self.params.get_bool('dp_vag_resume_fix')
 
     # set alternative experiences from parameters
-    self.disengage_on_accelerator = params.get_bool("DisengageOnAccelerator")
+    self.disengage_on_accelerator = self.params.get_bool("DisengageOnAccelerator")
     if self.sm['dragonConf'].dpAtl > 0:
       self.disengage_on_accelerator = False
     self.CP.alternativeExperience = 0
     if not self.disengage_on_accelerator:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
-    if self.CP.dashcamOnly and params.get_bool("DashcamOverride"):
+    if self.CP.dashcamOnly and self.params.get_bool("DashcamOverride"):
       self.CP.dashcamOnly = False
 
     # read params
-    self.is_metric = params.get_bool("IsMetric")
-    self.is_ldw_enabled = params.get_bool("IsLdwEnabled")
-    openpilot_enabled_toggle = params.get_bool("OpenpilotEnabledToggle")
-    passive = params.get_bool("Passive") or not openpilot_enabled_toggle
+    self.is_metric = self.params.get_bool("IsMetric")
+    self.is_ldw_enabled = self.params.get_bool("IsLdwEnabled")
+    openpilot_enabled_toggle = self.params.get_bool("OpenpilotEnabledToggle")
+    passive = self.params.get_bool("Passive") or not openpilot_enabled_toggle
 
     # detect sound card presence and ensure successful init
     sounds_available = HARDWARE.get_sound_card_online()
@@ -154,15 +153,15 @@ class Controls:
 
     # Write CarParams for radard
     cp_bytes = self.CP.to_bytes()
-    params.put("CarParams", cp_bytes)
+    self.params.put("CarParams", cp_bytes)
     put_nonblocking("CarParamsCache", cp_bytes)
     put_nonblocking("CarParamsPersistent", cp_bytes)
 
     # cleanup old params
     if not self.CP.experimentalLongitudinalAvailable:
-      params.remove("ExperimentalLongitudinalEnabled")
+      self.params.remove("ExperimentalLongitudinalEnabled")
     if not self.CP.openpilotLongitudinalControl:
-      params.remove("EndToEndLong")
+      self.params.remove("EndToEndLong")
 
     self.CC = car.CarControl.new_message()
     self.CS_prev = car.CarState.new_message()
@@ -173,9 +172,9 @@ class Controls:
     self.VM = VehicleModel(self.CP)
 
     self.LaC: LatControl
-    if params.get_bool("dp_lateral_torque") and self.CP.lateralTuning.which() == 'torque':
+    if self.params.get_bool("dp_lateral_torque") and self.CP.lateralTuning.which() == 'torque':
       self.LaC = LatControlTorque(self.CP, self.CI)
-    elif params.get_bool("dp_lateral_lqr") and self.CP.lateralTuning.which() == 'lqr':
+    elif self.params.get_bool("dp_lateral_lqr") and self.CP.lateralTuning.which() == 'lqr':
       self.LaC = LatControlLQR(self.CP, self.CI)
     elif self.CP.steerControlType == car.CarParams.SteerControlType.angle:
       self.LaC = LatControlAngle(self.CP, self.CI)
@@ -604,9 +603,9 @@ class Controls:
     """Given the state, this function returns a CarControl packet"""
 
     # Update VehicleModel
-    params = self.sm['liveParameters']
-    x = max(params.stiffnessFactor, 0.1)
-    sr = max(params.steerRatio, 0.1)
+    lp = self.sm['liveParameters']
+    x = max(lp.stiffnessFactor, 0.1)
+    sr = max(lp.steerRatio, 0.1)
     self.VM.update_params(x, sr)
 
     # Update Torque Params
@@ -652,7 +651,7 @@ class Controls:
                                                                                        lat_plan.psis,
                                                                                        lat_plan.curvatures,
                                                                                        lat_plan.curvatureRates)
-      actuators.steer, actuators.steeringAngleDeg, lac_log = self.LaC.update(CC.latActive, CS, self.VM, params,
+      actuators.steer, actuators.steeringAngleDeg, lac_log = self.LaC.update(CC.latActive, CS, self.VM, lp,
                                                                              self.last_actuators, self.steer_limited, self.desired_curvature,
                                                                              self.desired_curvature_rate, self.sm['liveLocationKalman'])
     else:
@@ -796,10 +795,10 @@ class Controls:
                   (self.state == State.softDisabling)
 
     # Curvature & Steering angle
-    params = self.sm['liveParameters']
+    lp = self.sm['liveParameters']
 
-    steer_angle_without_offset = math.radians(CS.steeringAngleDeg - params.angleOffsetDeg)
-    curvature = -self.VM.calc_curvature(steer_angle_without_offset, CS.vEgo, params.roll)
+    steer_angle_without_offset = math.radians(CS.steeringAngleDeg - lp.angleOffsetDeg)
+    curvature = -self.VM.calc_curvature(steer_angle_without_offset, CS.vEgo, lp.roll)
 
     # controlsState
     dat = messaging.new_message('controlsState')
@@ -885,6 +884,8 @@ class Controls:
   def step(self):
     start_time = sec_since_boot()
     self.prof.checkpoint("Ratekeeper", ignore=True)
+
+    self.is_metric = self.params.get_bool("IsMetric")
 
     # Sample data from sockets and get a carState
     CS = self.data_sample()
