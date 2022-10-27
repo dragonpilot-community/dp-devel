@@ -156,3 +156,23 @@ def get_safety_config(safety_model, safety_param = None):
   if safety_param is not None:
     ret.safetyParam = safety_param
   return ret
+
+#alternate settings when using torque interceptor. May or may not be useful to some users/branches.
+def apply_ti_steer_torque_limits(apply_torque, apply_torque_last, driver_torque, LIMITS):
+
+  # limits due to driver torque
+  driver_max_torque = LIMITS.TI_STEER_MAX + (LIMITS.TI_STEER_DRIVER_ALLOWANCE + driver_torque * LIMITS.TI_STEER_DRIVER_FACTOR) * LIMITS.TI_STEER_DRIVER_MULTIPLIER
+  driver_min_torque = -LIMITS.TI_STEER_MAX + (-LIMITS.TI_STEER_DRIVER_ALLOWANCE + driver_torque * LIMITS.TI_STEER_DRIVER_FACTOR) * LIMITS.TI_STEER_DRIVER_MULTIPLIER
+  max_steer_allowed = max(min(LIMITS.TI_STEER_MAX, driver_max_torque), 0)
+  min_steer_allowed = min(max(-LIMITS.TI_STEER_MAX, driver_min_torque), 0)
+  apply_torque = clip(apply_torque, min_steer_allowed, max_steer_allowed)
+
+  # slow rate if steer torque increases in magnitude
+  if apply_torque_last > 0:
+    apply_torque = clip(apply_torque, max(apply_torque_last - LIMITS.TI_STEER_DELTA_DOWN, -LIMITS.TI_STEER_DELTA_UP),
+                        apply_torque_last + LIMITS.TI_STEER_DELTA_UP)
+  else:
+    apply_torque = clip(apply_torque, apply_torque_last - LIMITS.TI_STEER_DELTA_UP,
+                        min(apply_torque_last + LIMITS.TI_STEER_DELTA_DOWN, LIMITS.TI_STEER_DELTA_UP))
+
+  return int(round(float(apply_torque)))
