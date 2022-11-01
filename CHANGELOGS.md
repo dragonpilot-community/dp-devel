@@ -1,5 +1,15 @@
 dragonpilot [latest]
 =======================
+* Synced with openpilot master 2022.11.01 commits.
+* COMMA: New Model.
+* ADDED: Multi Lateral Planner: Ability to choose different Lateral Planner (0 = LATEST, 1 = 0.8.13, 2 = 0.8.16).
+* READD: Toyota Prius ZSS support.
+* Improvement: Better User experience for installing mapd database.
+* Improvement: Turning on Lane Line will automatically will use DLP (Dynamic Lane Profile).
+* bug fix and improvement
+
+dragonpilot [2022.10.26]
+=======================
 * Synced with openpilot master 2022.10.26 commits.
 * COMMA: Torque controller used on all Toyota, Lexus, Hyundai, Kia, and Genesis models.
 * COMMA: New Model with much improved e2e long.
