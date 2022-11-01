@@ -98,6 +98,7 @@ void MessagesWidget::loadDBCFromPaste() {
   if (dlg.exec()) {
     dbc()->open("from paste", dlg.dbc_edit->toPlainText());
     dbc_combo->setCurrentText("loaded from paste");
+    model->updateState(true);
   }
 }
 
@@ -144,6 +145,11 @@ QVariant MessageListModel::data(const QModelIndex &index, int role) const {
     }
   }
   return {};
+}
+
+void MessageListModel::setFilterString(const QString &string) { 
+  filter_str = string;
+  updateState(true);
 }
 
 bool MessageListModel::updateMessages(bool sort) {

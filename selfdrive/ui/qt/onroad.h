@@ -120,6 +120,9 @@ private:
   bool mtscActive = false;
   int curveSign = 0;
 
+  int skip_frame_count = 0;
+  bool wide_cam_requested = false;
+
 protected:
   void paintGL() override;
   void initializeGL() override;
