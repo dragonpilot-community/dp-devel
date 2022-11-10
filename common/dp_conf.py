@@ -68,6 +68,8 @@ confs = [
   {'name': 'dp_ui_event', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_face', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_lead_info', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_laneline', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_chevron', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   #toyota
   {'name': 'dp_toyota_sng', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},

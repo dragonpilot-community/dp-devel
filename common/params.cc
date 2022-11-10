@@ -239,6 +239,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_ui_event", PERSISTENT},
     {"dp_ui_face", PERSISTENT},
     {"dp_ui_lead_info", PERSISTENT},
+    {"dp_ui_laneline", PERSISTENT},
+    {"dp_ui_chevron", PERSISTENT},
     {"dp_toyota_sng", PERSISTENT},
     {"dp_accel_profile_ctrl", PERSISTENT},
     {"dp_accel_profile", PERSISTENT},
@@ -270,8 +272,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_e2e_conditional", PERSISTENT},
     {"dp_e2e_conditional_at_speed", PERSISTENT},
     {"dp_toyota_zss", PERSISTENT},
-    {"dp_lateral_steer_rate_cost", PERSISTENT},
     {"dp_lateral_version", PERSISTENT},
+    {"dp_lateral_steer_rate_cost", PERSISTENT},
 };
 
 } // namespace
