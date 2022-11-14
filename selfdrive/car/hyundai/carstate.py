@@ -107,6 +107,9 @@ class CarState(CarStateBase):
     ret.brakePressed = cp.vl["TCS13"]["DriverBraking"] != 0
     ret.brakeHoldActive = cp.vl["TCS15"]["AVH_LAMP"] == 2 # 0 OFF, 1 ERROR, 2 ACTIVE, 3 READY
     ret.parkingBrake = cp.vl["TCS13"]["PBRAKE_ACT"] == 1
+    #dp
+    ret.brakeLightsDEPRECATED = bool(cp.vl["TCS13"]["BrakeLight"] or ret.brakePressed or ret.brakeHoldActive or ret.parkingBrake)
+
 
     if self.CP.carFingerprint in (HYBRID_CAR | EV_CAR):
       if self.CP.carFingerprint in HYBRID_CAR:
@@ -281,6 +284,7 @@ class CarState(CarStateBase):
       ("SAS_Speed", "SAS11"),
       #dp
       ("Cluster_Engine_RPM", "TCU_DCT13"),
+      ("BrakeLight", "TCS13"),
     ]
     checks = [
       # address, frequency

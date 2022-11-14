@@ -64,6 +64,8 @@ class CarState(CarStateBase):
     ret.brake = pt_cp.vl["ESP_05"]["ESP_Bremsdruck"] / 250.0  # FIXME: this is pressure in Bar, not sure what OP expects
     ret.brakePressed = bool(pt_cp.vl["ESP_05"]["ESP_Fahrer_bremst"])
     ret.parkingBrake = bool(pt_cp.vl["Kombi_01"]["KBI_Handbremse"])  # FIXME: need to include an EPB check as well
+    #dp
+    ret.brakeLightsDEPRECATED = bool(pt_cp.vl["ESP_05"]['ESP_Status_Bremsdruck'] or ret.brakePressed or ret.parkingBrake)
 
     # Update gear and/or clutch position data.
     if trans_type == TransmissionType.automatic:
@@ -291,6 +293,8 @@ class CarState(CarStateBase):
       ("GRA_Tip_Stufe_2", "GRA_ACC_01"),         # unknown related to stalk type
       ("GRA_ButtonTypeInfo", "GRA_ACC_01"),      # unknown related to stalk type
       ("COUNTER", "GRA_ACC_01"),                 # GRA_ACC_01 CAN message counter
+      #dp
+      ("ESP_Status_Bremsdruck", "ESP_05"),       # Brakes applied
     ]
 
     checks = [
