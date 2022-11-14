@@ -337,6 +337,9 @@ class CarInterface(CarInterfaceBase):
     ret = self.CS.update(self.cp, self.cp_cam, self.cp_body)
     ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
+    #dp
+    ret.engineRPM = self.CS.engineRPM
+
     buttonEvents = []
 
     if self.CS.cruise_buttons != self.CS.prev_cruise_buttons:
