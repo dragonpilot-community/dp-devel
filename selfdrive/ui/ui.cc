@@ -190,7 +190,7 @@ void ui_update_params(UIState *s) {
   s->scene.is_metric = params.getBool("IsMetric");
   s->scene.map_on_left = params.getBool("NavSettingLeftSide");
   if (!s->scene.dpE2EConditional) {
-    s->scene.end_to_end_long = params.getBool("EndToEndLong");
+    s->scene.end_to_end_long = params.getBool("ExperimentalMode");
   }
 }
 
