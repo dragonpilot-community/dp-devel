@@ -268,6 +268,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_following_profile", PERSISTENT},
     {"dp_lateral_torque", PERSISTENT},
     {"dp_lateral_torque_live_tune", PERSISTENT},
+    {"dp_toyota_rav4_tss2_tune", PERSISTENT},
     {"dp_toyota_prius_bad_angle_tune", PERSISTENT},
     {"dp_e2e_conditional", PERSISTENT},
     {"dp_e2e_conditional_at_speed", PERSISTENT},
