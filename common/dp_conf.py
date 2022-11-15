@@ -91,11 +91,11 @@ confs = [
   # dashcam related
   {'name': 'dp_dashcamd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # # auto shutdown
-  {'name': 'dp_auto_shutdown', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
-  {'name': 'dp_auto_shutdown_in', 'default': 90, 'type': 'UInt16', 'min': 0, 'max': 600, 'depends': [{'name': 'dp_auto_shutdown', 'vals': [True]}], 'conf_type': ['param']},
+  {'name': 'dp_auto_shutdown', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_auto_shutdown_in', 'default': 60, 'type': 'UInt16', 'min': 0, 'max': 600, 'depends': [{'name': 'dp_auto_shutdown', 'vals': [True]}], 'conf_type': ['param']},
 
-  {'name': 'dp_mazda_steer_alert', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_mazda_dashcam_bypass', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_mazda_steer_alert', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_mazda_dashcam_bypass', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # service
   # {'name': 'dp_updated', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_logger', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
