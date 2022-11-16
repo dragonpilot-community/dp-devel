@@ -241,6 +241,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_ui_lead_info", PERSISTENT},
     {"dp_ui_laneline", PERSISTENT},
     {"dp_ui_chevron", PERSISTENT},
+    {"dp_ui_dm_cam", PERSISTENT},
     {"dp_toyota_sng", PERSISTENT},
     {"dp_accel_profile_ctrl", PERSISTENT},
     {"dp_accel_profile", PERSISTENT},
