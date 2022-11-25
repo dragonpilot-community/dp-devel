@@ -19,6 +19,12 @@ class CarControllerParams:
     self.STEER_DRIVER_ALLOWANCE = 60   # allowed driver torque before start limiting
     self.STEER_DRIVER_MULTIPLIER = 50  # weight driver torque heavily
     self.STEER_DRIVER_FACTOR = 1       # from dbc
+    self.ACC_MIN_DIST = 2.5            # stop and go min distance threshold
+    self.ACC_MAX_DIST = 5.5            # stop and go max distance threshold
+    
+    self.SPDL_MIN = 49                 # min speed limit setting in kph, will be converted to mph if required in carcontroller.py
+    self.SPDL_MAX = 131                # max speed limit setting in kph, will be converted to mph if required in in carcontroller.py
+    self.SPDL_DLT = 10                 # max speed delta setting in kph, will be converted to mph if required in in carcontroller.py
 
     if CP.carFingerprint in GLOBAL_GEN2:
       self.STEER_MAX = 1000
@@ -196,7 +202,6 @@ FW_VERSIONS = {
       b'\xaa!dt\a',
       b'\xc5!ar\a',
       b'\xbe!as\a',
-      b'\xc5!as\x07',
       b'\xc5!ds\a',
       b'\xc5!`s\a',
       b'\xaa!au\a',

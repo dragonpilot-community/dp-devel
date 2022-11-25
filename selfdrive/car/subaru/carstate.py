@@ -12,6 +12,13 @@ class CarState(CarStateBase):
     super().__init__(CP)
     can_define = CANDefine(DBC[CP.carFingerprint]["pt"])
     self.shifter_values = can_define.dv["Transmission"]["Gear"]
+    self.speed_limit = 255
+    
+    #LKAS Modes:   1: OFF  2:Stock ACC no LKAS Standby 3: Stock LKAS (white lines) 4: Openpilot (green lines)
+    self.lkas_mode = 3
+    self.prev_lkas_mode = 3
+    self.lkasm_change = False
+    self.prev_lkas_state = 2
 
   def update(self, cp, cp_cam, cp_body):
     ret = car.CarState.new_message()
@@ -33,7 +40,7 @@ class CarState(CarStateBase):
     )
     ret.vEgoRaw = (ret.wheelSpeeds.fl + ret.wheelSpeeds.fr + ret.wheelSpeeds.rl + ret.wheelSpeeds.rr) / 4.
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
-    ret.standstill = ret.vEgoRaw == 0
+    ret.standstill = ret.vEgoRaw < 0.01
 
     # continuous blinker signals for assisted lane change
     ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_lamp(50, cp.vl["Dashlights"]["LEFT_BLINKER"],
@@ -78,12 +85,46 @@ class CarState(CarStateBase):
       ret.cruiseState.standstill = cp_cam.vl["ES_DashStatus"]["Cruise_State"] == 3
       ret.stockFcw = cp_cam.vl["ES_LKAS_State"]["LKAS_Alert"] == 2
       self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
+      self.cruise_state = cp_cam.vl["ES_DashStatus"]["Cruise_State"]
 
+    
+    self.throttle_msg = copy.copy(cp.vl["Throttle"])
+    
     cp_es_distance = cp_body if self.car_fingerprint in GLOBAL_GEN2 else cp_cam
     self.es_distance_msg = copy.copy(cp_es_distance.vl["ES_Distance"])
+    self.car_follow = cp_es_distance.vl["ES_Distance"]["Car_Follow"]
+    self.close_distance = cp_es_distance.vl["ES_Distance"]["Close_Distance"]
+    #self.es_distance_msg = copy.copy(cp_cam.vl["ES_Distance"])
     self.es_dashstatus_msg = copy.copy(cp_cam.vl["ES_DashStatus"])
+    
+    self.sw_cruise_buttons_msg = copy.copy(cp.vl["Cruise_Buttons"])
+    self.brake_pedal_msg = copy.copy(cp.vl["Brake_Pedal"])
+    
+    # ***See if the LKAS/Cancel button was pressed***    
+    
+    self.cruise_lkas_state = cp_cam.vl["ES_LKAS_State"]["LKAS_Dash_State"]
+    if (self.cruise_lkas_state < 2):
+      if not self.cruise_lkas_state == self.prev_lkas_state:
+        self.lkasm_change = True
+        if self.cruise_lkas_state == 1:
+          self.lkas_mode = 2
+        else:
+          if self.prev_lkas_mode == 3:
+            self.lkas_mode = 1
+          else:
+            self.lkas_mode = 3
+          self.prev_lkas_mode = self.lkas_mode
+      else:
+        self.lkasm_change = False
+      
+      self.prev_lkas_state = self.cruise_lkas_state
+
+    # ***See if the LKAS/Cancel button was pressed end***
 
     ret.cruiseActualEnabled = ret.cruiseState.enabled
+    
+    ret.engineRPM = self.speed_limit
+    
     return ret
 
   @staticmethod
@@ -96,11 +137,22 @@ class CarState(CarStateBase):
       ("RL", "Wheel_Speeds"),
       ("RR", "Wheel_Speeds"),
       ("Brake", "Brake_Status"),
+      
+      ("COUNTER", "Throttle"),
+      ("Signal1", "Throttle"),
+      ("Engine_RPM", "Throttle"),
+      ("Signal2", "Throttle"),
+      ("Throttle_Pedal", "Throttle"),
+      ("Throttle_Cruise", "Throttle"),
+      ("Throttle_Combo", "Throttle"),
+      ("Signal3", "Throttle"),
+      ("Off_Accel", "Throttle"),
     ]
     checks = [
       ("CruiseControl", 20),
       ("Wheel_Speeds", 50),
       ("Brake_Status", 50),
+      ("Throttle", 100),
     ]
 
     return signals, checks
@@ -142,8 +194,7 @@ class CarState(CarStateBase):
       ("Steer_Torque_Output", "Steering_Torque"),
       ("Steering_Angle", "Steering_Torque"),
       ("Steer_Error_1", "Steering_Torque"),
-      ("Brake_Pedal", "Brake_Pedal"),
-      ("Throttle_Pedal", "Throttle"),
+      #("Throttle_Pedal", "Throttle"),
       ("LEFT_BLINKER", "Dashlights"),
       ("RIGHT_BLINKER", "Dashlights"),
       ("SEATBELT_FL", "Dashlights"),
@@ -152,16 +203,33 @@ class CarState(CarStateBase):
       ("DOOR_OPEN_RR", "BodyInfo"),
       ("DOOR_OPEN_RL", "BodyInfo"),
       ("Gear", "Transmission"),
+      
+      ("COUNTER","Cruise_Buttons"),
+      ("Signal1","Cruise_Buttons"),
+      ("Main","Cruise_Buttons"),
+      ("Set","Cruise_Buttons"),
+      ("Resume","Cruise_Buttons"),
+      ("Signal2","Cruise_Buttons"),
+      
+      ("COUNTER", "Brake_Pedal"),
+      ("Signal1", "Brake_Pedal"),
+      ("Speed", "Brake_Pedal"),
+      ("Signal2", "Brake_Pedal"),
+      ("Brake_Lights", "Brake_Pedal"),
+      ("Signal3", "Brake_Pedal"),
+      ("Brake_Pedal", "Brake_Pedal"),
+      ("Signal4", "Brake_Pedal"),
     ]
 
     checks = [
       # sig_address, frequency
-      ("Throttle", 100),
+      #("Throttle", 100),
       ("Dashlights", 10),
       ("Brake_Pedal", 50),
       ("Transmission", 100),
       ("Steering_Torque", 50),
       ("BodyInfo", 1),
+      ("Cruise_Buttons", 20),
     ]
 
     if CP.enableBsm:
