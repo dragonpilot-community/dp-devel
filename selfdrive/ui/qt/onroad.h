@@ -76,6 +76,7 @@ private:
   void drawTurnSpeedSign(QPainter &p, QRect rc, const QString &speed, const QString &sub_text, int curv_sign, bool is_active);
 
   QPixmap engage_img;
+  QPixmap experimental_img;
   QPixmap dm_img;
   QPixmap map_img;
   QPixmap left_img;

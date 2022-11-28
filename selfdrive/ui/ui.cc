@@ -180,18 +180,12 @@ static void update_state(UIState *s) {
     scene.dpUiBrightness = dragonConf.getDpUiBrightness();
     scene.dpE2EConditional = dragonConf.getDpE2EConditional();
   }
-  if (scene.dpE2EConditional) {
-    s->scene.end_to_end_long = sm["longitudinalPlan"].getLongitudinalPlan().getDpE2EIsBlended();
-  }
 }
 
 void ui_update_params(UIState *s) {
   auto params = Params();
   s->scene.is_metric = params.getBool("IsMetric");
   s->scene.map_on_left = params.getBool("NavSettingLeftSide");
-  if (!s->scene.dpE2EConditional) {
-    s->scene.end_to_end_long = params.getBool("ExperimentalMode");
-  }
 }
 
 void UIState::updateStatus() {

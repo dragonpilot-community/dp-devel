@@ -12,6 +12,7 @@ V_CRUISE_MAX = 145  # kph
 V_CRUISE_MIN = 8  # kph
 V_CRUISE_ENABLE_MIN = 40  # kph
 V_CRUISE_INITIAL = 255  # kph
+IMPERIAL_INCREMENT = 1.6  # should be CV.MPH_TO_KPH, but this causes rounding errors
 
 MIN_SPEED = 1.0
 LAT_MPC_N = 16
@@ -50,7 +51,7 @@ class VCruiseHelper:
     self.v_cruise_cluster_kph = V_CRUISE_INITIAL
     self.v_cruise_kph_last = 0
     self.button_timers = {ButtonType.decelCruise: 0, ButtonType.accelCruise: 0}
-    self.button_change_states = {btn: {"standstill": False} for btn in self.button_timers}
+    self.button_change_states = {btn: {"standstill": False, "enabled": False} for btn in self.button_timers}
 
   @property
   def v_cruise_initialized(self):
@@ -81,8 +82,7 @@ class VCruiseHelper:
     long_press = False
     button_type = None
 
-    # should be CV.MPH_TO_KPH, but this causes rounding errors
-    v_cruise_delta = 1. if is_metric else 1.6
+    v_cruise_delta = 1. if is_metric else IMPERIAL_INCREMENT
 
     for b in CS.buttonEvents:
       if b.type.raw in self.button_timers and not b.pressed:
