@@ -208,11 +208,14 @@ class CarController:
         can_sends.append(hondacan.spam_buttons_command(self.packer, CruiseButtons.RES_ACCEL, self.CP.carFingerprint))
 
     else:
+      pedal_override = False
       # Send gas and brake commands.
-      # if not CS.out.cruiseActualEnabled:
-      #   accel = 0.
-      #   brake = 0.
-      #   self.brake_last = 0.
+      if not CS.out.cruiseActualEnabled:
+        accel = 0.
+        brake = 0.
+        self.brake_last = 0.
+        wind_brake = 0.
+        pedal_override = True
 
       if self.frame % 2 == 0:
         ts = self.frame * DT_CTRL
