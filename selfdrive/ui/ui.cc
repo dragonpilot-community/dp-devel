@@ -178,7 +178,6 @@ static void update_state(UIState *s) {
     scene.dpAccelProfileCtrl = dragonConf.getDpAccelProfileCtrl();
     scene.dpAccelProfile = dragonConf.getDpAccelProfile();
     scene.dpUiBrightness = dragonConf.getDpUiBrightness();
-    scene.dpE2EConditional = dragonConf.getDpE2EConditional();
   }
 }
 
