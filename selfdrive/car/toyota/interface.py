@@ -43,6 +43,7 @@ class CarInterface(CarInterfaceBase):
     steering_angle_deadzone_deg = 0.0
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
 
+    params = Params()
     if candidate == CAR.PRIUS:
       stop_and_go = True
       ret.wheelbase = 2.70
@@ -50,7 +51,7 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.6371   # hand-tune
       ret.mass = 3045. * CV.LB_TO_KG + STD_CARGO_KG
       # Only give steer angle deadzone to for bad angle sensor prius
-      if Params().get_bool("dp_toyota_prius_bad_angle_tune"):
+      if params.get_bool("dp_toyota_prius_bad_angle_tune"):
         steering_angle_deadzone_deg = 1.0
         CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
       else:
@@ -226,13 +227,14 @@ class CarInterface(CarInterfaceBase):
     ret.openpilotLongitudinalControl = smartDsu or ret.enableDsu or candidate in (TSS2_CAR - RADAR_ACC_CAR)
     ret.autoResumeSng = ret.openpilotLongitudinalControl and candidate in NO_STOP_TIMER_CAR
 
-    if int(Params().get("dp_atl").decode('utf-8')) == 1:
+    if int(params.get("dp_atl").decode('utf-8')) == 1:
       ret.openpilotLongitudinalControl = False
+
+    if smartDsu and int(params.get("dp_atl").decode('utf-8')) == 2:
+      ret.openpilotLongitudinalControl = True
 
     if candidate == CAR.CHR_TSS2:
       ret.enableBsm = True
-      if smartDsu and int(Params().get("dp_atl").decode('utf-8')) == 2:
-        ret.openpilotLongitudinalControl = True
 
     if not ret.openpilotLongitudinalControl:
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_TOYOTA_STOCK_LONGITUDINAL

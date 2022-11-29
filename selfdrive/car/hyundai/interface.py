@@ -283,10 +283,10 @@ class CarInterface(CarInterfaceBase):
     # mass and CG position, so all cars will have approximately similar dyn behaviors
     ret.tireStiffnessFront, ret.tireStiffnessRear = scale_tire_stiffness(ret.mass, ret.wheelbase, ret.centerToFront,
                                                                          tire_stiffness_factor=tire_stiffness_factor)
-
-    if int(Params().get("dp_atl").decode('utf-8')) == 1:
+    params = Params()
+    if int(params.get("dp_atl").decode('utf-8')) == 1:
       ret.openpilotLongitudinalControl = False
-
+    params.put("dp_lateral_steer_rate_cost", "0.5")
     return ret
 
   @staticmethod
