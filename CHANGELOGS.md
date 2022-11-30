@@ -1,5 +1,14 @@
 dragonpilot [latest]
 =======================
+* Synced with openpilot master 2022.11.25 commits.
+* ADDED: Lateral Controller Selector.
+   - Ability to select between DEFAULT / PID / LQR / Torque Controller.
+* ADDED: Redesigned UI to match Comma's new UI/UX style.
+* ADDED: Dynamic End-to-End can be turned on when lead car is going below x km/h. (Useful for stop and go traffic.)
+* bug fix and improvement.
+
+dragonpilot [2022.11.14]
+=======================
 * Synced with openpilot master 2022.11.14 commits.
 * COMMA: New Model.
 * COMMA: RAV4 TSS2 now uses PID.
