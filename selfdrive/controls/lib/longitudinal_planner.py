@@ -128,13 +128,14 @@ class LongitudinalPlanner:
     self.speed_limit_controller = SpeedLimitController()
     self.events = Events()
     self.turn_speed_controller = TurnSpeedController()
+    self.dp_e2e_adapt_ap = False
 
   def read_param(self):
     e2e = self.params.get_bool('ExperimentalMode') and self.CP.openpilotLongitudinalControl
     self.mpc.mode = 'blended' if e2e else 'acc'
 
   # dp - conditional e2e
-  def conditional_e2e(self, standstill, within_speed_condition, e2e_lead, lead_rel_speed):
+  def conditional_e2e(self, standstill, within_speed_condition, e2e_lead, within_speed_condition_lead):
     reset_state = False
 
     # lead counter
@@ -159,19 +160,20 @@ class LongitudinalPlanner:
         self.dp_e2e_sng = 0
 
     dp_e2e_mode = 'acc'
-    # set mode to e2e when the vehicle is standstill,
-    # so if a lead suddenly moved away, we still use e2e to control the vehicle.
+    # standstill uses e2e, to prevent lead suddenly move away.
     if standstill:
       self.dp_e2e_sng = 0
       self.dp_e2e_sng = False
       dp_e2e_mode = 'blended'
-    # when we transit from standstill to moving, use e2e for few secs (dp_e2e_lead_count >= _DP_E2E_LEAD_COUNT)
-    elif self.dp_e2e_sng:
-      dp_e2e_mode = 'blended'
-    # when set speed is below condition speed and we do not have a lead, use e2e.
-    elif within_speed_condition:
-      if not self.dp_e2e_has_lead:
-        dp_e2e_mode = 'blended'
+    else:
+      # lead is driving below x km/h
+      if self.dp_e2e_has_lead:
+        if within_speed_condition_lead:
+          dp_e2e_mode = 'blended'
+      else:
+        # within speed condition and does not have a lead, use e2e
+        if within_speed_condition:
+          dp_e2e_mode = 'blended'
 
     self.mpc.mode = dp_e2e_mode
     if dp_e2e_mode != self.dp_e2e_mode_last:
@@ -186,8 +188,8 @@ class LongitudinalPlanner:
   @staticmethod
   def parse_model(model_msg, model_error):
     if (len(model_msg.position.x) == 33 and
-       len(model_msg.velocity.x) == 33 and
-       len(model_msg.acceleration.x) == 33):
+      len(model_msg.velocity.x) == 33 and
+      len(model_msg.acceleration.x) == 33):
       x = np.interp(T_IDXS_MPC, T_IDXS, model_msg.position.x) - model_error * T_IDXS_MPC
       v = np.interp(T_IDXS_MPC, T_IDXS, model_msg.velocity.x) - model_error
       a = np.interp(T_IDXS_MPC, T_IDXS, model_msg.acceleration.x)
@@ -201,7 +203,9 @@ class LongitudinalPlanner:
 
   def get_df(self, v_ego):
     desired_tf = T_FOLLOW
-    if self.dp_following_profile_ctrl and self.mpc.mode == 'acc':
+    if not self.dp_e2e_adapt_ap and self.mpc.mode == 'blended':
+      return desired_tf
+    if self.dp_following_profile_ctrl:
       if self.dp_following_profile == 0:
         # At slow speeds more time, decrease time up to 60mph
         # in kph ~= 0     20     40      50      70     80     90     150
@@ -232,10 +236,11 @@ class LongitudinalPlanner:
     dp_reset_state = False
 
     if sm['dragonConf'].dpE2EConditional:
+      self.dp_e2e_adapt_ap = sm['dragonConf'].dpE2EConditionalAdaptAp
       e2e_lead = sm['radarState'].leadOne.status and sm['radarState'].leadOne.dRel <= _DP_E2E_LEAD_DIST
       within_speed_condition = sm['controlsState'].vCruise <= sm['dragonConf'].dpE2EConditionalAtSpeed
-      lead_rel_speed = sm['radarState'].leadOne.vRel + sm['carState'].vEgo
-      if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead, lead_rel_speed):
+      within_speed_condition_lead = (sm['radarState'].leadOne.vRel + sm['carState'].vEgo)*3.6 <= sm['dragonConf'].dpE2EConditionalAtSpeedLead
+      if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead, within_speed_condition_lead):
         dp_reset_state = True
     else:
       if self.param_read_counter % 50 == 0 and read:
@@ -256,13 +261,18 @@ class LongitudinalPlanner:
     # No change cost when user is controlling the speed, or when standstill
     prev_accel_constraint = not (reset_state or sm['carState'].standstill)
 
-    if self.dp_accel_profile_ctrl:
-      accel_limits = dp_calc_cruise_accel_limits(v_ego, self.dp_accel_profile)
-      accel_limits_turns = limit_accel_in_turns(v_ego, sm['carState'].steeringAngleDeg, accel_limits, self.CP)
-      if not self.dp_accel_profile_ctrl and self.mpc.mode == 'acc':
+    if self.mpc.mode == 'acc':
+      if self.dp_accel_profile_ctrl:
+        accel_limits = dp_calc_cruise_accel_limits(v_ego, self.dp_accel_profile)
+      else:
         accel_limits = [A_CRUISE_MIN, get_max_accel(v_ego)]
+      accel_limits_turns = limit_accel_in_turns(v_ego, sm['carState'].steeringAngleDeg, accel_limits, self.CP)
     else:
-      accel_limits = [MIN_ACCEL, MAX_ACCEL]
+      if sm['dragonConf'].dpE2EConditional and sm['dragonConf'].dpE2EConditionalAdaptAp and self.dp_accel_profile_ctrl:
+        _, accel_max = dp_calc_cruise_accel_limits(v_ego, self.dp_accel_profile)
+        accel_limits = [MIN_ACCEL, accel_max]
+      else:
+        accel_limits = [MIN_ACCEL, MAX_ACCEL]
       accel_limits_turns = [MIN_ACCEL, MAX_ACCEL]
 
     if reset_state or dp_reset_state:
@@ -284,11 +294,12 @@ class LongitudinalPlanner:
       # if required so, force a smooth deceleration
       accel_limits_turns[1] = min(accel_limits_turns[1], AWARENESS_DECEL)
       accel_limits_turns[0] = min(accel_limits_turns[0], accel_limits_turns[1])
-
     # clip limits, cannot init MPC outside of bounds
     accel_limits_turns[0] = min(accel_limits_turns[0], self.a_desired + 0.05, a_min_sol)
     accel_limits_turns[1] = max(accel_limits_turns[1], self.a_desired - 0.05)
 
+    # dp - mpc.set_weights calls moved to mpc.update function because we need lead0 and lead1 data
+    # self.mpc.set_weights(prev_accel_constraint)
     self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
     x, v, a, j = self.parse_model(sm['modelV2'], self.v_model_error)
