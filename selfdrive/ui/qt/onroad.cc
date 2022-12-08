@@ -226,7 +226,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
     v_ego_cluster_seen = true;
   }
   float cur_speed = cs_alive ? std::max<float>(0.0, v_ego) : 0.0;
-  cur_speed  *= s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH;
+  cur_speed *= s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH;
 
   auto speed_limit_sign = sm["navInstruction"].getNavInstruction().getSpeedLimitSign();
   float speed_limit_comma = nav_alive ? sm["navInstruction"].getNavInstruction().getSpeedLimit() : 0.0;

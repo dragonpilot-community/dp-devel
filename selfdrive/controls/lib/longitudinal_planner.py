@@ -6,7 +6,6 @@ from common.numpy_fast import clip, interp
 import cereal.messaging as messaging
 from common.conversions import Conversions as CV
 from common.filter_simple import FirstOrderFilter
-from common.params import Params
 from common.realtime import DT_MDL
 from selfdrive.modeld.constants import T_IDXS
 from selfdrive.controls.lib.longcontrol import LongCtrlState
@@ -101,12 +100,7 @@ class LongitudinalPlanner:
     self.dp_e2e_standstill_last = False
 
     self.CP = CP
-    self.params = Params()
-    self.param_read_counter = 0
-
     self.mpc = LongitudinalMpc()
-    self.read_param()
-
     self.fcw = False
 
     self.a_desired = init_a
@@ -129,10 +123,6 @@ class LongitudinalPlanner:
     self.events = Events()
     self.turn_speed_controller = TurnSpeedController()
     self.dp_e2e_adapt_ap = False
-
-  def read_param(self):
-    e2e = self.params.get_bool('ExperimentalMode') and self.CP.openpilotLongitudinalControl
-    self.mpc.mode = 'blended' if e2e else 'acc'
 
   # dp - conditional e2e
   def conditional_e2e(self, standstill, within_speed_condition, e2e_lead, within_speed_condition_lead):
@@ -243,9 +233,7 @@ class LongitudinalPlanner:
       if self.conditional_e2e(sm['carState'].standstill, within_speed_condition, e2e_lead, within_speed_condition_lead):
         dp_reset_state = True
     else:
-      if self.param_read_counter % 50 == 0 and read:
-        self.read_param()
-      self.param_read_counter += 1
+      self.mpc.mode = 'blended' if sm['controlsState'].experimentalMode else 'acc'
 
     v_ego = sm['carState'].vEgo
     v_cruise_kph = sm['controlsState'].vCruise
