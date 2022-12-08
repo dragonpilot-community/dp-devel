@@ -199,21 +199,21 @@ class LongitudinalPlanner:
       if self.dp_following_profile == 0:
         # At slow speeds more time, decrease time up to 60mph
         # in kph ~= 0     20     40      50      70     80     90     150
-        x_vel = [0,      5.56,   11.11,  13.89,  19.4,  22.2,  25.0,  41.67]
-        y_dist = [1.2,   1.3,   1.32,    1.32,   1.32,  1.32,  1.32,   1.35]
+        x_vel =  [0,    5.556,  13.89,  25.0,  41.67]
+        y_dist = [1.2,  1.3287, 1.3287, 1.22,  1.3]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
       elif self.dp_following_profile == 1:
         # in kph ~= 0     20     40      50      70      90     150
         #x_vel = [0,      5.56,   11.11,   13.89,  19.4,   25.0,  41.67]
         #y_dist = [1.3,   1.4,   1.45,    1.5,    1.5,    1.6,  1.8]
         # in kph ~= 0     20     40      50      70      90     150
-        x_vel = [0,      5.56,   11.11,   13.89,  19.4,   25.0,  41.67]
-        y_dist = [1.2,   1.37,   1.45,    1.5,    1.5,    1.6,  1.8]
+        x_vel =  [0,    13.89,  41.67]
+        y_dist = [1.2,  1.4,    1.8]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
       elif self.dp_following_profile == 2:
         # in kph ~= 0     20      40       50      90     150
-        x_vel = [0,      5.56,    11.11,   13.89,  25.0,  41.67]
-        y_dist = [1.2,   1.47,    1.75,    1.95,    2.2,   2.4]
+        x_vel =  [0,     5.556,  41.67]
+        y_dist = [1.19,  1.37,   2.4]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
     return desired_tf
 
