@@ -1,5 +1,16 @@
 dragonpilot [latest]
 =======================
+* Synced with openpilot master 2022.12.13 commits.
+* COMMA: New model, Toyota users can now configure SWAY settings.
+* ADDED: Dashcam for comma 3. Store in /data/media/0/video/ (@neokii)
+* ADDED: Better TSS2 Long and DF tune. @cgw1968-5779
+* NEW: Toggle to adapt Dynamic End-to-End to Following Dist. Mode.
+* NEW: Toggle to adapt Dynamic End-to-End to Accel Mode.
+* Improvement: Dynamic end to end is much more reliable and smoother experience
+* TWEAK: Bug fixes and improvement.
+
+dragonpilot [2022.11.25]
+=======================
 * Synced with openpilot master 2022.11.25 commits.
 * ADDED: Lateral Controller Selector.
    - Ability to select between DEFAULT / PID / LQR / Torque Controller.
