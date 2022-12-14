@@ -265,6 +265,10 @@ class CarInterface(CarInterfaceBase):
         ret.stoppingDecelRate = 0.009  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
         #ret.longitudinalActuatorDelayLowerBound = 0.3
         #ret.longitudinalActuatorDelayUpperBound = 0.3
+        ### stock ###
+        #ret.vEgoStopping = 0.25
+        #ret.vEgoStarting = 0.25
+        #ret.stoppingDecelRate = 0.3  # reach stopping target smoothly
     else:
       tune.kpBP = [0., 5., 35.]
       tune.kiBP = [0., 35.]

@@ -514,9 +514,9 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.resumeRequired: {
     ET.WARNING: Alert(
-      _("STOPPED"),
       _("Press Resume to Exit Standstill"),
-      AlertStatus.userPrompt, AlertSize.mid,
+      _(""),
+      AlertStatus.userPrompt, AlertSize.small,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, .2),
   },
 
@@ -832,9 +832,9 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.accFaulted: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("Cruise Faulted")),
-    ET.PERMANENT: NormalPermanentAlert(_("Cruise Faulted"), ""),
-    ET.NO_ENTRY: NoEntryAlert(_("Cruise Faulted")),
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("Cruise Fault: Restart the Car")),
+    ET.PERMANENT: NormalPermanentAlert(_("Cruise Fault: Restart the car to engage")),
+    ET.NO_ENTRY: NoEntryAlert(_("Cruise Fault: Restart the Car")),
   },
 
   EventName.accFaultedTemp: {
