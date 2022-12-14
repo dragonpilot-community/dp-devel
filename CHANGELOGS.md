@@ -7,7 +7,8 @@ dragonpilot [latest]
 * NEW: Toggle to adapt Dynamic End-to-End to Following Dist. Mode.
 * NEW: Toggle to adapt Dynamic End-to-End to Accel Mode.
 * Improvement: Dynamic end to end is much more reliable and smoother experience
-* TWEAK: Bug fixes and improvement.
+* Bug fixes and improvement.
+* Happy Holiday / New Years! Safe Travel, cya in 2023!
 
 dragonpilot [2022.11.25]
 =======================
