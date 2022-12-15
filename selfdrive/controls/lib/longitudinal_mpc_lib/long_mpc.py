@@ -63,7 +63,7 @@ def get_stopped_equivalence_factor(v_lead, v_ego):
   v_diff_offset = 0
   if np.all(v_lead - v_ego > 0):
     v_diff_offset = ((v_lead - v_ego) * 1.)
-    v_diff_offset = np.clip(v_diff_offset, 0, STOP_DISTANCE / 2)
+    v_diff_offset = np.clip(v_diff_offset, 0, STOP_DISTANCE)
     v_diff_offset = np.maximum(v_diff_offset * ((10 - v_ego)/10), 0)
   distance = (v_lead**2) / (2 * COMFORT_BRAKE) + v_diff_offset
   return distance
