@@ -13,12 +13,6 @@ class CarState(CarStateBase):
     can_define = CANDefine(DBC[CP.carFingerprint]["pt"])
     self.shifter_values = can_define.dv["Transmission"]["Gear"]
     self.speed_limit = 255
-    
-    #LKAS Modes:   1: OFF  2:Stock ACC no LKAS Standby 3: Stock LKAS (white lines) 4: Openpilot (green lines)
-    self.lkas_mode = 3
-    self.prev_lkas_mode = 3
-    self.lkasm_change = False
-    self.prev_lkas_state = 2
 
   def update(self, cp, cp_cam, cp_body):
     ret = car.CarState.new_message()
@@ -87,44 +81,21 @@ class CarState(CarStateBase):
       self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
       self.cruise_state = cp_cam.vl["ES_DashStatus"]["Cruise_State"]
 
-    
+
     self.throttle_msg = copy.copy(cp.vl["Throttle"])
-    
+
     cp_es_distance = cp_body if self.car_fingerprint in GLOBAL_GEN2 else cp_cam
     self.es_distance_msg = copy.copy(cp_es_distance.vl["ES_Distance"])
     self.car_follow = cp_es_distance.vl["ES_Distance"]["Car_Follow"]
     self.close_distance = cp_es_distance.vl["ES_Distance"]["Close_Distance"]
     #self.es_distance_msg = copy.copy(cp_cam.vl["ES_Distance"])
     self.es_dashstatus_msg = copy.copy(cp_cam.vl["ES_DashStatus"])
-    
+
     self.sw_cruise_buttons_msg = copy.copy(cp.vl["Cruise_Buttons"])
     self.brake_pedal_msg = copy.copy(cp.vl["Brake_Pedal"])
-    
-    # ***See if the LKAS/Cancel button was pressed***    
-    
-    self.cruise_lkas_state = cp_cam.vl["ES_LKAS_State"]["LKAS_Dash_State"]
-    if (self.cruise_lkas_state < 2):
-      if not self.cruise_lkas_state == self.prev_lkas_state:
-        self.lkasm_change = True
-        if self.cruise_lkas_state == 1:
-          self.lkas_mode = 2
-        else:
-          if self.prev_lkas_mode == 3:
-            self.lkas_mode = 1
-          else:
-            self.lkas_mode = 3
-          self.prev_lkas_mode = self.lkas_mode
-      else:
-        self.lkasm_change = False
-      
-      self.prev_lkas_state = self.cruise_lkas_state
-
-    # ***See if the LKAS/Cancel button was pressed end***
-
     ret.cruiseActualEnabled = ret.cruiseState.enabled
-    
     ret.engineRPM = self.speed_limit
-    
+
     return ret
 
   @staticmethod
@@ -137,7 +108,7 @@ class CarState(CarStateBase):
       ("RL", "Wheel_Speeds"),
       ("RR", "Wheel_Speeds"),
       ("Brake", "Brake_Status"),
-      
+
       ("COUNTER", "Throttle"),
       ("Signal1", "Throttle"),
       ("Engine_RPM", "Throttle"),
@@ -203,14 +174,14 @@ class CarState(CarStateBase):
       ("DOOR_OPEN_RR", "BodyInfo"),
       ("DOOR_OPEN_RL", "BodyInfo"),
       ("Gear", "Transmission"),
-      
+
       ("COUNTER","Cruise_Buttons"),
       ("Signal1","Cruise_Buttons"),
       ("Main","Cruise_Buttons"),
       ("Set","Cruise_Buttons"),
       ("Resume","Cruise_Buttons"),
       ("Signal2","Cruise_Buttons"),
-      
+
       ("COUNTER", "Brake_Pedal"),
       ("Signal1", "Brake_Pedal"),
       ("Speed", "Brake_Pedal"),
