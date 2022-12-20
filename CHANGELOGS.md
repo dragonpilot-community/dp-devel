@@ -1,5 +1,14 @@
 dragonpilot [latest]
 =======================
+* Synced with openpilot master 2023.1.3 commits.
+
+HOTFIX:
+=======================
+* Allow Experimental Mode in release branch. (@Stupefacient)
+* Happy Holiday / New Years! Safe Travel, cya in 2023!
+
+dragonpilot 2022.12.13
+=======================
 * Synced with openpilot master 2022.12.13 commits.
 * COMMA: New model, Toyota users can now configure SWAY settings.
 * ADDED: Dashcam for comma 3. Store in /data/media/0/video/ (@neokii)
