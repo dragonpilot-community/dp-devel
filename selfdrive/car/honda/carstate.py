@@ -59,7 +59,7 @@ def get_can_signals(CP, gearbox_msg, main_on_sig_msg):
     ("STEER_MOTOR_TORQUE", 0),  # TODO: not on every car
   ]
 
-  if CP.carFingerprint == CAR.ODYSSEY_CHN:
+  if CP.carFingerprint in (CAR.ODYSSEY_CHN, CAR.ODYSSEY_HYBRID):
     checks += [
       ("SCM_FEEDBACK", 25),
       ("SCM_BUTTONS", 50),
@@ -79,7 +79,7 @@ def get_can_signals(CP, gearbox_msg, main_on_sig_msg):
     signals.append(("BRAKE_PRESSED", "BRAKE_MODULE"))
     checks.append(("BRAKE_MODULE", 50))
 
-  if CP.carFingerprint in (HONDA_BOSCH | {CAR.CIVIC, CAR.ODYSSEY, CAR.ODYSSEY_CHN}):
+  if CP.carFingerprint in (HONDA_BOSCH | {CAR.CIVIC, CAR.ODYSSEY, CAR.ODYSSEY_CHN, CAR.ODYSSEY_HYBRID}):
     signals.append(("EPB_STATE", "EPB_STATUS"))
     checks.append(("EPB_STATUS", 50))
 
@@ -102,7 +102,7 @@ def get_can_signals(CP, gearbox_msg, main_on_sig_msg):
     signals += [("CRUISE_SPEED_PCM", "CRUISE"),
                 ("CRUISE_SPEED_OFFSET", "CRUISE_PARAMS")]
 
-    if CP.carFingerprint == CAR.ODYSSEY_CHN:
+    if CP.carFingerprint in (CAR.ODYSSEY_CHN, CAR.ODYSSEY_HYBRID):
       checks.append(("CRUISE_PARAMS", 10))
     else:
       checks.append(("CRUISE_PARAMS", 50))
@@ -125,11 +125,18 @@ def get_can_signals(CP, gearbox_msg, main_on_sig_msg):
     checks.append(("GAS_SENSOR", 50))
 
   if CP.openpilotLongitudinalControl:
-    signals += [
-      ("BRAKE_ERROR_1", "STANDSTILL"),
-      ("BRAKE_ERROR_2", "STANDSTILL")
-    ]
-    checks.append(("STANDSTILL", 50))
+    if CP.carFingerprint in (CAR.ODYSSEY_HYBRID,):
+      signals += [
+        ("BRAKE_ERROR_1", "BRAKE_ERROR"), 
+        ("BRAKE_ERROR_2", "BRAKE_ERROR")
+      ]
+      checks.append(("BRAKE_ERROR", 100))
+    else:
+      signals += [
+        ("BRAKE_ERROR_1", "STANDSTILL"),
+        ("BRAKE_ERROR_2", "STANDSTILL")
+      ]
+      checks.append(("STANDSTILL", 50))
 
   return signals, checks
 
@@ -197,7 +204,10 @@ class CarState(CarStateBase):
     ret.steerFaultTemporary = steer_status not in ("NORMAL", "LOW_SPEED_LOCKOUT", "NO_TORQUE_ALERT_2")
 
     if self.CP.openpilotLongitudinalControl:
-      self.brake_error = cp.vl["STANDSTILL"]["BRAKE_ERROR_1"] or cp.vl["STANDSTILL"]["BRAKE_ERROR_2"]
+      if self.CP.carFingerprint in (CAR.ODYSSEY_HYBRID,):
+        self.brake_error = cp.vl["BRAKE_ERROR"]["BRAKE_ERROR_1"] or cp.vl["BRAKE_ERROR"]["BRAKE_ERROR_2"]
+      else:
+        self.brake_error = cp.vl["STANDSTILL"]["BRAKE_ERROR_1"] or cp.vl["STANDSTILL"]["BRAKE_ERROR_2"]
     ret.espDisabled = cp.vl["VSA_STATUS"]["ESP_DISABLED"] != 0
 
     ret.wheelSpeeds = self.get_wheel_speeds(
@@ -228,7 +238,7 @@ class CarState(CarStateBase):
     self.engineRPM = cp.vl["POWERTRAIN_DATA"]['ENGINE_RPM']
 
     # TODO: set for all cars
-    if self.CP.carFingerprint in (HONDA_BOSCH | {CAR.CIVIC, CAR.ODYSSEY, CAR.ODYSSEY_CHN}):
+    if self.CP.carFingerprint in (HONDA_BOSCH | {CAR.CIVIC, CAR.ODYSSEY, CAR.ODYSSEY_CHN, CAR.ODYSSEY_HYBRID}):
       ret.parkingBrake = cp.vl["EPB_STATUS"]["EPB_STATE"] != 0
 
     gear = int(cp.vl[self.gearbox_msg]["GEAR_SHIFTER"])
@@ -285,7 +295,7 @@ class CarState(CarStateBase):
       if ret.brake > 0.1:
         ret.brakePressed = True
 
-    if self.CP.carFingerprint in (CAR.CIVIC, CAR.ODYSSEY, CAR.ODYSSEY_CHN, CAR.CRV_5G, CAR.ACCORD, CAR.ACCORDH, CAR.CIVIC_BOSCH,
+    if self.CP.carFingerprint in (CAR.CIVIC, CAR.ODYSSEY, CAR.ODYSSEY_CHN, CAR.ODYSSEY_HYBRID, CAR.CRV_5G, CAR.ACCORD, CAR.ACCORDH, CAR.CIVIC_BOSCH,
                                     CAR.CIVIC_BOSCH_DIESEL, CAR.CRV_HYBRID, CAR.INSIGHT, CAR.ACURA_RDX_3G, CAR.HONDA_E):
       ret.brakeLightsDEPRECATED = bool(ret.brakePressed or cp.vl["ACC_CONTROL"]['BRAKE_LIGHTS'] != 0 or ret.brake > 0.4 or ret.parkingBrake) if not self.CP.openpilotLongitudinalControl else \
                          bool(ret.brakePressed or ret.brake > 0.4 or ret.parkingBrake)

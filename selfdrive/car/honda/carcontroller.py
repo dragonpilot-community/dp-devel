@@ -7,7 +7,7 @@ from common.realtime import DT_CTRL
 from opendbc.can.packer import CANPacker
 from selfdrive.car import create_gas_interceptor_command
 from selfdrive.car.honda import hondacan
-from selfdrive.car.honda.values import CruiseButtons, VISUAL_HUD, HONDA_BOSCH, HONDA_BOSCH_RADARLESS, HONDA_NIDEC_ALT_PCM_ACCEL, CarControllerParams
+from selfdrive.car.honda.values import CruiseButtons, VISUAL_HUD, HONDA_BOSCH, HONDA_BOSCH_RADARLESS, HONDA_NIDEC_ALT_PCM_ACCEL, CarControllerParams, CAR
 from selfdrive.controls.lib.drive_helpers import rate_limit
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
@@ -72,6 +72,10 @@ def brake_pump_hysteresis(apply_brake, apply_brake_last, last_pump_ts, ts):
 
   # once the pump is on, run it for at least 0.2s
   if ts - last_pump_ts < 0.2 and apply_brake > 0:
+    pump_on = True
+
+  # Some nidec hybrid vehicles like Clarity and Odyssey hybrid need pump on all the time during braking, or it'll lose pressure
+  if self.CP.carFingerprint == CAR.ODYSSEY_HYBRID:
     pump_on = True
 
   return pump_on, last_pump_ts
