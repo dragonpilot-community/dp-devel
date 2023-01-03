@@ -30,12 +30,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon, confirm
   std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
     {
-      "dp_change5speed",
-      "Change 5 speed",
-      "Every tap to change the maximum cruise speed will change 5 instead of just 1",
-      "../assets/offroad/icon_speed_limit.png",
-    },
-    {
       "OpenpilotEnabledToggle",
       tr("Enable openpilot"),
       tr("Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this setting takes effect when the car is powered off."),
