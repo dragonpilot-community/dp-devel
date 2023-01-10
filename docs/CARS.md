@@ -4,7 +4,7 @@
 
 A supported vehicle is one that just works when you install a comma three. All supported cars provide a better experience than any stock system.
 
-# 220 Supported Cars
+# 222 Supported Cars
 
 |Make|Model|Supported Package|ACC|No ACC accel below|No ALC below|Steering Torque|Resume from stop|Harness|
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -62,6 +62,7 @@ A supported vehicle is one that just works when you install a comma three. All s
 |Hyundai|Elantra Hybrid 2021-23|Smart Cruise Control (SCC)|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai K|
 |Hyundai|Genesis 2015-16|Smart Cruise Control (SCC)|Stock|19 mph|37 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai J|
 |Hyundai|i30 2017-19|Smart Cruise Control (SCC)|Stock|0 mph|32 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai E|
+|Hyundai|Ioniq 5 (Southeast Asia only) 2022-23[<sup>5</sup>](#footnotes)|All|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai Q|
 |Hyundai|Ioniq 5 (with HDA II) 2022-23[<sup>5</sup>](#footnotes)|Highway Driving Assist II|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai Q|
 |Hyundai|Ioniq 5 (without HDA II) 2022-23[<sup>5</sup>](#footnotes)|Highway Driving Assist|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai K|
 |Hyundai|Ioniq Electric 2019|Smart Cruise Control (SCC)|Stock|0 mph|32 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai C|
@@ -81,7 +82,7 @@ A supported vehicle is one that just works when you install a comma three. All s
 |Hyundai|Santa Fe Hybrid 2022|All|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai L|
 |Hyundai|Santa Fe Plug-in Hybrid 2022|All|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai L|
 |Hyundai|Sonata 2018-19|Smart Cruise Control (SCC)|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai E|
-|Hyundai|Sonata 2020-22|All|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai A|
+|Hyundai|Sonata 2020-23|All|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai A|
 |Hyundai|Sonata Hybrid 2020-22|All|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai A|
 |Hyundai|Tucson 2021|Smart Cruise Control (SCC)|openpilot available[<sup>1</sup>](#footnotes)|19 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai L|
 |Hyundai|Tucson 2022[<sup>5</sup>](#footnotes)|Smart Cruise Control (SCC)|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai N|
@@ -92,6 +93,7 @@ A supported vehicle is one that just works when you install a comma three. All s
 |Jeep|Grand Cherokee 2016-18|Adaptive Cruise Control (ACC)|Stock|0 mph|9 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|FCA|
 |Jeep|Grand Cherokee 2019-21|Adaptive Cruise Control (ACC)|Stock|0 mph|39 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|FCA|
 |Kia|Ceed 2019|Smart Cruise Control (SCC)|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai E|
+|Kia|EV6 (Southeast Asia only) 2022-23[<sup>5</sup>](#footnotes)|All|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai P|
 |Kia|EV6 (with HDA II) 2022[<sup>5</sup>](#footnotes)|Highway Driving Assist II|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai P|
 |Kia|EV6 (without HDA II) 2022[<sup>5</sup>](#footnotes)|Highway Driving Assist|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai L|
 |Kia|Forte 2019-21|Smart Cruise Control (SCC)|openpilot available[<sup>1</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Hyundai G|
@@ -178,9 +180,9 @@ A supported vehicle is one that just works when you install a comma three. All s
 |Toyota|Corolla Hatchback 2019-22|All|openpilot|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
 |Toyota|Corolla Hybrid 2020-22|All|openpilot|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
 |Toyota|Highlander 2017-19|All|openpilot available[<sup>2</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
-|Toyota|Highlander 2020-22|All|openpilot|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
+|Toyota|Highlander 2020-23|All|openpilot|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
 |Toyota|Highlander Hybrid 2017-19|All|openpilot available[<sup>2</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
-|Toyota|Highlander Hybrid 2020-22|All|openpilot|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
+|Toyota|Highlander Hybrid 2020-23|All|openpilot|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
 |Toyota|Mirai 2021|All|openpilot|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|Toyota|
 |Toyota|Prius 2016|Toyota Safety Sense P|openpilot available[<sup>2</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-empty.svg)](##)|Toyota|
 |Toyota|Prius 2017-20|All|openpilot available[<sup>2</sup>](#footnotes)|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-empty.svg)](##)|Toyota|
@@ -234,7 +236,7 @@ A supported vehicle is one that just works when you install a comma three. All s
 <sup>2</sup>By default, this car will use the stock Adaptive Cruise Control (ACC) for longitudinal control. If the Driver Support Unit (DSU) is disconnected, openpilot ACC will replace stock ACC. <b><i>NOTE: disconnecting the DSU disables Automatic Emergency Braking (AEB).</i></b> <br />
 <sup>3</sup>Requires a <a href="https://github.com/commaai/openpilot/wiki/GM#hardware">community built ASCM harness</a>. <b><i>NOTE: disconnecting the ASCM disables Automatic Emergency Braking (AEB).</i></b> <br />
 <sup>4</sup>2019 Honda Civic 1.6L Diesel Sedan does not have ALC below 12mph. <br />
-<sup>5</sup>Requires a <a href="https://comma.ai/shop/panda" target="_blank">red panda</a>, additional <a href="https://comma.ai/shop/harness-box" target="_blank">harness box</a>, additional <a href="https://comma.ai/shop/obd-c-cable" target="_blank">OBD-C cable</a>, USB-A to USB-A cable, and a USB-A to USB-C OTG dongle. <br />
+<sup>5</sup>Requires a <a href="https://comma.ai/shop/panda" target="_blank">red panda</a> for this <a href="https://en.wikipedia.org/wiki/CAN_FD">CAN FD</a>. All the hardware needed is sold in the <a href="https://comma.ai/shop/can-fd-panda-kit">CAN FD kit</a>. <br />
 <sup>6</sup>openpilot operates above 28mph for Camry 4CYL L, 4CYL LE and 4CYL SE which don't have Full-Speed Range Dynamic Radar Cruise Control. <br />
 <sup>7</sup>Not including the China market Kamiq, which is based on the (currently) unsupported PQ34 platform. <br />
 <sup>8</sup>Refers only to the MQB-based European B8 Passat, not the NMS Passat in the USA/China/Mideast markets. <br />
