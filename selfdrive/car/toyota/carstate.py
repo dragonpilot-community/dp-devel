@@ -183,7 +183,7 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       self.distance = cp_cam.vl["ACC_CONTROL"]['DISTANCE']
-    elif self.CP.carFingerprint in [CAR.RAV4H, CAR.HIGHLANDER]:
+  elif self.CP.carFingerprint in [CAR.RAV4H, CAR.RAV4, CAR.HIGHLANDER]:
       self.distance = cp.vl["SDSU"]['FD_BUTTON']
 
     #dp
