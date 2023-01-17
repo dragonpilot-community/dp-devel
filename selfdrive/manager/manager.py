@@ -24,6 +24,8 @@ from system.version import is_dirty, get_commit, get_version, get_origin, get_sh
 from common.dp_conf import init_params_vals
 
 
+sys.path.append(os.path.join(BASEDIR, "pyextra"))
+
 
 def manager_init() -> None:
   # update system time from panda

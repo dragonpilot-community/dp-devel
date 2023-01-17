@@ -86,7 +86,7 @@ function launch {
 
   # handle pythonpath
   ln -sfn $(pwd) /data/pythonpath
-  export PYTHONPATH="$PWD"
+  export PYTHONPATH="$PWD:$PWD/pyextra"
 
   # dp - apply custom patch
   if [ -f "/data/media/0/dp_patcher.py" ]; then

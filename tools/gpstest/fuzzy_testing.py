@@ -32,11 +32,44 @@ def run_remote_checker(lat, lon, alt, duration, ip_addr):
     print("could not run remote checker is 'rpc_server.py' running???")
     return False, None, None
 
-  matched, log, info = con.root.exposed_run_checker(lat, lon, alt,
-                        timeout=duration,
-                        use_laikad=True)
-  con.close() # TODO: might wanna fetch more logs here
-  con = None
+def get_random_coords(lat, lon) -> Tuple[int, int]:
+  # jump around the world
+  # max values, lat: -90 to 90, lon: -180 to 180
+
+  lat_add = random.random()*20 + 10
+  lon_add = random.random()*20 + 20
+
+  lat = ((lat + lat_add + 90) % 180) - 90
+  lon = ((lon + lon_add + 180) % 360) - 180
+  return round(lat, 5), round(lon, 5)
+
+def get_continuous_coords(lat, lon) -> Tuple[int, int]:
+  # continuously move around the world
+
+  lat_add = random.random()*0.01
+  lon_add = random.random()*0.01
+
+  lat = ((lat + lat_add + 90) % 180) - 90
+  lon = ((lon + lon_add + 180) % 360) - 180
+  return round(lat, 5), round(lon, 5)
+
+rc_p: Any = None
+def exec_remote_checker(lat, lon, duration, ip_addr):
+  global rc_p
+  # TODO: good enough for testing
+  remote_cmd =  "export PYTHONPATH=/data/pythonpath:/data/pythonpath/pyextra && "
+  remote_cmd += "cd /data/openpilot && "
+  remote_cmd += f"timeout {duration} /usr/local/pyenv/shims/python tools/gpstest/remote_checker.py "
+  remote_cmd += f"{lat} {lon}"
+
+  ssh_cmd = ["ssh", "-i", "/home/batman/openpilot/xx/phone/key/id_rsa",
+             f"comma@{ip_addr}"]
+  ssh_cmd += [remote_cmd]
+
+  rc_p = sp.Popen(ssh_cmd, stdout=sp.PIPE)
+  rc_p.wait()
+  rc_output = rc_p.stdout.read()
+  print(f"Checker Result: {rc_output.strip().decode('utf-8')}")
 
   print(f"Remote Checker: {log} {info}")
   return matched, log, info
