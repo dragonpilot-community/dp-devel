@@ -58,7 +58,7 @@ class CarController:
       self.dp_toyota_auto_lock = dragonconf.dpToyotaAutoLock
       self.dp_toyota_auto_unlock = dragonconf.dpToyotaAutoUnlock
 
-    self.dp_toyota_change5speed = Param().get_bool("dp_toyota_change5speed")
+    self.dp_toyota_change5speed = Params().get_bool("dp_toyota_change5speed")
     actuators = CC.actuators
     hud_control = CC.hudControl
     pcm_cancel_cmd = CC.cruiseControl.cancel
