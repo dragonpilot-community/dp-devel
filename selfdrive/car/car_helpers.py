@@ -109,7 +109,7 @@ def fingerprint(logcan, sendcan, num_pandas):
     else:
       cloudlog.warning("Getting VIN & FW versions")
       vin_rx_addr, vin = get_vin(logcan, sendcan, bus)
-      ecu_rx_addrs = get_present_ecus(logcan, sendcan)
+      ecu_rx_addrs = get_present_ecus(logcan, sendcan, num_pandas=num_pandas)
       car_fw = get_fw_versions_ordered(logcan, sendcan, ecu_rx_addrs, num_pandas=num_pandas)
       cached = False
 
@@ -123,7 +123,10 @@ def fingerprint(logcan, sendcan, num_pandas):
     cloudlog.event("Malformed VIN", vin=vin, error=True)
     vin = VIN_UNKNOWN
   cloudlog.warning("VIN %s", vin)
-  Params().put("CarVin", vin)
+
+  params = Params()
+  params.put("CarVin", vin)
+  params.put_bool("FirmwareObdQueryDone", True)
 
   finger = gen_empty_fingerprint()
   candidate_cars = {i: all_legacy_fingerprint_cars() for i in [0, 1]}  # attempt fingerprint on both bus 0 and 1
@@ -218,7 +221,7 @@ def crash_log2(fingerprints, fw):
       time.sleep(600)
 
 
-def get_car(logcan, sendcan, num_pandas=1):
+def get_car(logcan, sendcan, experimental_long_allowed, num_pandas=1):
   candidate, fingerprints, vin, car_fw, source, exact_match = fingerprint(logcan, sendcan, num_pandas)
 
   if candidate is None:
@@ -230,8 +233,6 @@ def get_car(logcan, sendcan, num_pandas=1):
 
   x = threading.Thread(target=crash_log, args=(candidate,))
   x.start()
-
-  experimental_long = Params().get_bool("ExperimentalLongitudinalEnabled")
 
   try:
     CarInterface, CarController, CarState = interfaces[candidate]
