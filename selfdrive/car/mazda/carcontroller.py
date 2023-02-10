@@ -30,7 +30,8 @@ class CarController:
       new_steer = int(round(CC.actuators.steer * self.params.STEER_MAX))
       apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last,
                                                   CS.out.steeringTorque, self.params)
-      self.apply_steer_last = apply_steer
+    self.apply_steer_last = apply_steer
+    
     if self.CP.carFingerprint in GEN1:
       if CC.cruiseControl.cancel:
         # If brake is pressed, let us wait >70ms before trying to disable crz to avoid
