@@ -20,7 +20,7 @@ class CarInterface(CarInterfaceBase):
     if candidate in GEN2:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.mazda2019)]
       ret.openpilotLongitudinalControl = True
-      ret.stopAccel = 0.0
+      ret.stopAccel = -.5
       ret.longitudinalTuning.kpBP = [0., 5., 35.]
       ret.longitudinalTuning.kpV = [0.0, 0.0, 0.0]
       ret.longitudinalTuning.kiBP = [0., 35.]
