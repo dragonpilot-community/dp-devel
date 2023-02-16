@@ -51,7 +51,7 @@ class CarController:
     self.last_gear = GearShifter.park
     self.lock_once = False
 
-  def update(self, CC, CS, dragonconf):
+  def update(self, CC, CS, now_nanos, dragonconf):
     if dragonconf is not None:
       self.dp_toyota_sng = dragonconf.dpToyotaSng
       self.dp_atl = dragonconf.dpAtl
