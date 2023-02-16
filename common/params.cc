@@ -245,7 +245,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_quiet_drive", PERSISTENT},
     {"dp_ui_top", PERSISTENT},
     {"dp_ui_side", PERSISTENT},
-    {"dp_ui_volume", PERSISTENT},
     {"dp_ui_brightness", PERSISTENT},
     {"dp_ui_display_mode", PERSISTENT},
     {"dp_ui_speed", PERSISTENT},
@@ -276,7 +275,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_dm", PERSISTENT},
     {"dp_speed_check", PERSISTENT},
     {"dp_temp_check", PERSISTENT},
-    {"dp_vag_resume_fix", PERSISTENT},
     {"dp_following_profile_ctrl", PERSISTENT},
     {"dp_following_profile", PERSISTENT},
     {"dp_lateral_tune", PERSISTENT},
@@ -284,14 +282,13 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"dp_toyota_rav4_tss2_tune", PERSISTENT},
     {"dp_toyota_prius_bad_angle_tune", PERSISTENT},
     {"dp_e2e_conditional", PERSISTENT},
-    {"dp_e2e_conditional_at_speed", PERSISTENT},
-    {"dp_e2e_conditional_at_speed_lead", PERSISTENT},
     {"dp_e2e_conditional_adapt_fp", PERSISTENT},
     {"dp_e2e_conditional_adapt_ap", PERSISTENT},
+    {"dp_e2e_conditional_voacc", PERSISTENT},
     {"dp_toyota_zss", PERSISTENT},
+    {"dp_toyota_change5speed", PERSISTENT},
     {"dp_lateral_version", PERSISTENT},
     {"dp_lateral_steer_rate_cost", PERSISTENT},
-    {"dp_toyota_change5speed", PERSISTENT},
 };
 
 } // namespace
