@@ -30,7 +30,7 @@ class CarInterface(CarInterfaceBase):
 
     ret.dashcamOnly = candidate not in (CAR.CX5_2022, CAR.CX9_2021, CAR.MAZDA3_2019, CAR.CX_30, CAR.CX_50, CAR.CX_60, CAR.CX_70, CAR.CX_80, CAR.CX_90) and not Params().get_bool('dp_mazda_dashcam_bypass')
 
-    ret.steerActuatorDelay = 0.1
+    ret.steerActuatorDelay = 0.2
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 0.70   # not optimized yet
 
