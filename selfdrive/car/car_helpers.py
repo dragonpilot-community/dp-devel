@@ -236,7 +236,7 @@ def get_car(logcan, sendcan, experimental_long_allowed, num_pandas=1):
 
   try:
     CarInterface, CarController, CarState = interfaces[candidate]
-    CP = CarInterface.get_params(candidate, fingerprints, car_fw, experimental_long)
+    CP = CarInterface.get_params(candidate, fingerprints, car_fw, experimental_long_allowed)
     CP.carVin = vin
     CP.carFw = car_fw
     CP.fingerprintSource = source
