@@ -66,7 +66,7 @@ class CarState(CarStateBase):
 
     speed_kph = cp_cam.vl["SPEED"]["SPEED"] * unit_conversion
     ret.standstill = speed_kph < .1
-    ret.cruiseState.standstill = ret.standstill
+    ret.cruiseState.standstill = False
     self.cp = cp
     self.cp_cam = cp_cam
     self.acc = copy.copy(cp.vl["ACC"])
