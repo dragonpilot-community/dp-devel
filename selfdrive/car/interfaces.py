@@ -136,7 +136,7 @@ class CarInterfaceBase(ABC):
     return self.get_steer_feedforward_default
 
   @staticmethod
-  def torque_from_lateral_accel_linear(lateral_accel_value, torque_params, lateral_accel_error, lateral_accel_deadzone, vego, friction_compensation):
+  def torque_from_lateral_accel_linear(lateral_accel_value, torque_params, lateral_accel_error, lateral_accel_deadzone, steering_angle, vego, friction_compensation):
     # The default is a linear relationship between torque and lateral acceleration (accounting for road roll and steering friction)
     friction_interp = interp(
       apply_center_deadzone(lateral_accel_error, lateral_accel_deadzone),
@@ -146,8 +146,21 @@ class CarInterfaceBase(ABC):
     friction = friction_interp if friction_compensation else 0.0
     return (lateral_accel_value / torque_params.latAccelFactor) + friction
 
-  def torque_from_lateral_accel(self) -> TorqueFromLateralAccelCallbackType:
-    return self.torque_from_lateral_accel_linear
+  @staticmethod
+  def torque_from_lateral_accel_non_linear(lateral_accel_value, torque_params, lateral_accel_error, lateral_accel_deadzone, steering_angle, vego, friction_compensation):
+    steering_angle = abs(steering_angle)
+    lat_factor = torque_params.latAccelFactor * ((steering_angle * torque_params.latAngleFactor) + 1)
+    friction_interp = interp(
+      apply_center_deadzone(lateral_accel_error, lateral_accel_deadzone),
+      [-FRICTION_THRESHOLD, FRICTION_THRESHOLD],
+      [-torque_params.friction, torque_params.friction]
+    )
+    friction = friction_interp if friction_compensation else 0.0
+    return (lateral_accel_value / lat_factor) + friction
+
+  def torque_from_lateral_accel(self, linear) -> TorqueFromLateralAccelCallbackType:
+    return self.torque_from_lateral_accel_linear if linear else self.torque_from_lateral_accel_non_linear
+
 
   # returns a set of default params to avoid repetition in car specific params
   @staticmethod
@@ -200,7 +213,7 @@ class CarInterfaceBase(ABC):
     tune.lqr.dcGain = 0.002237852961363602
 
   @staticmethod
-  def configure_torque_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True):
+  def configure_torque_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True, linear = True):
     params = get_torque_params(candidate)
 
     tune.init('torque')
@@ -212,14 +225,15 @@ class CarInterfaceBase(ABC):
     tune.torque.latAccelFactor = params['LAT_ACCEL_FACTOR']
     tune.torque.latAccelOffset = 0.0
     tune.torque.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
+    tune.torque.linear = linear
 
   @staticmethod
-  def configure_dp_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True):
+  def configure_dp_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True, linear = True):
     params = Params()
     if params.get_bool('dp_lateral_lqr'):
       CarInterfaceBase.configure_lqr_tune(tune)
     elif params.get_bool('dp_lateral_torque'):
-      CarInterfaceBase.configure_torque_tune(candidate, tune, steering_angle_deadzone_deg, use_steering_angle)
+      CarInterfaceBase.configure_torque_tune(candidate, tune, steering_angle_deadzone_deg, use_steering_angle, linear)
 
   @abstractmethod
   def _update(self, c: car.CarControl) -> car.CarState:

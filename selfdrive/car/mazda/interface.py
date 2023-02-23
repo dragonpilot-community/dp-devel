@@ -18,6 +18,7 @@ class CarInterface(CarInterfaceBase):
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.mazda)]
       ret.dashcamOnly = candidate not in (CAR.CX5_2022, CAR.CX9_2021) and not Params().get_bool('dp_mazda_dashcam_bypass')
       ret.steerActuatorDelay = 0.2
+      ret.lateralTuning.torque.linear = True
       
       if candidate not in (CAR.CX5_2022,):
         ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MS
@@ -33,12 +34,14 @@ class CarInterface(CarInterfaceBase):
       ret.startingState = True
       ret.dashcamOnly = False
       ret.steerActuatorDelay = 0.0
+      ret.lateralTuning.torque.latAngleFactor = 0.13
+      ret.lateralTuning.torque.linear = False
       
     ret.radarUnavailable = True
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 0.70   # not optimized yet
 
-    CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
+    CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, linear=ret.lateralTuning.torque.linear)
 
     if candidate in (CAR.CX5, CAR.CX5_2022):
       ret.mass = 3655 * CV.LB_TO_KG + STD_CARGO_KG
@@ -71,7 +74,8 @@ class CarInterface(CarInterfaceBase):
 
     
 
-    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning, linear = ret.lateralTuning.torque.linear)
+
 
     ret.centerToFront = ret.wheelbase * 0.41
 
