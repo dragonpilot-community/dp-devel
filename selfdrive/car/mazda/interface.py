@@ -16,6 +16,11 @@ class CarInterface(CarInterfaceBase):
     ret.carName = "mazda"
     if candidate in GEN1:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.mazda)]
+      ret.dashcamOnly = candidate not in (CAR.CX5_2022, CAR.CX9_2021) and not Params().get_bool('dp_mazda_dashcam_bypass')
+      ret.steerActuatorDelay = 0.2
+      
+      if candidate not in (CAR.CX5_2022,):
+        ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MS
       
     if candidate in GEN2:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.mazda2019)]
@@ -26,12 +31,10 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kiBP = [0., 35.]
       ret.longitudinalTuning.kiV = [0.1, 0.1]
       ret.startingState = True
+      ret.dashcamOnly = False
+      ret.steerActuatorDelay = 0.0
       
     ret.radarUnavailable = True
-
-    ret.dashcamOnly = candidate not in (CAR.CX5_2022, CAR.CX9_2021, CAR.MAZDA3_2019, CAR.CX_30, CAR.CX_50, CAR.CX_60, CAR.CX_70, CAR.CX_80, CAR.CX_90) and not Params().get_bool('dp_mazda_dashcam_bypass')
-
-    ret.steerActuatorDelay = 0.2
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 0.70   # not optimized yet
 
@@ -57,20 +60,16 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 3000 * CV.LB_TO_KG + STD_CARGO_KG
       ret.wheelbase = 2.725
       ret.steerRatio = 17.0
-      ret.steerActuatorDelay = 0.0
     elif candidate in (CAR.CX_30, CAR.CX_50):
       ret.mass = 3375 * CV.LB_TO_KG + STD_CARGO_KG
       ret.wheelbase = 2.7
       ret.steerRatio = 15.5
-      ret.steerActuatorDelay = 0.0
     elif candidate in (CAR.CX_60, CAR.CX_80, CAR.CX_70, CAR.CX_90):
       ret.mass = 4217 * CV.LB_TO_KG + STD_CARGO_KG
       ret.wheelbase = 3.1
       ret.steerRatio = 17.6
-      ret.steerActuatorDelay = 0.0
 
-    if candidate not in (CAR.CX5_2022, CAR.MAZDA3_2019, CAR.CX_30, CAR.CX_50, CAR.CX_60, CAR.CX_70, CAR.CX_80, CAR.CX_90):
-      ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MS
+    
 
     CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
 

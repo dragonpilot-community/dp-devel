@@ -36,12 +36,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "../assets/offroad/icon_openpilot.png",
     },
     {
-      "OpenpilotLongitudinalControl",
-      tr("Override Stock ACC"),
-      "Use openpilot's longitudinal control instead of the car's built-in ACC. Enabling this will disable Automatic Emergency Braking (AEB).",
-      "../assets/icon_speed_limit.png",
-    },
-    {
       "ExperimentalMode",
       tr("Experimental Mode"),
       "",
