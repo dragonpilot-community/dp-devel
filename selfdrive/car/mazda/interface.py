@@ -25,6 +25,7 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kpV = [0.0, 0.0, 0.0]
       ret.longitudinalTuning.kiBP = [0., 35.]
       ret.longitudinalTuning.kiV = [0.1, 0.1]
+      ret.startingState = True
       
     ret.radarUnavailable = True
 
