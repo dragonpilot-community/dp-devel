@@ -160,8 +160,12 @@ class CarInterfaceBase(ABC):
     ret.longitudinalActuatorDelayUpperBound = 0.15
     ret.steerLimitTimer = 1.0
     
-    # No Torque Interceptor by default
-    ret.enableTorqueInterceptor = False
+    # No Torque Interceptor unless toggled
+    if self.dp_mazda_ti
+      ret.enableTorqueInterceptor = True
+    else 
+      ret.enableTorqueInterceptor = False
+      
     
     return ret
 
