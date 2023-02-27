@@ -94,6 +94,7 @@ confs = [
 
   {'name': 'dp_mazda_steer_alert', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_mazda_dashcam_bypass', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_mazda_ti', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # service
   # {'name': 'dp_updated', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_logger', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
