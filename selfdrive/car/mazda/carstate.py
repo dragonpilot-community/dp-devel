@@ -200,7 +200,7 @@ class CarState(CarStateBase):
 
     # ti
     # get real driver torque if we are using a torque interceptor
-    if Params().get_bool('dp_mazda_ti'):
+    if CP.enableTorqueInterceptor:
       signals += [
         ("TI_TORQUE_SENSOR", "TI_FEEDBACK", 0),
         ("CHKSUM", "TI_FEEDBACK", 0),
