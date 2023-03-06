@@ -1,8 +1,8 @@
 from cereal import car
 from opendbc.can.packer import CANPacker
-from selfdrive.car import apply_std_steer_torque_limits, apply_ti_steer_torque_limits
+from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.mazda import mazdacan
-from selfdrive.car.mazda.values import CarControllerParams, Buttons
+from selfdrive.car.mazda.values import CarControllerParams, TiSteerLimits, Buttons
 from common.params import Params
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
@@ -28,8 +28,8 @@ class CarController:
     if CC.latActive:
       # ti
       if self.dp_mazda_ti and CS.ti_lkas_allowed:
-        ti_new_steer = int(round(CC.actuators.steer * CarControllerParams.STEER_MAX))
-        ti_apply_steer = apply_ti_steer_torque_limits(ti_new_steer, self.ti_apply_steer_last,
+        ti_new_steer = int(round(CC.actuators.steer * TiSteerLimits.TI_STEER_MAX))
+        ti_apply_steer = (ti_new_steer, self.ti_apply_steer_last,
                                                       CS.out.steeringTorque, CarControllerParams)
 
       new_steer = int(round(CC.actuators.steer * CarControllerParams.STEER_MAX))
