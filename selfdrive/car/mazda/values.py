@@ -20,6 +20,7 @@ class CarControllerParams:
   STEER_DRIVER_MULTIPLIER = 40  # weight driver torque
   STEER_DRIVER_FACTOR = 1       # from dbc
   STEER_ERROR_MAX = 350         # max delta between torque cmd and torque motor
+
 class TiSteerLimits:
   TI_STEER_MAX = 600                # theoretical max_steer 2047
   TI_STEER_DELTA_UP = 6             # torque increase per refresh

@@ -49,8 +49,54 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.83
       ret.steerRatio = 15.5
 
+    if Params().get_bool('dp_mazda_ti'):
+      if candidate in (CAR.CX5, CAR.CX5_2022):
+        ret.lateralTuning.pid.kiBP = [5.0, 25.0]
+        ret.lateralTuning.pid.kpBP = [5.0, 25.0]
+        ret.lateralTuning.pid.kpV = [0.25,0.28]
+        ret.lateralTuning.pid.kiV = [0.01,0.025]
+        ret.lateralTuning.pid.kf = 0.00008
+
+        ret.lateralTuning.init('indi')
+        ret.lateralTuning.indi.innerLoopGainBP = [5.0, 35]
+        ret.lateralTuning.indi.innerLoopGainV = [4.5, 6.0]
+        ret.lateralTuning.indi.outerLoopGainBP = [5, 35]
+        ret.lateralTuning.indi.outerLoopGainV = [3.0, 6]
+        ret.lateralTuning.indi.timeConstantBP = [2, 35]
+        ret.lateralTuning.indi.timeConstantV = [0.2, 1.5]
+        ret.lateralTuning.indi.actuatorEffectivenessBP = [0, 25]
+        ret.lateralTuning.indi.actuatorEffectivenessV = [2.0, 1]
+      elif candidate in [CAR.CX9, CAR.CX9_2021]:
+        ret.lateralTuning.pid.kiBP = [8.0, 30.0]
+        ret.lateralTuning.pid.kpBP = [8.0, 30.0]
+        ret.lateralTuning.pid.kpV = [0.10,0.22]
+        ret.lateralTuning.pid.kiV = [0.01,0.019]
+        ret.lateralTuning.pid.kf = 0.00006
+      elif candidate == CAR.MAZDA3:
+        ret.lateralTuning.pid.kiBP = [5.0, 25.0]
+        ret.lateralTuning.pid.kpBP = [5.0, 25.0]
+        ret.lateralTuning.pid.kpV = [0.25,0.28]
+        ret.lateralTuning.pid.kiV = [0.01,0.025]
+        ret.lateralTuning.pid.kf = 0.00008
+
+        ret.lateralTuning.init('indi')
+        ret.lateralTuning.indi.innerLoopGainBP = [5.0, 35]
+        ret.lateralTuning.indi.innerLoopGainV = [4.5, 6.0]
+        ret.lateralTuning.indi.outerLoopGainBP = [5, 35]
+        ret.lateralTuning.indi.outerLoopGainV = [3.0, 6]
+        ret.lateralTuning.indi.timeConstantBP = [2, 35]
+        ret.lateralTuning.indi.timeConstantV = [0.2, 1.5]
+        ret.lateralTuning.indi.actuatorEffectivenessBP = [0, 25]
+        ret.lateralTuning.indi.actuatorEffectivenessV = [2.0, 1]
+      elif candidate == CAR.MAZDA6:
+        ret.lateralTuning.pid.kiBP = [8.0, 30.0]
+        ret.lateralTuning.pid.kpBP = [8.0, 30.0]
+        ret.lateralTuning.pid.kpV = [0.10,0.22]
+        ret.lateralTuning.pid.kiV = [0.01,0.019]
+        ret.lateralTuning.pid.kf = 0.00006
+
     if candidate not in (CAR.CX5_2022, ):
-      ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MS
+      ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MSS
 
     ret.centerToFront = ret.wheelbase * 0.41
 
