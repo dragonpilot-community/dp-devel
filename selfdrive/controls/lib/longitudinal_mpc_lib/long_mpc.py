@@ -36,7 +36,7 @@ A_EGO_COST = 0.
 J_EGO_COST = 5.0
 A_CHANGE_COST = 200.
 DANGER_ZONE_COST = 100.
-CRASH_DISTANCE = .5
+CRASH_DISTANCE = .25
 LEAD_DANGER_FACTOR = 0.75
 LIMIT_COST = 1e6
 ACADOS_SOLVER_TYPE = 'SQP_RTI'
@@ -49,6 +49,7 @@ MAX_T = 10.0
 T_IDXS_LST = [index_function(idx, max_val=MAX_T, max_idx=N) for idx in range(N+1)]
 
 T_IDXS = np.array(T_IDXS_LST)
+FCW_IDXS = T_IDXS < 5.0
 T_DIFFS = np.diff(T_IDXS, prepend=[0.])
 MIN_ACCEL = -3.5
 MAX_ACCEL = 2.0
@@ -56,7 +57,7 @@ T_FOLLOW = 1.45
 COMFORT_BRAKE = 2.5
 STOP_DISTANCE = 5.5
 
-def get_stopped_equivalence_factor(v_lead, v_ego, t_follow=T_FOLLOW):
+def get_stopped_equivalence_factor(v_lead, v_ego):
   # KRKeegan this offset rapidly decreases the following distance when the lead pulls
   # away, resulting in an early demand for acceleration.
   v_diff_offset = 0
@@ -71,7 +72,7 @@ def get_safe_obstacle_distance(v_ego, t_follow=T_FOLLOW):
   return (v_ego**2) / (2 * COMFORT_BRAKE) + t_follow * v_ego + STOP_DISTANCE
 
 def desired_follow_distance(v_ego, v_lead, t_follow=T_FOLLOW):
-  return get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(v_lead, v_ego, t_follow)
+  return get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(v_lead, v_ego)
 
 
 def gen_long_model():
@@ -260,27 +261,6 @@ class LongitudinalMpc:
     for i in range(N):
       self.solver.cost_set(i, 'Zl', Zl)
 
-  def get_cost_multipliers(self, v_lead0, v_lead1):
-    v_ego = self.x0[1]
-    v_ego_bps = [0, 10]
-    TFs = [1.0, 1.25, T_FOLLOW, 1.8]
-    # KRKeegan adjustments to costs for different TFs
-    # these were calculated using the test_longitudial.py deceleration tests
-    a_change_tf = interp(self.desired_TF, TFs, [.1, .8, 1., 1.1])
-    j_ego_tf = interp(self.desired_TF, TFs, [.6, .8, 1., 1.1])
-    d_zone_tf = interp(self.desired_TF, TFs, [1.6, 1.3, 1., 1.])
-    # KRKeegan adjustments to improve sluggish acceleration
-    # do not apply to deceleration
-    j_ego_v_ego = 1
-    a_change_v_ego = 1
-    if (v_lead0 - v_ego >= 0) and (v_lead1 - v_ego >= 0):
-      j_ego_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
-      a_change_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
-    # Select the appropriate min/max of the options
-    j_ego = min(j_ego_tf, j_ego_v_ego)
-    a_change = min(a_change_tf, a_change_v_ego)
-    return a_change, j_ego, d_zone_tf
-
   def set_weights(self, prev_accel_constraint=True, v_lead0=0, v_lead1=0):
     cost_multipliers = self.get_cost_multipliers(v_lead0, v_lead1)
     if self.mode == 'acc':
@@ -335,10 +315,12 @@ class LongitudinalMpc:
     return lead_xv
 
   def set_accel_limits(self, min_a, max_a):
+    # TODO this sets a max accel limit, but the minimum limit is only for cruise decel
+    # needs refactor
     self.cruise_min_a = min_a
-    self.cruise_max_a = max_a
+    self.max_a = max_a
 
-  def update(self, carstate, radarstate, v_cruise, x, v, a, j, prev_accel_constraint, desired_tf=T_FOLLOW):
+  def update(self, radarstate, v_cruise, x, v, a, j, prev_accel_constraint, desired_tf=T_FOLLOW):
     v_ego = self.x0[1]
     self.status = radarstate.leadOne.status or radarstate.leadTwo.status
 
@@ -351,19 +333,20 @@ class LongitudinalMpc:
     # To estimate a safe distance from a moving lead, we calculate how much stopping
     # distance that lead needs as a minimum. We can add that to the current distance
     # and then treat that as a stopped car/obstacle at this new distance.
-    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor(lead_xv_0[:,1], self.x_sol[:,1], self.desired_TF)
-    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor(lead_xv_1[:,1], self.x_sol[:,1], self.desired_TF)
+    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor(lead_xv_0[:,1], self.x_sol[:,1])
+    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor(lead_xv_1[:,1], self.x_sol[:,1])
+
+    self.params[:,0] = MIN_ACCEL
+    self.params[:,1] = self.max_a
 
     # Update in ACC mode or ACC/e2e blend
     if self.mode == 'acc':
-      self.params[:,0] = MIN_ACCEL
-      self.params[:,1] = self.cruise_max_a
       self.params[:,5] = LEAD_DANGER_FACTOR
 
       # Fake an obstacle for cruise, this ensures smooth acceleration to set speed
       # when the leads are no factor.
       v_lower = v_ego + (T_IDXS * self.cruise_min_a * 1.05)
-      v_upper = v_ego + (T_IDXS * self.cruise_max_a * 1.05)
+      v_upper = v_ego + (T_IDXS * self.max_a * 1.05)
       v_cruise_clipped = np.clip(v_cruise * np.ones(N+1),
                                  v_lower,
                                  v_upper)
@@ -375,9 +358,6 @@ class LongitudinalMpc:
       x[:], v[:], a[:], j[:] = 0.0, 0.0, 0.0, 0.0
 
     elif self.mode == 'blended':
-      self.params[:,0] = MIN_ACCEL
-      self.params[:,1] = MAX_ACCEL
-
       self.params[:,5] = 1.0
 
       x_obstacles = np.column_stack([lead_0_obstacle,
@@ -389,7 +369,7 @@ class LongitudinalMpc:
       x_and_cruise = np.column_stack([x, cruise_target])
       x = np.min(x_and_cruise, axis=1)
 
-      self.source = 'e2e' if x_and_cruise[0,0] < x_and_cruise[0,1] else 'cruise'
+      self.source = 'e2e' if x_and_cruise[1,0] < x_and_cruise[1,1] else 'cruise'
 
     else:
       raise NotImplementedError(f'Planner mode {self.mode} not recognized in planner update')
@@ -407,8 +387,8 @@ class LongitudinalMpc:
     self.params[:,4] = self.desired_TF
 
     self.run()
-    if (np.any(lead_xv_0[:,0] - self.x_sol[:,0] < CRASH_DISTANCE) and
-            radarstate.leadOne.modelProb > 0.9):
+    if (np.any(lead_xv_0[FCW_IDXS,0] - self.x_sol[FCW_IDXS,0] < CRASH_DISTANCE) and
+      radarstate.leadOne.modelProb > 0.9):
       self.crash_cnt += 1
     else:
       self.crash_cnt = 0
@@ -419,7 +399,7 @@ class LongitudinalMpc:
       if any((lead_0_obstacle - get_safe_obstacle_distance(self.x_sol[:,1], self.desired_TF))- self.x_sol[:,0] < 0.0):
         self.source = 'lead0'
       if any((lead_1_obstacle - get_safe_obstacle_distance(self.x_sol[:,1], self.desired_TF))- self.x_sol[:,0] < 0.0) and \
-         (lead_1_obstacle[0] - lead_0_obstacle[0]):
+        (lead_1_obstacle[0] - lead_0_obstacle[0]):
         self.source = 'lead1'
 
   def run(self):
@@ -462,6 +442,26 @@ class LongitudinalMpc:
       # reset = 1
     # print(f"long_mpc timings: total internal {self.solve_time:.2e}, external: {(sec_since_boot() - t0):.2e} qp {self.time_qp_solution:.2e}, lin {self.time_linearization:.2e} qp_iter {qp_iter}, reset {reset}")
 
+  def get_cost_multipliers(self, v_lead0, v_lead1):
+    v_ego = self.x0[1]
+    v_ego_bps = [0, 10]
+    TFs = [1.0, 1.25, T_FOLLOW, 1.8]
+    # KRKeegan adjustments to costs for different TFs
+    # these were calculated using the test_longitudial.py deceleration tests
+    a_change_tf = interp(self.desired_TF, TFs, [.1, .8, 1., 1.1])
+    j_ego_tf = interp(self.desired_TF, TFs, [.6, .8, 1., 1.1])
+    d_zone_tf = interp(self.desired_TF, TFs, [1.6, 1.3, 1., 1.])
+    # KRKeegan adjustments to improve sluggish acceleration
+    # do not apply to deceleration
+    j_ego_v_ego = 1
+    a_change_v_ego = 1
+    if (v_lead0 - v_ego >= 0) and (v_lead1 - v_ego >= 0):
+      j_ego_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
+      a_change_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
+    # Select the appropriate min/max of the options
+    j_ego = min(j_ego_tf, j_ego_v_ego)
+    a_change = min(a_change_tf, a_change_v_ego)
+    return a_change, j_ego, d_zone_tf
 
 if __name__ == "__main__":
   ocp = gen_long_ocp()

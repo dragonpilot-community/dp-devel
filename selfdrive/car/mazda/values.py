@@ -13,6 +13,7 @@ Ecu = car.CarParams.Ecu
 # Steer torque limits
 
 class CarControllerParams:
+
   STEER_MAX = 800               # theoretical max_steer 2047
   STEER_DELTA_UP = 10            # torque increase per refresh
   STEER_DELTA_DOWN = 25         # torque decrease per refresh
@@ -29,6 +30,7 @@ class TiSteerLimits:
   TI_STEER_DRIVER_MULTIPLIER = 40     # weight driver torque
   TI_STEER_DRIVER_FACTOR = 1         # from dbc
   TI_STEER_ERROR_MAX = 350           # max delta between torque cmd and torque motor
+
 
 class TI_STATE:
   DISCOVER = 0
@@ -56,7 +58,7 @@ CAR_INFO: Dict[str, Union[MazdaCarInfo, List[MazdaCarInfo]]] = {
   CAR.CX9: MazdaCarInfo("Mazda CX-9 2016-20"),
   CAR.MAZDA3: MazdaCarInfo("Mazda 3 2017-18"),
   CAR.MAZDA6: MazdaCarInfo("Mazda 6 2017-20"),
-  CAR.CX9_2021: MazdaCarInfo("Mazda CX-9 2021-22", video_link="https://youtu.be/dA3duO4a0O4"),
+  CAR.CX9_2021: MazdaCarInfo("Mazda CX-9 2021-23", video_link="https://youtu.be/dA3duO4a0O4"),
   CAR.CX5_2022: MazdaCarInfo("Mazda CX-5 2022-23"),
 }
 
@@ -302,6 +304,7 @@ FW_VERSIONS = {
       b'TC3M-3210X-A-00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
     ],
     (Ecu.engine, 0x7e0, None): [
+      b'PXGW-188K2-C\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
       b'PXM4-188K2-C\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
       b'PXM4-188K2-D\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
       b'PXM6-188K2-E\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
@@ -318,6 +321,7 @@ FW_VERSIONS = {
       b'GSH7-67XK2-N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
       b'GSH7-67XK2-P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
       b'GSH7-67XK2-S\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
+      b'GSH7-67XK2-T\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'PXM4-21PS1-B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',

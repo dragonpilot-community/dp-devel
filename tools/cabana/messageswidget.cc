@@ -1,48 +1,19 @@
 #include "tools/cabana/messageswidget.h"
 
-#include <QCompleter>
-#include <QDialogButtonBox>
-#include <QFile>
+#include <QApplication>
 #include <QFontDatabase>
-#include <QHeaderView>
-#include <QLineEdit>
+#include <QHBoxLayout>
+#include <QPainter>
 #include <QPushButton>
-#include <QTextEdit>
 #include <QVBoxLayout>
 
 #include "tools/cabana/dbcmanager.h"
 
 MessagesWidget::MessagesWidget(QWidget *parent) : QWidget(parent) {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
-  main_layout->setContentsMargins(0, 0, 0, 0);
-
-  // DBC file selector
-  QHBoxLayout *dbc_file_layout = new QHBoxLayout();
-  dbc_combo = new QComboBox(this);
-  auto dbc_names = dbc()->allDBCNames();
-  for (const auto &name : dbc_names) {
-    dbc_combo->addItem(QString::fromStdString(name));
-  }
-  dbc_combo->model()->sort(0);
-  dbc_combo->setEditable(true);
-  dbc_combo->setCurrentText(QString());
-  dbc_combo->setInsertPolicy(QComboBox::NoInsert);
-  dbc_combo->completer()->setCompletionMode(QCompleter::PopupCompletion);
-  QFont font;
-  font.setBold(true);
-  dbc_combo->lineEdit()->setFont(font);
-  dbc_file_layout->addWidget(dbc_combo);
-
-  QPushButton *load_from_paste = new QPushButton(tr("Load from paste"), this);
-  dbc_file_layout->addWidget(load_from_paste);
-
-  dbc_file_layout->addStretch();
-  QPushButton *save_btn = new QPushButton(tr("Save DBC"), this);
-  dbc_file_layout->addWidget(save_btn);
-  main_layout->addLayout(dbc_file_layout);
 
   // message filter
-  QLineEdit *filter = new QLineEdit(this);
+  filter = new QLineEdit(this);
   filter->setClearButtonEnabled(true);
   filter->setPlaceholderText(tr("filter messages"));
   main_layout->addWidget(filter);
@@ -51,63 +22,74 @@ MessagesWidget::MessagesWidget(QWidget *parent) : QWidget(parent) {
   table_widget = new QTableView(this);
   model = new MessageListModel(this);
   table_widget->setModel(model);
+  table_widget->setItemDelegateForColumn(4, new MessageBytesDelegate(table_widget));
   table_widget->setSelectionBehavior(QAbstractItemView::SelectRows);
   table_widget->setSelectionMode(QAbstractItemView::SingleSelection);
-  table_widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
   table_widget->setSortingEnabled(true);
   table_widget->sortByColumn(0, Qt::AscendingOrder);
-  table_widget->setColumnWidth(0, 250);
-  table_widget->setColumnWidth(1, 80);
-  table_widget->setColumnWidth(2, 80);
   table_widget->horizontalHeader()->setStretchLastSection(true);
   table_widget->verticalHeader()->hide();
   main_layout->addWidget(table_widget);
 
+  // suppress
+  QHBoxLayout *suppress_layout = new QHBoxLayout();
+  suppress_add = new QPushButton("Suppress Highlighted");
+  suppress_clear = new QPushButton();
+  suppress_layout->addWidget(suppress_add);
+  suppress_layout->addWidget(suppress_clear);
+  main_layout->addLayout(suppress_layout);
+
   // signals/slots
-  QObject::connect(filter, &QLineEdit::textChanged, model, &MessageListModel::setFilterString);
-  QObject::connect(can, &CANMessages::eventsMerged, this, &MessagesWidget::loadDBCFromFingerprint);
-  QObject::connect(can, &CANMessages::updated, [this]() { model->updateState(); });
-  QObject::connect(dbc_combo, SIGNAL(activated(const QString &)), SLOT(loadDBCFromName(const QString &)));
-  QObject::connect(load_from_paste, &QPushButton::clicked, this, &MessagesWidget::loadDBCFromPaste);
-  QObject::connect(save_btn, &QPushButton::clicked, [=]() {
-    // TODO: save DBC to file
-  });
+  QObject::connect(filter, &QLineEdit::textEdited, model, &MessageListModel::setFilterString);
+  QObject::connect(can, &AbstractStream::msgsReceived, model, &MessageListModel::msgsReceived);
+  QObject::connect(can, &AbstractStream::streamStarted, this, &MessagesWidget::reset);
+  QObject::connect(dbc(), &DBCManager::DBCFileChanged, model, &MessageListModel::sortMessages);
+  QObject::connect(dbc(), &DBCManager::msgUpdated, model, &MessageListModel::sortMessages);
+  QObject::connect(dbc(), &DBCManager::msgRemoved, model, &MessageListModel::sortMessages);
+  QObject::connect(model, &MessageListModel::modelReset, [this]() { selectMessage(*current_msg_id); });
   QObject::connect(table_widget->selectionModel(), &QItemSelectionModel::currentChanged, [=](const QModelIndex &current, const QModelIndex &previous) {
-    if (current.isValid()) {
-      emit msgSelectionChanged(current.data(Qt::UserRole).toString());
+    if (current.isValid() && current.row() < model->msgs.size()) {
+      if (model->msgs[current.row()] != *current_msg_id) {
+        current_msg_id = model->msgs[current.row()];
+        emit msgSelectionChanged(*current_msg_id);
+      }
     }
   });
+  QObject::connect(suppress_add, &QPushButton::clicked, [=]() {
+    model->suppress();
+    updateSuppressedButtons();
+  });
+  QObject::connect(suppress_clear, &QPushButton::clicked, [=]() {
+    model->clearSuppress();
+    updateSuppressedButtons();
+  });
 
-  QFile json_file("./car_fingerprint_to_dbc.json");
-  if(json_file.open(QIODevice::ReadOnly)) {
-    fingerprint_to_dbc = QJsonDocument::fromJson(json_file.readAll());
+  updateSuppressedButtons();
+}
+
+void MessagesWidget::selectMessage(const MessageId &msg_id) {
+  if (int row = model->msgs.indexOf(msg_id); row != -1) {
+    table_widget->selectionModel()->setCurrentIndex(model->index(row, 0), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
   }
 }
 
-void MessagesWidget::loadDBCFromName(const QString &name) {
-  dbc()->open(name);
-  dbc_combo->setCurrentText(name);
-  // refresh model
-  model->updateState();
-}
-
-void MessagesWidget::loadDBCFromPaste() {
-  LoadDBCDialog dlg(this);
-  if (dlg.exec()) {
-    dbc()->open("from paste", dlg.dbc_edit->toPlainText());
-    dbc_combo->setCurrentText("loaded from paste");
+void MessagesWidget::updateSuppressedButtons() {
+  if (model->suppressed_bytes.empty()) {
+    suppress_clear->setEnabled(false);
+    suppress_clear->setText("Clear Suppressed");
+  } else {
+    suppress_clear->setEnabled(true);
+    suppress_clear->setText(QString("Clear Suppressed (%1)").arg(model->suppressed_bytes.size()));
   }
 }
 
-void MessagesWidget::loadDBCFromFingerprint() {
-  auto fingerprint = can->carFingerprint();
-  if (!fingerprint.isEmpty() && dbc()->name().isEmpty())  {
-    auto dbc_name = fingerprint_to_dbc[fingerprint];
-    if (dbc_name !=  QJsonValue::Undefined) {
-      loadDBCFromName(dbc_name.toString());
-    }
-  }
+void MessagesWidget::reset() {
+  model->reset();
+  filter->clear();
+  current_msg_id = std::nullopt;
+  updateSuppressedButtons();
 }
+
 
 // MessageListModel
 
@@ -118,99 +100,98 @@ QVariant MessageListModel::headerData(int section, Qt::Orientation orientation, 
 }
 
 QVariant MessageListModel::data(const QModelIndex &index, int role) const {
+  const auto &id = msgs[index.row()];
+  auto &can_data = can->lastMessage(id);
+
   if (role == Qt::DisplayRole) {
-    const auto &m = msgs[index.row()];
-    auto &can_data = can->lastMessage(m->id);
     switch (index.column()) {
-      case 0: return m->name;
-      case 1: return m->id;
+      case 0: return msgName(id);
+      case 1: return id.toString(); // TODO: put source and address in separate columns
       case 2: return can_data.freq;
       case 3: return can_data.count;
       case 4: return toHex(can_data.dat);
     }
-  } else if (role == Qt::UserRole) {
-    return msgs[index.row()]->id;
-  } else if (role == Qt::FontRole) {
-    if (index.column() == columnCount() - 1) {
-      return QFontDatabase::systemFont(QFontDatabase::FixedFont);
+  } else if (role == Qt::UserRole && index.column() == 4) {
+    QList<QVariant> colors;
+    colors.reserve(can_data.dat.size());
+    for (int i = 0; i < can_data.dat.size(); i++){
+      if (suppressed_bytes.contains({id, i})) {
+        colors.append(QColor(255, 255, 255, 0));
+      } else {
+        colors.append(i < can_data.colors.size() ? can_data.colors[i] : QColor(255, 255, 255, 0));
+      }
     }
+    return colors;
+
   }
   return {};
 }
 
-bool MessageListModel::updateMessages(bool sort) {
-  if (msgs.size() == can->can_msgs.size() && filter_str.isEmpty() && !sort)
+void MessageListModel::setFilterString(const QString &string) {
+  auto contains = [](const MessageId &id, const QString &txt) {
+    auto cs = Qt::CaseInsensitive;
+    if (id.toString().contains(txt, cs) || msgName(id).contains(txt, cs)) return true;
+    // Search by signal name
+    if (const auto msg = dbc()->msg(id)) {
+      for (auto &signal : msg->getSignals()) {
+        if (QString::fromStdString(signal->name).contains(txt, cs)) return true;
+      }
+    }
     return false;
+  };
 
-  // update message list
-  int i = 0;
-  bool search_id = filter_str.contains(':');
+  filter_str = string;
+  msgs.clear();
   for (auto it = can->can_msgs.begin(); it != can->can_msgs.end(); ++it) {
-    const Msg *msg = dbc()->msg(it.key());
-    QString msg_name = msg ? msg->name.c_str() : "untitled";
-    if (!filter_str.isEmpty() && !(search_id ? it.key() : msg_name).contains(filter_str, Qt::CaseInsensitive))
-      continue;
-    auto &m = i < msgs.size() ? msgs[i] : msgs.emplace_back(new Message);
-    m->id = it.key();
-    m->name = msg_name;
-    ++i;
+    if (filter_str.isEmpty() || contains(it.key(), filter_str)) {
+      msgs.push_back(it.key());
+    }
   }
-  msgs.resize(i);
+  sortMessages();
+}
 
+void MessageListModel::sortMessages() {
+  beginResetModel();
   if (sort_column == 0) {
     std::sort(msgs.begin(), msgs.end(), [this](auto &l, auto &r) {
-      bool ret = l->name < r->name || (l->name == r->name && l->id < r->id);
-      return sort_order == Qt::AscendingOrder ? ret : !ret;
+      auto ll = std::pair{msgName(l), l};
+      auto rr = std::pair{msgName(r), r};
+      return sort_order == Qt::AscendingOrder ? ll < rr : ll > rr;
     });
   } else if (sort_column == 1) {
     std::sort(msgs.begin(), msgs.end(), [this](auto &l, auto &r) {
-      return sort_order == Qt::AscendingOrder ? l->id < r->id : l->id > r->id;
+      return sort_order == Qt::AscendingOrder ? l < r : l > r;
     });
   } else if (sort_column == 2) {
-    // sort by frequency
     std::sort(msgs.begin(), msgs.end(), [this](auto &l, auto &r) {
-      uint32_t lfreq = can->lastMessage(l->id).freq;
-      uint32_t rfreq = can->lastMessage(r->id).freq;
-      bool ret = lfreq < rfreq || (lfreq == rfreq && l->id < r->id);
-      return sort_order == Qt::AscendingOrder ? ret : !ret;
+      auto ll = std::pair{can->lastMessage(l).freq, l};
+      auto rr = std::pair{can->lastMessage(r).freq, r};
+      return sort_order == Qt::AscendingOrder ? ll < rr : ll > rr;
     });
   } else if (sort_column == 3) {
-    // sort by count
     std::sort(msgs.begin(), msgs.end(), [this](auto &l, auto &r) {
-      uint32_t lcount = can->lastMessage(l->id).count;
-      uint32_t rcount = can->lastMessage(r->id).count;
-      bool ret = lcount < rcount || (lcount == rcount && l->id < r->id);
-      return sort_order == Qt::AscendingOrder ? ret : !ret;
+      auto ll = std::pair{can->lastMessage(l).count, l};
+      auto rr = std::pair{can->lastMessage(r).count, r};
+      return sort_order == Qt::AscendingOrder ? ll < rr : ll > rr;
     });
   }
-  return true;
+  endResetModel();
 }
 
-void MessageListModel::updateState(bool sort) {
+void MessageListModel::msgsReceived(const QHash<MessageId, CanData> *new_msgs) {
   int prev_row_count = msgs.size();
-  auto prev_idx = persistentIndexList();
-  QString selected_msg_id = prev_idx.empty() ? "" : prev_idx[0].data(Qt::UserRole).toString();
-
-  bool msg_updated = updateMessages(sort);
-  int delta = msgs.size() - prev_row_count;
-  if (delta > 0) {
-    beginInsertRows({}, prev_row_count, msgs.size() - 1);
-    endInsertRows();
-  } else if (delta < 0) {
-    beginRemoveRows({}, msgs.size(), prev_row_count - 1);
-    endRemoveRows();
+  if (filter_str.isEmpty() && msgs.size() != can->can_msgs.size()) {
+    msgs = can->can_msgs.keys();
   }
-
-  if (!msgs.empty()) {
-    if (msg_updated && !prev_idx.isEmpty()) {
-      // keep selection
-      auto it = std::find_if(msgs.begin(), msgs.end(), [&](auto &m) { return m->id == selected_msg_id; });
-      if (it != msgs.end()) {
-        for (auto &idx : prev_idx)
-          changePersistentIndex(idx, index(std::distance(msgs.begin(), it), idx.column()));
-      }
+  if (msgs.size() != prev_row_count) {
+    sortMessages();
+    return;
+  }
+  for (int i = 0; i < msgs.size(); ++i) {
+    if (new_msgs->contains(msgs[i])) {
+      for (int col = 2; col < columnCount(); ++col)
+        emit dataChanged(index(i, col), index(i, col), {Qt::DisplayRole});
     }
-    emit dataChanged(index(0, 0), index(msgs.size() - 1, 3), {Qt::DisplayRole});
   }
 }
 
@@ -218,20 +199,32 @@ void MessageListModel::sort(int column, Qt::SortOrder order) {
   if (column != columnCount() - 1) {
     sort_column = column;
     sort_order = order;
-    updateState(true);
+    sortMessages();
   }
 }
 
-LoadDBCDialog::LoadDBCDialog(QWidget *parent) : QDialog(parent) {
-  QVBoxLayout *main_layout = new QVBoxLayout(this);
-  dbc_edit = new QTextEdit(this);
-  dbc_edit->setAcceptRichText(false);
-  dbc_edit->setPlaceholderText(tr("paste DBC file here"));
-  main_layout->addWidget(dbc_edit);
-  auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  main_layout->addWidget(buttonBox);
+void MessageListModel::suppress() {
+  const double cur_ts = can->currentSec();
 
-  setFixedWidth(640);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+  for (auto &id : msgs) {
+    auto &can_data = can->lastMessage(id);
+    for (int i = 0; i < can_data.dat.size(); i++) {
+      const double dt = cur_ts - can_data.last_change_t[i];
+      if (dt < 2.0) {
+        suppressed_bytes.insert({id, i});
+      }
+    }
+  }
+}
+
+void MessageListModel::clearSuppress() {
+  suppressed_bytes.clear();
+}
+
+void MessageListModel::reset() {
+  beginResetModel();
+  filter_str = "";
+  msgs.clear();
+  clearSuppress();
+  endResetModel();
 }

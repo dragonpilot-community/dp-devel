@@ -175,7 +175,7 @@ def finalize_update() -> None:
   shutil.copytree(OVERLAY_MERGED, FINALIZED, symlinks=True)
 
   run(["git", "reset", "--hard"], FINALIZED)
-  run(["git", "submodule", "foreach", "--recursive", "git", "reset"], FINALIZED)
+  run(["git", "submodule", "foreach", "--recursive", "git", "reset", "--hard"], FINALIZED)
 
   cloudlog.info("Starting git cleanup in finalized update")
   t = time.monotonic()
@@ -374,8 +374,8 @@ class Updater:
       ["git", "reset", "--hard"],
       ["git", "clean", "-xdff"],
       ["git", "submodule", "sync"],
-      ["git", "submodule", "init"],
-      ["git", "submodule", "update"],
+      ["git", "submodule", "update", "--init", "--recursive"],
+      ["git", "submodule", "foreach", "--recursive", "git", "reset", "--hard"],
     ]
     r = [run(cmd, OVERLAY_MERGED) for cmd in cmds]
     cloudlog.info("git reset success: %s", '\n'.join(r))
@@ -422,6 +422,9 @@ def main() -> None:
   # no fetch on the first time
   wait_helper = WaitTimeHelper()
   wait_helper.only_check_for_update = True
+
+  # invalidate old finalized update
+  set_consistent_flag(False)
 
   # Run the update loop
   while True:

@@ -5,9 +5,11 @@ from selfdrive.car.toyota.toyotacan import create_steer_command, create_ui_comma
                                            create_accel_command, create_acc_cancel_command, \
                                            create_fcw_command, create_lta_steer_command
 from selfdrive.car.toyota.values import CAR, STATIC_DSU_MSGS, NO_STOP_TIMER_CAR, TSS2_CAR, \
-                                        MIN_ACC_SPEED, PEDAL_TRANSITION, CarControllerParams
+                                        MIN_ACC_SPEED, PEDAL_TRANSITION, CarControllerParams, \
+                                        UNSUPPORTED_DSU_CAR
 from opendbc.can.packer import CANPacker
 from common.conversions import Conversions as CV
+from common.params import Params
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
@@ -49,12 +51,14 @@ class CarController:
     self.last_gear = GearShifter.park
     self.lock_once = False
 
-  def update(self, CC, CS, dragonconf):
+  def update(self, CC, CS, now_nanos, dragonconf):
     if dragonconf is not None:
       self.dp_toyota_sng = dragonconf.dpToyotaSng
       self.dp_atl = dragonconf.dpAtl
       self.dp_toyota_auto_lock = dragonconf.dpToyotaAutoLock
       self.dp_toyota_auto_unlock = dragonconf.dpToyotaAutoUnlock
+
+    self.dp_toyota_change5speed = Params().get_bool("dp_toyota_change5speed")
     actuators = CC.actuators
     hud_control = CC.hudControl
     pcm_cancel_cmd = CC.cruiseControl.cancel
@@ -117,7 +121,7 @@ class CarController:
 
     # dp - door auto lock / unlock logic
     # thanks to AlexandreSato & cydia2020
-    # https://github.com/AlexandreSato/openpilot/blob/personal/doors.py
+    # https://github.com/AlexandreSato/animalpilot/blob/personal/doors.py
     if self.dp_toyota_auto_lock or self.dp_toyota_auto_unlock:
       gear = CS.out.gearShifter
       if self.last_gear != gear and gear == GearShifter.park:
@@ -150,13 +154,13 @@ class CarController:
       lead = hud_control.leadVisible or CS.out.vEgo < 12.  # at low speed we always assume the lead is present so ACC can be engaged
 
       # Lexus IS uses a different cancellation message
-      if pcm_cancel_cmd and self.CP.carFingerprint in (CAR.LEXUS_IS, CAR.LEXUS_RC):
+      if pcm_cancel_cmd and self.CP.carFingerprint in UNSUPPORTED_DSU_CAR:
         can_sends.append(create_acc_cancel_command(self.packer))
       elif self.CP.openpilotLongitudinalControl:
-        can_sends.append(create_accel_command(self.packer, pcm_accel_cmd, pcm_cancel_cmd, self.standstill_req, lead, CS.acc_type, CS.distance))
+        can_sends.append(create_accel_command(self.packer, pcm_accel_cmd, pcm_cancel_cmd, self.standstill_req, lead, CS.acc_type, CS.distance, self.dp_toyota_change5speed))
         self.accel = pcm_accel_cmd
       else:
-        can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance))
+        can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance, self.dp_toyota_change5speed))
 
     if self.frame % 2 == 0 and self.CP.enableGasInterceptor and self.CP.openpilotLongitudinalControl:
       # send exactly zero if gas cmd is zero. Interceptor will send the max between read value and gas cmd.
@@ -180,10 +184,10 @@ class CarController:
         # forcing the pcm to disengage causes a bad fault sound so play a good sound instead
         send_ui = True
 
-      if self.frame % 100 == 0 or send_ui:
+      if self.frame % 20 == 0 or send_ui:
         can_sends.append(create_ui_command(self.packer, steer_alert, pcm_cancel_cmd, hud_control.leftLaneVisible,
                                            hud_control.rightLaneVisible, hud_control.leftLaneDepart,
-                                           hud_control.rightLaneDepart, CC.enabled))
+                                           hud_control.rightLaneDepart, CC.enabled, CS.lkas_hud))
 
       if (self.frame % 100 == 0 or send_ui) and self.CP.enableDsu:
         can_sends.append(create_fcw_command(self.packer, fcw_alert))
@@ -195,6 +199,7 @@ class CarController:
 
     new_actuators = actuators.copy()
     new_actuators.steer = apply_steer / CarControllerParams.STEER_MAX
+    new_actuators.steerOutputCan = apply_steer
     new_actuators.accel = self.accel
     new_actuators.gas = self.gas
 

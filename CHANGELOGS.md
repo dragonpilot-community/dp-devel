@@ -1,4 +1,74 @@
-dragonpilot [latest]
+dragonpilot [2023.2.15]
+=======================
+* Synced with openpilot master 2022.12.14 commits.
+* Comma 0.9.1 release
+  * New driving model
+    * 30% improved height estimation resulting in better driving performance for tall cars
+  * UI updates
+    * Adjust alert volume using ambient noise level
+    * Driver monitoring icon shows driver's head pose
+* NEW: Always On Lateral v2 (For Toyota/VAG/HKG/Honda).
+* NEW: Block ALC if it's close to the road edges.
+* NEW: Rinbow path toggle. (This effect is purely cosmetic)
+* IMPROVEMENT: Better TSS2 Long and DF tune. @cgw1968-5779
+* Bug fixes and improvement.
+
+dragonpilot [2023.1.10]
+=======================
+* Synced with openpilot master 2023.1.3 commits.
+* IMPROVEMENT: Dynamic end to end refactored. It will automatically turn on and off for red light for smoother u/x. Now Supports (honda and vw that cab take advantage of VOACC).
+* IMPROVEMENT: Better TSS2 Long and DF tune. @cgw1968-5779
+* ADDED: support for Chevrolet Trailblazer 2022 (Thanks @TurboCE)
+* ADDED: support for Honda odyssey hybrid 2022 China (Thanks @lijunhao731)
+* ADDED: GPS accuracy on the sidebar.
+* Bug fixes and improvement.
+
+HOTFIX:
+=======================
+* Allow Experimental Mode in release branch. (@Stupefacient)
+* Happy Holiday / New Years! Safe Travel, cya in 2023!
+
+dragonpilot 2022.12.13
+=======================
+* Synced with openpilot master 2022.12.13 commits.
+* COMMA: New model, Toyota users can now configure SWAY settings.
+* ADDED: Dashcam for comma 3. Store in /data/media/0/video/ (@neokii)
+* ADDED: Better TSS2 Long and DF tune. @cgw1968-5779
+* NEW: Toggle to adapt Dynamic End-to-End to Following Dist. Mode.
+* NEW: Toggle to adapt Dynamic End-to-End to Accel Mode.
+* Improvement: Dynamic end to end is much more reliable and smoother experience
+* Bug fixes and improvement.
+* Happy Holiday / New Years! Safe Travel, cya in 2023!
+
+dragonpilot [2022.11.25]
+=======================
+* Synced with openpilot master 2022.11.25 commits.
+* ADDED: Lateral Controller Selector.
+   - Ability to select between DEFAULT / PID / LQR / Torque Controller.
+* ADDED: Redesigned UI to match Comma's new UI/UX style.
+* ADDED: Dynamic End-to-End can be turned on when lead car is going below x km/h. (Useful for stop and go traffic.)
+* bug fix and improvement.
+
+dragonpilot [2022.11.14]
+=======================
+* Synced with openpilot master 2022.11.14 commits.
+* COMMA: New Model.
+* COMMA: RAV4 TSS2 now uses PID.
+* REFACTORED: Turning off nav will free up some system resource. QR for nav has been move to home button / sidebar.
+* ADDED: 2 new toggle to turn on or off laneline / path and chevron.
+* ADDED: When reversing it will now show DM cam.
+
+dragonpilot [2022.11.01]
+=======================
+* Synced with openpilot master 2022.11.01 commits.
+* COMMA: New Model.
+* ADDED: Multi Lateral Planner: Ability to choose different Lateral Planner (0 = LATEST, 1 = 0.8.13, 2 = 0.8.16).
+* READD: Toyota Prius ZSS support.
+* Improvement: Better User experience for installing mapd database.
+* Improvement: Turning on Lane Line will automatically will use DLP (Dynamic Lane Profile).
+* bug fix and improvement
+
+dragonpilot [2022.10.26]
 =======================
 * Synced with openpilot master 2022.10.26 commits.
 * COMMA: Torque controller used on all Toyota, Lexus, Hyundai, Kia, and Genesis models.

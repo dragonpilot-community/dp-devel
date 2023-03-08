@@ -5,6 +5,9 @@ from common.kalman.simple_kalman import KF1D
 # Default lead acceleration decay set to 50% at 1s
 _LEAD_ACCEL_TAU = 1.5
 
+# Hack to maintain vision lead state
+_vision_lead_aTau = {0: _LEAD_ACCEL_TAU, 1: _LEAD_ACCEL_TAU}
+
 # radar tracks
 SPEED, ACCEL = 0, 1   # Kalman filter states enum
 
@@ -130,15 +133,21 @@ class Cluster():
       "aLeadTau": float(self.aLeadTau)
     }
 
-  def get_RadarState_from_vision(self, lead_msg, v_ego):
+  def get_RadarState_from_vision(self, lead_msg, lead_index, v_ego):
+    # Learn if constant acceleration
+    if abs(float(lead_msg.a[0])) < 0.5:
+      _vision_lead_aTau[lead_index] = _LEAD_ACCEL_TAU
+    else:
+      _vision_lead_aTau[lead_index] *= 0.9
+
     return {
       "dRel": float(lead_msg.x[0] - RADAR_TO_CAMERA),
       "yRel": float(-lead_msg.y[0]),
       "vRel": float(lead_msg.v[0] - v_ego),
       "vLead": float(lead_msg.v[0]),
       "vLeadK": float(lead_msg.v[0]),
-      "aLeadK": float(0),
-      "aLeadTau": _LEAD_ACCEL_TAU,
+      "aLeadK": float(lead_msg.a[0]),
+      "aLeadTau": _vision_lead_aTau[lead_index],
       "fcw": False,
       "modelProb": float(lead_msg.prob),
       "radar": False,
@@ -151,7 +160,8 @@ class Cluster():
 
   def potential_low_speed_lead(self, v_ego):
     # stop for stuff in front of you and low speed, even without model confirmation
-    return abs(self.yRel) < 1.0 and (v_ego < v_ego_stationary) and self.dRel < 25
+    # Radar points closer than 0.75, are almost always glitches on toyota radars
+    return abs(self.yRel) < 1.0 and (v_ego < v_ego_stationary) and (0.75 < self.dRel < 25)
 
   def is_potential_fcw(self, model_prob):
     return model_prob > .9
