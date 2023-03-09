@@ -27,7 +27,7 @@ from common.params import Params
 from system.version import get_version
 
 # for uploader
-from selfdrive.loggerd.xattr_cache import getxattr, setxattr
+from system.loggerd.xattr_cache import getxattr, setxattr
 import glob
 import requests
 import json
