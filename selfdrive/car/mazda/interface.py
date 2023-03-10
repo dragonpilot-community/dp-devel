@@ -47,7 +47,7 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.83
       ret.steerRatio = 15.5
 
-    if Params().get_bool('dp_mazda_ti'):
+    if self.CP.enableTorqueInterceptor and self.dp_mazda_ti:
       if candidate in (CAR.CX5, CAR.CX5_2022):
         ret.lateralTuning.pid.kiBP = [5.0, 25.0]
         ret.lateralTuning.pid.kpBP = [5.0, 25.0]
