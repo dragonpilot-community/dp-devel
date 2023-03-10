@@ -60,7 +60,7 @@ class CarState(CarStateBase):
     ret.steeringTorqueEps = cp.vl["STEER_TORQUE"]["STEER_TORQUE_MOTOR"]
     ret.steeringRateDeg = cp.vl["STEER_RATE"]["STEER_ANGLE_RATE"]
 
-    if self.dp_mazda_ti:
+    if self.dp_mazda_ti and self.CP.enableTorqueInterceptor:
       ret.steeringTorque = cp_body.vl["TI_FEEDBACK"]["TI_TORQUE_SENSOR"]
 
       self.ti_version = cp_body.vl["TI_FEEDBACK"]["VERSION_NUMBER"]
@@ -200,7 +200,7 @@ class CarState(CarStateBase):
 
     # ti
     # get real driver torque if we are using a torque interceptor
-    if CP.enableTorqueInterceptor:
+    if self.dp_mazda_ti and CP.enableTorqueInterceptor:
       signals += [
         ("TI_TORQUE_SENSOR", "TI_FEEDBACK", 0),
         ("CHKSUM", "TI_FEEDBACK", 0),
@@ -261,7 +261,7 @@ class CarState(CarStateBase):
     signals = []
     checks = []
     # get real driver torque if we are using a torque interceptor
-    if Params().get_bool('dp_mazda_ti'):
+    if self.dp_mazda_ti and CP.enableTorqueInterceptor:
       signals += [
         ("TI_TORQUE_SENSOR", "TI_FEEDBACK", 0),
         ("CHKSUM", "TI_FEEDBACK", 0),
