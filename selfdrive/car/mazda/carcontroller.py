@@ -69,10 +69,10 @@ class CarController:
       can_sends.append(mazdacan.create_alert_command(self.packer, CS.cam_laneinfo, ldw, steer_required))
 
     # ti
-    #The ti cannot be detected unless OP sends a can message to it becasue the ti only transmits when it
-    #sees the signature key in the designated address range.
-    can_sends.append(mazdacan.create_ti_steering_control(self.packer, CS.CP.carFingerprint, self.frame, ti_apply_steer))
-    # Always send steering command to stock system, even with TI enabled.
+    # TI needs to be sent a message with a special key to exit standby mode. Only send TI messages when TI toggle is enabled.
+    if self.dp_mazda_ti
+      can_sends.append(mazdacan.create_ti_steering_control(self.packer, CS.CP.carFingerprint, self.frame, ti_apply_steer))
+    # Always send steering command to stock system, even with TI enabled. This provides extra torque, smoother steering, and also redundancy if one fails while engaged.
     can_sends.append(mazdacan.create_steering_control(self.packer, self.CP.carFingerprint,
                                                       self.frame, apply_steer, CS.cam_lkas))
 
