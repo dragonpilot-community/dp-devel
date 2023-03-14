@@ -29,18 +29,6 @@ function agnos_init {
     fi
     $DIR/system/hardware/tici/updater $AGNOS_PY $MANIFEST
   fi
-
-  #dp: change splash logo
-  if [ -f "/usr/comma/.dp_splash" ]; then
-      echo "DP splash exists."
-  else
-      echo "DP splash not deployed yet"
-      sudo mount -o rw,remount /
-      sudo cp /data/openpilot/selfdrive/dragonpilot/bg.jpg /usr/comma/bg.jpg
-      sudo touch /usr/comma/.dp_splash
-      sudo mount -o ro,remount /
-      sudo reboot
-  fi
 }
 
 function launch {
