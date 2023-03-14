@@ -105,6 +105,8 @@ class Controls:
       # wait for one pandaState and one CAN packet
       print("Waiting for CAN messages...")
       get_one_can(self.can_sock)
+      
+      self.ti_ready = False
 
       num_pandas = len(messaging.recv_one_retry(self.sm.sock['pandaStates']).pandaStates)
       experimental_long_allowed = self.params.get_bool("ExperimentalLongitudinalEnabled") and not is_release_branch()
@@ -341,6 +343,13 @@ class Controls:
       if log.PandaState.FaultType.relayMalfunction in pandaState.faults:
         self.events.add(EventName.relayMalfunction)
 
+    #check pandaState to see if panda has detected TI
+     if self.sm['pandaState'].torqueInterceptorDetected and not self.ti_ready:
+       self.ti_ready = True
+       print("TI is found")
+       self.CP.enableTorqueInterceptor = True
+    #Update CP based on torque_interceptor_ready
+       self.CP = get_ti()
     # Handle HW and system malfunctions
     # Order is very intentional here. Be careful when modifying this.
     # All events here should at least have NO_ENTRY and SOFT_DISABLE.
