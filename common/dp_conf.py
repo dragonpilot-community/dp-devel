@@ -96,8 +96,8 @@ confs = [
   {'name': 'dp_auto_shutdown_in', 'default': 60, 'type': 'UInt16', 'min': 0, 'max': 600, 'depends': [{'name': 'dp_auto_shutdown', 'vals': [True]}], 'conf_type': ['param']},
 
 
-  {'name': 'dp_mazda_steer_alert', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_mazda_dashcam_bypass', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_mazda_steer_alert', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_mazda_dashcam_bypass', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_mazda_ti', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
 
   # # service

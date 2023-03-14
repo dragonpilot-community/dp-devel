@@ -96,7 +96,7 @@ class CarInterface(CarInterfaceBase):
     if candidate not in (CAR.CX5_2022, ):
       ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MSS
 
-    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)  
+    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning)
 
     ret.centerToFront = ret.wheelbase * 0.41
 
@@ -115,6 +115,7 @@ class CarInterface(CarInterfaceBase):
       self.can_parsers = [self.cp, self.cp_cam, self.cp_adas, self.cp_body, self.cp_loopback]
 
     ret = self.CS.update(self.cp, self.cp_cam, self.cp_body)
+	ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
 
     # events
     events = self.create_common_events(ret)
@@ -122,7 +123,7 @@ class CarInterface(CarInterfaceBase):
 
     if self.CS.lkas_disabled:
       events.add(EventName.lkasDisabled)
-    elif self.CS.low_speed_alert:
+    elif self.dragonconf.dpMazdaSteerAlert and self.CS.low_speed_alert:
       events.add(EventName.belowSteerSpeed)
 
     if self.dp_mazda_ti and not self.CS.acc_active_last and not self.CS.ti_lkas_allowed:
