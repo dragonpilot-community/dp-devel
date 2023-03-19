@@ -3,7 +3,7 @@ from common.conversions import Conversions as CV
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import CarStateBase
-from selfdrive.car.mazda.values import DBC, LKAS_LIMITS, GEN1, TI_STATE
+from selfdrive.car.mazda.values import DBC, LKAS_LIMITS, GEN1, TI_STATE, CAR
 from common.params import Params
 
 class CarState(CarStateBase):
@@ -108,9 +108,9 @@ class CarState(CarStateBase):
     # ti
     # On if no driver torque the last 5 seconds
     if self.CP.carFingerprint not in (CAR.CX5_2022, CAR.CX9_2021):
-      ret.steerWarning = cp.vl["STEER_RATE"]["HANDS_OFF_5_SECONDS"] == 1
+      ret.steerFaultTemporary = cp.vl["STEER_RATE"]["HANDS_OFF_5_SECONDS"] == 1
     else:
-      ret.steerWarning = False
+      ret.steerFaultTemporary = False
 
     if ret.cruiseState.enabled:
       if not self.lkas_allowed_speed and self.acc_active_last:
@@ -200,7 +200,7 @@ class CarState(CarStateBase):
 
     # ti
     # get real driver torque if we are using a torque interceptor
-    if self.dp_mazda_ti and CP.enableTorqueInterceptor:
+    if CP.enableTorqueInterceptor:
       signals += [
         ("TI_TORQUE_SENSOR", "TI_FEEDBACK", 0),
         ("CHKSUM", "TI_FEEDBACK", 0),
@@ -261,7 +261,7 @@ class CarState(CarStateBase):
     signals = []
     checks = []
     # get real driver torque if we are using a torque interceptor
-    if self.dp_mazda_ti and CP.enableTorqueInterceptor:
+    if CP.enableTorqueInterceptor:
       signals += [
         ("TI_TORQUE_SENSOR", "TI_FEEDBACK", 0),
         ("CHKSUM", "TI_FEEDBACK", 0),

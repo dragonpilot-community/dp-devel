@@ -47,7 +47,7 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.83
       ret.steerRatio = 15.5
 
-    if self.CP.enableTorqueInterceptor and self.dp_mazda_ti:
+    if ret.enableTorqueInterceptor:
       if candidate in (CAR.CX5, CAR.CX5_2022):
         ret.lateralTuning.pid.kiBP = [5.0, 25.0]
         ret.lateralTuning.pid.kpBP = [5.0, 25.0]
@@ -109,6 +109,7 @@ class CarInterface(CarInterfaceBase):
 
   # returns a car.CarState
   def _update(self, c):
+    ret = self.CS.update(self.cp, self.cp_cam, self.cp_body)
     if self.CP.enableTorqueInterceptor and not TI.enabled:
       TI.enabled = True
       self.cp_body = self.CS.get_body_can_parser(self.CP)

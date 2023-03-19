@@ -344,7 +344,7 @@ class Controls:
         self.events.add(EventName.relayMalfunction)
 
     #check pandaState to see if panda has detected TI
-     if self.sm['pandaState'].torqueInterceptorDetected and not self.ti_ready:
+    if pandaState.torqueInterceptorDetected and not self.ti_ready:
        self.ti_ready = True
        print("TI is found")
        self.CP.enableTorqueInterceptor = True
