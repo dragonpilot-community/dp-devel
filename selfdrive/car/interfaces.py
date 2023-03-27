@@ -184,6 +184,9 @@ class CarInterfaceBase(ABC):
     ret.longitudinalActuatorDelayLowerBound = 0.15
     ret.longitudinalActuatorDelayUpperBound = 0.15
     ret.steerLimitTimer = 1.0
+    # Mazda TI
+    ret.enableTorqueInterceptor = Params().get_bool('dp_mazda_ti')
+   
     return ret
 
   @staticmethod
