@@ -245,7 +245,7 @@ void UIState::updateStatus() {
     if (scene.started) {
       status = STATUS_DISENGAGED;
       scene.started_frame = sm->frame;
-      wide_cam_only = Params().getBool("WideCameraOnly");
+
       scene.show_debug_ui = Params().getBool("ShowDebugUI");
       scene.speed_limit_control_enabled = Params().getBool("SpeedLimitControl");
       scene.speed_limit_perc_offset = Params().getBool("SpeedLimitPercOffset");
@@ -273,7 +273,6 @@ UIState::UIState(QObject *parent) : QObject(parent) {
   });
 
   Params params;
-  wide_cam_only = params.getBool("WideCameraOnly");
   prime_type = std::atoi(params.get("PrimeType").c_str());
   language = QString::fromStdString(params.get("LanguageSetting"));
 
