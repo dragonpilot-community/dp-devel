@@ -3,8 +3,7 @@ from common.conversions import Conversions as CV
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import CarStateBase
-from selfdrive.car.mazda.values import DBC, LKAS_LIMITS, GEN1, TI_STATE
-from common.params import Params
+from selfdrive.car.mazda.values import DBC, LKAS_LIMITS, GEN1, TI_STATE, CAR
 
 class CarState(CarStateBase):
   def __init__(self, CP):
@@ -19,8 +18,6 @@ class CarState(CarStateBase):
     self.lkas_allowed_speed = False
     self.lkas_disabled = False
 
-    # dp - ti
-    self.dp_mazda_ti = Params().get_bool('dp_mazda_ti')
     self.ti_ramp_down = False
     self.ti_version = 1
     self.ti_state = TI_STATE.RUN
@@ -53,14 +50,7 @@ class CarState(CarStateBase):
     ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_lamp(40, cp.vl["BLINK_INFO"]["LEFT_BLINK"] == 1,
                                                                       cp.vl["BLINK_INFO"]["RIGHT_BLINK"] == 1)
 
-    ret.steeringAngleDeg = cp.vl["STEER"]["STEER_ANGLE"]
-    ret.steeringTorque = cp.vl["STEER_TORQUE"]["STEER_TORQUE_SENSOR"]
-    ret.steeringPressed = abs(ret.steeringTorque) > LKAS_LIMITS.STEER_THRESHOLD
-
-    ret.steeringTorqueEps = cp.vl["STEER_TORQUE"]["STEER_TORQUE_MOTOR"]
-    ret.steeringRateDeg = cp.vl["STEER_RATE"]["STEER_ANGLE_RATE"]
-
-    if self.dp_mazda_ti and self.CP.enableTorqueInterceptor:
+    if self.CP.enableTorqueInterceptor:
       ret.steeringTorque = cp_body.vl["TI_FEEDBACK"]["TI_TORQUE_SENSOR"]
 
       self.ti_version = cp_body.vl["TI_FEEDBACK"]["VERSION_NUMBER"]
@@ -70,8 +60,16 @@ class CarState(CarStateBase):
       if self.ti_version > 1:
         self.ti_ramp_down = (cp_body.vl["TI_FEEDBACK"]["RAMP_DOWN"] == 1)
 
-      ret.steeringPressed = abs(ret.steeringTorque) > LKAS_LIMITS.STEER_THRESHOLD
+      ret.steeringPressed = abs(ret.steeringTorque) > LKAS_LIMITS.TI_STEER_THRESHOLD
       self.ti_lkas_allowed = not self.ti_ramp_down and self.ti_state == TI_STATE.RUN
+    else:
+      ret.steeringTorque = cp.vl["STEER_TORQUE"]["STEER_TORQUE_SENSOR"]
+      ret.steeringPressed = abs(ret.steeringTorque) > LKAS_LIMITS.STEER_THRESHOLD
+
+    ret.steeringAngleDeg = cp.vl["STEER"]["STEER_ANGLE"]      
+
+    ret.steeringTorqueEps = cp.vl["STEER_TORQUE"]["STEER_TORQUE_MOTOR"]
+    ret.steeringRateDeg = cp.vl["STEER_RATE"]["STEER_ANGLE_RATE"]
 
     # TODO: this should be from 0 - 1.
     ret.brakePressed = cp.vl["PEDALS"]["BRAKE_ON"] == 1
@@ -105,23 +103,11 @@ class CarState(CarStateBase):
     ret.cruiseState.standstill = cp.vl["PEDALS"]["STANDSTILL"] == 1
     ret.cruiseState.speed = cp.vl["CRZ_EVENTS"]["CRZ_SPEED"] * CV.KPH_TO_MS
 
-    # ti
     # On if no driver torque the last 5 seconds
-    if self.CP.carFingerprint not in (CAR.CX5_2022, CAR.CX9_2021):
-      ret.steerWarning = cp.vl["STEER_RATE"]["HANDS_OFF_5_SECONDS"] == 1
+    if self.CP.carFingerprint not in (CAR.CX5_2022, CAR.CX9_2021): 
+      ret.steerFaultTemporary = cp.vl["STEER_RATE"]["HANDS_OFF_5_SECONDS"] == 1
     else:
-      ret.steerWarning = False
-
-    if ret.cruiseState.enabled:
-      if not self.lkas_allowed_speed and self.acc_active_last:
-        self.low_speed_alert = True
-      else:
-        self.low_speed_alert = False
-
-    # Check if LKAS is disabled due to lack of driver torque when all other states indicate
-    # it should be enabled (steer lockout). Don't warn until we actually get lkas active
-    # and lose it again, i.e, after initial lkas activation
-    ret.steerFaultTemporary = self.lkas_allowed_speed and lkas_blocked
+      ret.steerFaultTemporary = False
 
     self.acc_active_last = ret.cruiseState.enabled
 
@@ -151,7 +137,6 @@ class CarState(CarStateBase):
       ("RL", "WHEEL_SPEEDS"),
       ("RR", "WHEEL_SPEEDS"),
     ]
-
     checks = [
       # sig_address, frequency
       ("BLINK_INFO", 10),
@@ -160,7 +145,6 @@ class CarState(CarStateBase):
       ("STEER_TORQUE", 83),
       ("WHEEL_SPEEDS", 100),
     ]
-
     if CP.carFingerprint in GEN1:
       signals += [
         ("LKAS_BLOCK", "STEER_RATE"),
@@ -197,10 +181,8 @@ class CarState(CarStateBase):
         ("GEAR", 20),
         ("BSM", 10),
       ]
-
-    # ti
     # get real driver torque if we are using a torque interceptor
-    if self.dp_mazda_ti and CP.enableTorqueInterceptor:
+    if CP.enableTorqueInterceptor:
       signals += [
         ("TI_TORQUE_SENSOR", "TI_FEEDBACK", 0),
         ("CHKSUM", "TI_FEEDBACK", 0),
@@ -214,7 +196,7 @@ class CarState(CarStateBase):
       checks += [
         ("TI_FEEDBACK", 100),
       ]
-
+      
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
   @staticmethod
@@ -254,14 +236,14 @@ class CarState(CarStateBase):
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2)
 
-  # ti
+
   @staticmethod
   def get_body_can_parser(CP):
     # this function generates lists for signal, messages and initial values
     signals = []
     checks = []
     # get real driver torque if we are using a torque interceptor
-    if self.dp_mazda_ti and CP.enableTorqueInterceptor:
+    if CP.enableTorqueInterceptor:
       signals += [
         ("TI_TORQUE_SENSOR", "TI_FEEDBACK", 0),
         ("CHKSUM", "TI_FEEDBACK", 0),

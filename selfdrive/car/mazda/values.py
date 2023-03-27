@@ -20,8 +20,7 @@ class CarControllerParams:
   STEER_DRIVER_MULTIPLIER = 40  # weight driver torque
   STEER_DRIVER_FACTOR = 1       # from dbc
   STEER_ERROR_MAX = 350         # max delta between torque cmd and torque motor
-
-class TiSteerLimits:
+  
   TI_STEER_MAX = 600                # theoretical max_steer 2047
   TI_STEER_DELTA_UP = 6             # torque increase per refresh
   TI_STEER_DELTA_DOWN = 15           # torque decrease per refresh
@@ -64,12 +63,11 @@ CAR_INFO: Dict[str, Union[MazdaCarInfo, List[MazdaCarInfo]]] = {
 
 class LKAS_LIMITS:
   STEER_THRESHOLD = 15
-  if not Params().get_bool('dp_mazda_ti'):
-    DISABLE_SPEED = 45       # kph
-    ENABLE_SPEED = 52        # kph
-  else:
-    DISABLE_SPEED = 0       # kph
-    ENABLE_SPEED = 0        # kph
+  DISABLE_SPEED = 0    # kph
+  ENABLE_SPEED = 0     # kph
+  TI_STEER_THRESHOLD = 15
+  TI_DISABLE_SPEED = 0    # kph
+  TI_ENABLE_SPEED = 0     # kph
 
 
 class Buttons:

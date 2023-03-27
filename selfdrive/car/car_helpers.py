@@ -249,6 +249,8 @@ def get_car(logcan, sendcan, experimental_long_allowed, num_pandas=1):
     CP.carFw = car_fw
     CP.fingerprintSource = source
     CP.fuzzyFingerprint = not exact_match
+    
+    global_ti.saved_CarInterface = CarInterface
 
     return CarInterface(CP, CarController, CarState), CP
   except KeyError:

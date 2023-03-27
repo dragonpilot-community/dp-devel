@@ -14,7 +14,7 @@ from panda import ALTERNATIVE_EXPERIENCE
 from system.swaglog import cloudlog
 from system.version import is_release_branch, get_short_branch
 from selfdrive.boardd.boardd import can_list_to_can_capnp
-from selfdrive.car.car_helpers import get_car, get_startup_event, get_one_can
+from selfdrive.car.car_helpers import get_car, get_startup_event, get_one_can, get_ti
 from selfdrive.controls.lib.lateral_planner import CAMERA_OFFSET
 from selfdrive.controls.lib.drive_helpers import VCruiseHelper, get_lag_adjusted_curvature
 from selfdrive.controls.lib.latcontrol import LatControl, MIN_LATERAL_CONTROL_SPEED
@@ -105,7 +105,7 @@ class Controls:
       # wait for one pandaState and one CAN packet
       print("Waiting for CAN messages...")
       get_one_can(self.can_sock)
-      
+
       self.ti_ready = False
 
       num_pandas = len(messaging.recv_one_retry(self.sm.sock['pandaStates']).pandaStates)
@@ -344,7 +344,7 @@ class Controls:
         self.events.add(EventName.relayMalfunction)
 
     #check pandaState to see if panda has detected TI
-     if self.sm['pandaState'].torqueInterceptorDetected and not self.ti_ready:
+    if pandaState.torqueInterceptorDetected and not self.ti_ready:
        self.ti_ready = True
        print("TI is found")
        self.CP.enableTorqueInterceptor = True
