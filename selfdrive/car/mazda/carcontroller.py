@@ -2,8 +2,7 @@ from cereal import car
 from opendbc.can.packer import CANPacker
 from selfdrive.car import apply_driver_steer_torque_limits
 from selfdrive.car.mazda import mazdacan
-from selfdrive.car.mazda.values import CarControllerParams, TiSteerLimits, Buttons
-from common.params import Params
+from selfdrive.car.mazda.values import CarControllerParams, Buttons
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
@@ -15,24 +14,14 @@ class CarController:
     self.packer = CANPacker(dbc_name)
     self.brake_counter = 0
     self.frame = 0
-    # dp - ti
-    self.dp_mazda_ti = Params().get_bool('dp_mazda_ti')
-    self.ti_apply_steer_last = 0
 
   def update(self, CC, CS, now_nanos):
     can_sends = []
 
     apply_steer = 0
-    ti_apply_steer = 0
 
     if CC.latActive:
-      # ti
-      if self.dp_mazda_ti and CS.CP.enableTorqueInterceptor:
-        if CS.ti_lkas_allowed:
-          ti_new_steer = int(round(CC.actuators.steer * TiSteerLimits.TI_STEER_MAX))
-          ti_apply_steer = (ti_new_steer, self.ti_apply_steer_last,
-                                                      CS.out.steeringTorque, CarControllerParams)
-
+      # calculate steer and also set limits due to driver torque
       new_steer = int(round(CC.actuators.steer * CarControllerParams.STEER_MAX))
       apply_steer = apply_driver_steer_torque_limits(new_steer, self.apply_steer_last,
                                                      CS.out.steeringTorque, CarControllerParams)
@@ -55,24 +44,16 @@ class CarController:
         can_sends.append(mazdacan.create_button_cmd(self.packer, self.CP.carFingerprint, CS.crz_btns_counter, Buttons.RESUME))
 
     self.apply_steer_last = apply_steer
-    self.ti_apply_steer_last = ti_apply_steer
 
     # send HUD alerts
     if self.frame % 50 == 0:
       ldw = CC.hudControl.visualAlert == VisualAlert.ldw
-      if not self.dp_mazda_ti:
-        steer_required = CC.hudControl.visualAlert == VisualAlert.steerRequired
-        # TODO: find a way to silence audible warnings so we can add more hud alerts
-        steer_required = steer_required and CS.lkas_allowed_speed
-      else:
-        steer_required = CS.out.steerWarning
+      steer_required = CC.hudControl.visualAlert == VisualAlert.steerRequired
+      # TODO: find a way to silence audible warnings so we can add more hud alerts
+      steer_required = steer_required and CS.lkas_allowed_speed
       can_sends.append(mazdacan.create_alert_command(self.packer, CS.cam_laneinfo, ldw, steer_required))
 
-    # ti
-    # TI needs to be sent a message with a special key to exit standby mode. Only send TI messages when TI toggle is enabled.
-    if self.dp_mazda_ti
-      can_sends.append(mazdacan.create_ti_steering_control(self.packer, CS.CP.carFingerprint, self.frame, ti_apply_steer))
-    # Always send steering command to stock system, even with TI enabled. This provides extra torque, smoother steering, and also redundancy if one fails while engaged.
+    # send steering command
     can_sends.append(mazdacan.create_steering_control(self.packer, self.CP.carFingerprint,
                                                       self.frame, apply_steer, CS.cam_lkas))
 
