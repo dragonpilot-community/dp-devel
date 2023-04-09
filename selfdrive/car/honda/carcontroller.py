@@ -74,6 +74,10 @@ def brake_pump_hysteresis(apply_brake, apply_brake_last, last_pump_ts, ts):
   if ts - last_pump_ts < 0.2 and apply_brake > 0:
     pump_on = True
 
+  # some hybrid nidecs like Odyssey hybrid and Clarity need to keep pump on during braking or they'll lose pressure
+  if self.CP.carFingerprint == CAR.ODYSSEY_HYBRID:
+    pump_on = apply_brake > 0
+
   return pump_on, last_pump_ts
 
 
@@ -223,8 +227,6 @@ class CarController:
           apply_brake = clip(self.brake_last - wind_brake, 0.0, 1.0)
           apply_brake = int(clip(apply_brake * self.params.NIDEC_BRAKE_MAX, 0, self.params.NIDEC_BRAKE_MAX - 1))
           pump_on, self.last_pump_ts = brake_pump_hysteresis(apply_brake, self.apply_brake_last, self.last_pump_ts, ts)
-          if self.CP.carFingerprint == CAR.ODYSSEY_HYBRID:
-            pump_on = True
 
           pcm_override = True
           can_sends.append(hondacan.create_brake_command(self.packer, apply_brake, pump_on,
