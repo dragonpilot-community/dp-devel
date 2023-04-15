@@ -3,11 +3,15 @@ from collections import defaultdict
 from cereal import car
 from common.conversions import Conversions as CV
 from common.numpy_fast import interp
+from common.params import put_nonblocking
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.car.honda.hondacan import get_pt_bus
 from selfdrive.car.honda.values import CAR, DBC, STEER_THRESHOLD, HONDA_BOSCH, HONDA_NIDEC_ALT_SCM_MESSAGES, HONDA_BOSCH_ALT_BRAKE_SIGNAL, HONDA_BOSCH_RADARLESS
 from selfdrive.car.interfaces import CarStateBase
+
+import time
+from math import floor
 
 TransmissionType = car.CarParams.TransmissionType
 
@@ -162,6 +166,9 @@ class CarState(CarStateBase):
     self.cruise_setting = 0
     self.v_cruise_pcm_prev = 0
     self.engineRPM = 0
+    self.read_distance_lines_init = False
+    self.read_distance_lines = 4
+    self.prev_read_distance_lines = self.read_distance_lines
 
     # When available we use cp.vl["CAR_SPEED"]["ROUGH_CAR_SPEED_2"] to populate vEgoCluster
     # However, on cars without a digital speedometer this is not always present (HRV, FIT, CRV 2016, ILX and RDX)
@@ -236,6 +243,18 @@ class CarState(CarStateBase):
     ret.brakeHoldActive = cp.vl["VSA_STATUS"]["BRAKE_HOLD_ACTIVE"] == 1
     #dp
     self.engineRPM = cp.vl["POWERTRAIN_DATA"]['ENGINE_RPM']
+
+    # when user presses distance button on steering wheel
+    if self.prev_cruise_setting == 3:
+      if self.cruise_setting == 0:
+        self.prev_read_distance_lines = self.read_distance_lines
+        self.read_distance_lines = self.read_distance_lines % 4 + 1
+
+    if not self.read_distance_lines_init or self.read_distance_lines != self.prev_read_distance_lines:
+        self.read_distance_lines_init = True
+        put_nonblocking('dp_following_profile', str(int(min(self.read_distance_lines - 1, 2))))
+        put_nonblocking('dp_last_modified',str(floor(time.time())))
+        self.prev_read_distance_lines = self.read_distance_lines
 
     # TODO: set for all cars
     if self.CP.carFingerprint in (HONDA_BOSCH | {CAR.CIVIC, CAR.ODYSSEY, CAR.ODYSSEY_CHN, CAR.ODYSSEY_HYBRID}):
