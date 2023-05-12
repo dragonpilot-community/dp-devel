@@ -1,3 +1,23 @@
+dragonpilot [2023.5.12]
+=======================
+* Synced with openpilot master 2023.05.12 commits.
+* comma 0.9.2 release
+  * New driving model
+    * fixes turn diving
+    * trained on a new dataset
+  * Draw MPC path instead of model predicted path, this is a more accurate representation of what the car will do.
+* DP Highlight
+  * NEW: Enhance BSM request for car's that op currently does not support. (TESTED ON: Prius TSS1/TSS2, RAV4 TSS1)
+  * NEW: Manual Lane Change.
+  * NEW: Local Trip counter.
+  * TWEAK: Better TSS2 Long and DF tune. @cgw1968-5779
+  * TWEAK: Honda - ODYSSEY_HYBRID tweaks. (@lijunhao731)
+  * TWEAK: Toyota - AVALONH_2019 SNG tweaks. (@南少)
+  * FIXED: Fixed Reverse message not showing issue.
+  * FIXED: Honda - ALKA not working. @loveloveses
+  * FIXED: Display Mode.
+  * FIXED: Toyota - Speed Override.
+
 dragonpilot [2023.3.27]
 =======================
 * Synced with openpilot master 2023.03.26 commits.
