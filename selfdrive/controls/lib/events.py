@@ -372,6 +372,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   # Car is recognized, but marked as dashcam only
   EventName.startupNoControl: {
     ET.PERMANENT: StartupAlert(_("Dashcam mode")),
+    ET.NO_ENTRY: NoEntryAlert(_("Dashcam mode")),
   },
 
   # Car is not recognized
@@ -971,13 +972,10 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.NO_ENTRY: NoEntryAlert(_("LKAS Disabled")),
   },
 
-  # dp - use for atl alert
-  EventName.communityFeatureDisallowedDEPRECATED: {
-    ET.OVERRIDE_LATERAL: Alert(
-      "",
-      "",
-      AlertStatus.normal, AlertSize.none,
-      Priority.MID, VisualAlert.none,
-      AudibleAlert.disengage, .2),
+  EventName.vehicleSensorsInvalid: {
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("Vehicle Sensors Invalid")),
+    ET.PERMANENT: NormalPermanentAlert(_("Vehicle Sensors Calibrating"), _("Drive to Calibrate")),
+    ET.NO_ENTRY: NoEntryAlert(_("Vehicle Sensors Calibrating"), _("Drive to Calibrate")),
   },
+
 }
