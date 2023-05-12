@@ -39,15 +39,17 @@ DP_ACCEL_NORMAL = 1
 DP_ACCEL_SPORT = 2
 
 # accel profile by @arne182 modified by cgw
-_DP_CRUISE_MIN_V =       [-0.50,  -0.50,  -0.50, -0.50,  -0.50, -0.45, -0.45]
-_DP_CRUISE_MIN_V_ECO =   [-0.40,  -0.40,  -0.40, -0.40,  -0.40, -0.40, -0.40]
-_DP_CRUISE_MIN_V_SPORT = [-0.52,  -0.52,  -0.52, -0.52,  -0.52, -0.47, -0.47]
-_DP_CRUISE_MIN_BP =      [0.,     0.07,   3.1,   10.,   20.,    30.,   55.]
+_DP_CRUISE_MIN_V =       [-0.53, -0.53, -0.55, -0.65, -0.65, -0.60,  -0.43]
+_DP_CRUISE_MIN_V_ECO =   [-0.50, -0.50, -0.53, -0.60, -0.60, -0.55,  -0.40]
+_DP_CRUISE_MIN_V_SPORT = [-0.60, -0.60, -0.65, -0.70, -0.80, -0.70,  -0.50]
+_DP_CRUISE_MIN_BP =      [0.,    3.,    8.3,   14,    20.,   30.,   55.]
+#DP_CRUISE_MIN_BP in mph=[0.,    2,     18,    31,    44,    67,    94]
 
-_DP_CRUISE_MAX_V =       [3.5, 3.4, 2.1, 1.6, 1.1, 0.91, 0.69, 0.45, 0.34, 0.13]
+_DP_CRUISE_MAX_V =       [3.5, 3.4, 2.1, 1.6, 1.1,  0.91, 0.69, 0.44, 0.34, 0.14]
 _DP_CRUISE_MAX_V_ECO =   [3.0, 1.8, 1.3, 1.0, 0.71, 0.59, 0.45, 0.36, 0.28, 0.09]
-_DP_CRUISE_MAX_V_SPORT = [3.5, 3.5, 3.4, 3.0, 2.1, 1.61, 1.1,  0.63, 0.50, 0.33]
-_DP_CRUISE_MAX_BP =      [0.,  3,   6.,  8.,  11., 15.,  20.,  25.,  30.,  55.]
+_DP_CRUISE_MAX_V_SPORT = [3.5, 3.5, 3.4, 3.0, 2.1,  1.7,  1.3,  0.9,  0.7,  0.5]
+_DP_CRUISE_MAX_BP =      [0.,  3,   6.,  8.,  11.,  15.,  20.,  25.,  30.,  42.]
+#DP_CRUISE_MAX_BP in mph=[0.,  6.7, 13,  18,  25,   33,   45,   56,   67,   94]
 
 # count n times before we decide a lead is there or not
 _DP_E2E_LEAD_COUNT = 50
@@ -196,16 +198,16 @@ class LongitudinalPlanner:
       return desired_tf
     if self.dp_following_profile_ctrl:
       if self.dp_following_profile == 0:
-        x_vel =  [1.1,   13.89,  25.0,   41.67]
-        y_dist = [1.35,  1.35,   1.27,   1.32]
+        x_vel =  [1.1,  3.3,   5.5,    19.7,   22.0,   25.0,   42]
+        y_dist = [1.0,  1.24,  1.31,   1.33,   1.3,    1.24,   1.25]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
       elif self.dp_following_profile == 1:
-        x_vel =  [5.556, 19.7,   41.67]
-        y_dist = [1.4,   1.6,    1.6 ]
+        x_vel =  [1.1,  5.556, 19.7,   42]
+        y_dist = [1.0,  1.35,  1.6,    1.6 ]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
       elif self.dp_following_profile == 2:
-        x_vel =  [0,     19.7,   41.67]
-        y_dist = [1.4,   2.0,    2.0]
+        x_vel =  [1.1,  5.556, 19.7,   42]
+        y_dist = [1.0,  1.4,   2.0,    2.0]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
     return desired_tf
 
