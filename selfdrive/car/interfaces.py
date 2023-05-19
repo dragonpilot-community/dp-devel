@@ -209,6 +209,21 @@ class CarInterfaceBase(ABC):
     tune.torque.latAccelFactor = params['LAT_ACCEL_FACTOR']
     tune.torque.latAccelOffset = 0.0
     tune.torque.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
+    
+  @staticmethod
+  def configure_ti_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True):
+    params = get_torque_params(candidate)
+
+    tune.init('ti')
+    tune.ti.useSteeringAngle = use_steering_angle
+    tune.ti.kp = 1.0
+    tune.ti.kf = 1.0
+    tune.ti.ki = 0.1
+    tune.ti.friction = params['FRICTION']
+    tune.ti.latAccelFactor = params['LAT_ACCEL_FACTOR']
+    tune.ti.latAccelOffset = 0.0
+    tune.ti.latAngleFactor = .14
+    tune.ti.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
 
   @staticmethod
   def configure_dp_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True):
@@ -217,6 +232,8 @@ class CarInterfaceBase(ABC):
       CarInterfaceBase.configure_lqr_tune(tune)
     elif params.get_bool('dp_lateral_torque'):
       CarInterfaceBase.configure_torque_tune(candidate, tune, steering_angle_deadzone_deg, use_steering_angle)
+    elif params.get_bool('dp_lateral_ti'):
+      CarInterfaceBase.configure_ti_tune(candidate, tune, steering_angle_deadzone_deg, use_steering_angle)
 
   @abstractmethod
   def _update(self, c: car.CarControl) -> car.CarState:

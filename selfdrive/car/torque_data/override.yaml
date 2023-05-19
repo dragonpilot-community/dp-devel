@@ -48,6 +48,14 @@ KIA NIRO HYBRID 2ND GEN: [2.42, 2.5, 0.12]
 KIA NIRO EV 2ND GEN: [2.05, 2.5, 0.14]
 GENESIS GV80 2023: [2.5, 2.5, 0.1]
 
+MAZDA 3 2019: [1.0, 3.0, .19]
+MAZDA CX-30: [1.0, 3.0, .21]
+MAZDA CX-50: [1.0, 3.0, .21]
+MAZDA CX-60: [1.0, 3.0, .21]
+MAZDA CX-70: [1.0, 3.0, .21]
+MAZDA CX-80: [1.0, 3.0, .21]
+MAZDA CX-90: [1.0, 3.0, .21]
+
 # Dashcam or fallback configured as ideal car
 mock: [10.0, 10, 0.0]
 
