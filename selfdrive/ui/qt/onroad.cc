@@ -108,7 +108,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 void OnroadWindow::offroadTransition(bool offroad) {
 #ifdef ENABLE_MAPS
   if (!offroad) {
-    if (map == nullptr && (uiState()->prime_type || !MAPBOX_TOKEN.isEmpty())) {
+    if (map == nullptr && (uiState()->primeType() || !MAPBOX_TOKEN.isEmpty())) {
       MapWindow * m = new MapWindow(get_mapbox_settings());
       map = m;
 
@@ -303,11 +303,15 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   // update engageability/experimental mode button
   experimental_btn->updateState(s);
 
-  // update DM icons at 2Hz
-  if (sm.frame % (UI_FREQ / 2) == 0) {
-    setProperty("dmActive", sm["driverMonitoringState"].getDriverMonitoringState().getIsActiveMode());
-    setProperty("rightHandDM", sm["driverMonitoringState"].getDriverMonitoringState().getIsRHD());
+  // update DM icon
+  auto dm_state = sm["driverMonitoringState"].getDriverMonitoringState();
+  setProperty("dmActive", dm_state.getIsActiveMode());
+  setProperty("rightHandDM", dm_state.getIsRHD());
+  // DM icon transition
+  dm_fade_state = std::clamp(dm_fade_state+0.2*(0.5-dmActive), 0.0, 1.0);
 
+  // update following at 2Hz
+  if (sm.frame % (UI_FREQ / 2) == 0) {
     //dp
     const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
     const auto vtcState = lp.getVisionTurnControllerState();
@@ -364,9 +368,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
     setProperty("mtscActive", mtscState > cereal::LongitudinalPlan::SpeedLimitControlState::TEMP_INACTIVE);
     setProperty("curveSign", lp.getTurnSign());
   }
-
-  // DM icon transition
-  dm_fade_state = fmax(0.0, fmin(1.0, dm_fade_state+0.2*(0.5-(float)(dmActive))));
 }
 
 void AnnotatedCameraWidget::drawHud(QPainter &p) {
@@ -613,6 +614,7 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QB
   p.drawEllipse(x - btn_size / 2, y - btn_size / 2, btn_size, btn_size);
   p.setOpacity(opacity);
   p.drawPixmap(x - img.size().width() / 2, y - img.size().height() / 2, img);
+  p.setOpacity(1.0);
 }
 
 void AnnotatedCameraWidget::drawVisionTurnControllerUI(QPainter &p, int x, int y, int size, const QColor &color,
@@ -784,13 +786,7 @@ void AnnotatedCameraWidget::drawDriverState(QPainter &painter, const UIState *s)
   int x = rightHandDM ? rect().right() -  (btn_size - 24) / 2 - (bdr_s * 2) : (btn_size - 24) / 2 + (bdr_s * 2);
   int y = rect().bottom() - footer_h / 2;
   float opacity = dmActive ? 0.65 : 0.2;
-  drawIcon(painter, x, y, dm_img, blackColor(0), opacity);
-
-  // circle background
-  painter.setOpacity(1.0);
-  painter.setPen(Qt::NoPen);
-  painter.setBrush(blackColor(70));
-  painter.drawEllipse(x - btn_size / 2, y - btn_size / 2, btn_size, btn_size);
+  drawIcon(painter, x, y, dm_img, blackColor(70), opacity);
 
   // face
   QPointF face_kpts_draw[std::size(default_face_kpts_3d)];
