@@ -2,6 +2,8 @@
 import math
 import numpy as np
 from common.numpy_fast import clip, interp
+from common.params import Params
+from cereal import log
 
 import cereal.messaging as messaging
 from common.conversions import Conversions as CV
@@ -112,6 +114,16 @@ class LongitudinalPlanner:
     self.a_desired_trajectory = np.zeros(CONTROL_N)
     self.j_desired_trajectory = np.zeros(CONTROL_N)
     self.solverExecutionTime = 0.0
+    self.params = Params()
+    self.param_read_counter = 0
+    self.read_param()
+    self.personality = log.LongitudinalPersonality.standard
+
+  def read_param(self):
+    try:
+      self.personality = int(self.params.get('LongitudinalPersonality'))
+    except (ValueError, TypeError):
+      self.personality = log.LongitudinalPersonality.standard
 
     # dp
     self.dp_accel_profile_ctrl = False
@@ -318,6 +330,7 @@ class LongitudinalPlanner:
     longitudinalPlan.fcw = self.fcw
 
     longitudinalPlan.solverExecutionTime = self.mpc.solve_time
+    longitudinalPlan.personality = self.personality
 
     longitudinalPlan.visionTurnControllerState = self.vision_turn_controller.state
     longitudinalPlan.visionTurnSpeed = float(self.vision_turn_controller.v_turn)
