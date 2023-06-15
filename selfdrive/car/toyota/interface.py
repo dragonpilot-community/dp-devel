@@ -3,24 +3,15 @@ from cereal import car
 from common.conversions import Conversions as CV
 from panda import Panda
 from selfdrive.car.toyota.values import Ecu, CAR, DBC, ToyotaFlags, CarControllerParams, TSS2_CAR, RADAR_ACC_CAR, NO_DSU_CAR, \
-                                        MIN_ACC_SPEED, EPS_SCALE, EV_HYBRID_CAR, UNSUPPORTED_DSU_CAR, NO_STOP_TIMER_CAR, ANGLE_CONTROL_CAR
+  MIN_ACC_SPEED, EPS_SCALE, EV_HYBRID_CAR, UNSUPPORTED_DSU_CAR, NO_STOP_TIMER_CAR, ANGLE_CONTROL_CAR
 from selfdrive.car import STD_CARGO_KG, scale_tire_stiffness, get_safety_config
 from selfdrive.car.interfaces import CarInterfaceBase
 from common.params import Params
 
 EventName = car.CarEvent.EventName
 
-CRUISE_OVERRIDE_SPEED_MIN = 5 * CV.KPH_TO_MS
-
 
 class CarInterface(CarInterfaceBase):
-  def __init__(self, CP, CarController, CarState):
-    super().__init__(CP, CarController, CarState)
-
-    self.dp_cruise_speed = 0. # km/h
-    self.dp_override_speed_last = 0. # km/h
-    self.dp_override_speed = 0. # m/s
-
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
@@ -209,7 +200,8 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.444
       ret.mass = 4305. * CV.LB_TO_KG + STD_CARGO_KG
 
-    CarInterfaceBase.configure_dp_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg)
+    CarInterfaceBase.dp_lat_tune_collection(candidate, ret.latTuneCollection, steering_angle_deadzone_deg = 0.0)
+    CarInterfaceBase.configure_dp_tune(ret.lateralTuning, ret.latTuneCollection)
 
     ret.centerToFront = ret.wheelbase * 0.44
 
@@ -233,11 +225,8 @@ class CarInterface(CarInterfaceBase):
     ret.openpilotLongitudinalControl = bool(ret.flags & ToyotaFlags.SMART_DSU) or ret.enableDsu or candidate in (TSS2_CAR - RADAR_ACC_CAR)
     ret.autoResumeSng = ret.openpilotLongitudinalControl and candidate in NO_STOP_TIMER_CAR
 
-    if int(params.get("dp_atl").decode('utf-8')) == 1:
+    if int(Params().get("dp_atl").decode('utf-8')) == 1:
       ret.openpilotLongitudinalControl = False
-
-    if smartDsu and int(params.get("dp_atl").decode('utf-8')) == 2:
-      ret.openpilotLongitudinalControl = True
 
     if candidate == CAR.CHR_TSS2:
       ret.enableBsm = True
@@ -260,14 +249,16 @@ class CarInterface(CarInterfaceBase):
     if candidate in TSS2_CAR or ret.enableGasInterceptor:
       tune.kpBP = [0., 5., 20.]
       tune.kpV = [1.3, 1.0, 0.7]
-      tune.kiBP = [0.,  3.,  12.,  20.,  23.,  40.]
-      #kiBP in mph [0,  6.7, 22,   45,   51,   89]
-      tune.kiV = [.209,  .219, .209, .168, .085, .0027]
+      #tune.kpBP = [0., 5., 20., 30.]
+      #tune.kpV = [1.3, 1.0, 0.7, 0.1]
+      tune.kiBP = [0.,  2.,   5.,  12., 20.,  24.,  40.]
+      #kiBP in mph [0,  2,    5,  22,   45,   51,   89]
+      tune.kiV = [.351, .35, .245, .205, .169, .093, .001]
       if candidate in TSS2_CAR:
-        ret.vEgoStopping = 0.1         # car is near 0.1 to 0.2 when car starts requesting stopping accel
-        ret.vEgoStarting = 0.1         # needs to be > or == vEgoStopping
-        ret.stopAccel = -0.4           # Toyota requests -0.4 when stopped
-        ret.stoppingDecelRate = 0.03   # reach stopping target smoothly
+        ret.vEgoStopping = 0.25  # car is near 0.1 to 0.2 when car starts requesting stopping accel
+        ret.vEgoStarting = 0.25 # needs to be > or == vEgoStopping
+        ret.stopAccel = -0.4  # Toyota requests -0.4 when stopped
+        ret.stoppingDecelRate = 0.03  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
         #ret.longitudinalActuatorDelayLowerBound = 0.2
         #ret.longitudinalActuatorDelayUpperBound = 0.2
         ### stock ###
@@ -279,32 +270,14 @@ class CarInterface(CarInterfaceBase):
       tune.kiBP = [0., 35.]
       tune.kpV = [3.6, 2.4, 1.5]
       tune.kiV = [0.54, 0.36]
-
     return ret
 
   # returns a car.CarState
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
 
-    # dp
-    ret.cruiseState.enabled, ret.cruiseState.available = self.dp_atl_mode(ret)
-
-    # low speed re-write
-    if self.dragonconf.dpToyotaCruiseOverride:
-      if self.dragonconf.dpToyotaCruiseOverrideSpeed != self.dp_override_speed_last:
-        self.dp_override_speed = self.dragonconf.dpToyotaCruiseOverrideSpeed * CV.KPH_TO_MS
-        self.dp_override_speed_last = self.dragonconf.dpToyotaCruiseOverrideSpeed
-      if self.CP.openpilotLongitudinalControl and ret.cruiseActualEnabled and ret.cruiseState.speed <= self.dp_override_speed:
-        if self.dp_cruise_speed == 0.:
-          self.dp_cruise_speed = self.dp_cruise_speed = max(CRUISE_OVERRIDE_SPEED_MIN, ret.vEgo)
-        else:
-          ret.cruiseState.speed = self.dp_cruise_speed
-      else:
-        self.dp_cruise_speed = 0.
-
     # events
     events = self.create_common_events(ret)
-    events = self.dp_atl_warning(ret, events)
 
     if self.CP.openpilotLongitudinalControl:
       if ret.cruiseState.standstill and not ret.brakePressed and not self.CP.enableGasInterceptor:
