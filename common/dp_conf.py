@@ -24,7 +24,7 @@ confs = [
   {'name': 'dp_jetson', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
 
   # nav service
-  {'name': 'dp_nav', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_nav', 'default': True if TICI else False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_otisserv', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_nav_mapbox_token_pk', 'default': '', 'type': 'Text', 'conf_type': ['param']},
   {'name': 'dp_nav_mapbox_token_sk', 'default': '', 'type': 'Text', 'conf_type': ['param']},
@@ -56,23 +56,24 @@ confs = [
   {'name': 'dp_lateral_lanelines', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_lateral_camera_offset', 'default': 4 if TICI else -6, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_lateral_path_offset', 'default': 4 if TICI else 0, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_road_edge_detected', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   #ui
   {'name': 'dp_ip_addr', 'default': '', 'type': 'Text', 'conf_type': ['struct']},
-  {'name': 'dp_quiet_drive', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_quiet_drive', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 2, 'conf_type': ['param']},
   {'name': 'dp_ui_top', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_side', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   #{'name': 'dp_ui_volume', 'default': -5, 'type': 'Int8', 'min': -5, 'max': 100, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_brightness', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 100, 'conf_type': ['param', 'struct']},
-  {'name': 'dp_ui_display_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 1, 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_display_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 4, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_speed', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_ui_event', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  # {'name': 'dp_ui_event', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_face', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_lead_info', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_laneline', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_chevron', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_dm_cam', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_ui_rainbow', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_rainbow', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   #toyota
   {'name': 'dp_toyota_sng', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
@@ -84,6 +85,7 @@ confs = [
   {'name': 'dp_toyota_auto_lock', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_toyota_auto_unlock', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_toyota_fp_btn_link', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_toyota_debug_bsm', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   {'name': 'dp_mapd', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_local_db', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
@@ -105,7 +107,7 @@ confs = [
   # # {'name': 'dp_gpxd', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_hotspot_on_boot', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_honda_eps_mod', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
-  {'name': 'dp_dm', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_dm', 'default': True if not TICI else False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_speed_check', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_temp_check', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
   # {'name': 'dp_vag_resume_fix', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
@@ -118,6 +120,12 @@ confs = [
   {'name': 'dp_following_profile', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 2, 'depends': [{'name': 'dp_following_profile_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_lateral_tune', 'default': 0, 'type': 'UInt8', 'conf_type': ['param']},
   {'name': 'dp_lateral_torque_live_tune', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_lateral_alt', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_alt_speed', 'default': 80, 'type': 'UInt8', 'min': 10, 'max': 130, 'depends': [{'name': 'dp_lateral_alt', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_alt_ctrl', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 3, 'depends': [{'name': 'dp_lateral_alt', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_alt_lanelines', 'default': False, 'type': 'Bool', 'depends': [{'name': 'dp_lateral_alt', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_alt_camera_offset', 'default': 4 if TICI else -6, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_alt', 'vals': [True]}, {'name': 'dp_lateral_alt_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lateral_alt_path_offset', 'default': 4 if TICI else 0, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_alt', 'vals': [True]}, {'name': 'dp_lateral_alt_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   # {'name': 'dp_accel_profile_ctrl', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   # {'name': 'dp_accel_profile', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 2, 'depends': [{'name': 'dp_accel_profile_ctrl', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   # # safety
@@ -190,6 +198,11 @@ confs = [
   # {'name': 'dp_ftpd', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_lateral_version', 'default': 0, 'min': 0, 'max': 2, 'type': 'UInt8', 'conf_type': ['param']},
   {'name': 'dp_lateral_steer_rate_cost', 'default': 1.0, 'min': 0.5, 'max': 2.0, 'type': 'Float32', 'conf_type': ['param']},
+  {'name': 'dp_upload_ignored', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'local_trip_count_total', 'default': 0.0, 'type': 'Float32', 'conf_type': ['param']},
+  {'name': 'local_trip_meter_total', 'default': 0.0, 'type': 'Float32', 'conf_type': ['param']},
+  {'name': 'local_trip_min_total', 'default': 0.0, 'type': 'Float32', 'conf_type': ['param']},
+  {'name': 'dp_lateral_lc_manual', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 ]
 
 def get_definition(name):
