@@ -42,17 +42,17 @@ DP_ACCEL_NORMAL = 1
 DP_ACCEL_SPORT = 2
 
 # accel profile by @arne182 modified by cgw
-_DP_CRUISE_MIN_V =       [-0.78, -0.80, -0.90, -1.00, -0.90, -0.80]
-_DP_CRUISE_MIN_V_ECO =   [-0.75, -0.77, -0.84, -0.95, -0.80, -0.70]
-_DP_CRUISE_MIN_V_SPORT = [-0.82, -0.84, -0.95, -1.05, -1.00, -0.90]
-_DP_CRUISE_MIN_BP =      [0.,    8.3,   14,    20.,   30.,   55.]
-#DP_CRUISE_MIN_BP in mph=[0.,    15,    22,    30,    33,    90]
+_DP_CRUISE_MIN_V =       [-0.765, -0.765,  -0.80, -0.80, -0.75, -0.70]
+_DP_CRUISE_MIN_V_ECO =   [-0.760, -0.760,  -0.76, -0.76, -0.70, -0.65]
+_DP_CRUISE_MIN_V_SPORT = [-0.770, -0.770,  -0.90, -1.00, -0.90, -0.80]
+_DP_CRUISE_MIN_BP =      [0.,     15.66,  17.88, 20.,   30.,   55.]
+#DP_CRUISE_MIN_BP in mph=[0.,     18,     35,    40,    45,    67,    123]
 
-_DP_CRUISE_MAX_V =       [3.3, 2.6, 1.8, 1.4, 1.06, .88, .68, .45, .34, .13]
-_DP_CRUISE_MAX_V_ECO =   [3.1, 2.4, 1.6, 1.2, .76, .62,  .48,  0.36, 0.28, 0.09]
-_DP_CRUISE_MAX_V_SPORT = [3.5, 3.0, 2.4, 2.9, 2.1, 1.7, 1.3,  0.9, 0.7, 0.5]
-_DP_CRUISE_MAX_BP =      [0.,  3,   6.,  8.,  11., 15.,  20.,  25.,  30.,  55.]
-#DP_CRUISE_MAX_BP in mph=[0.,  6.7, 13,  18,  25,   33,   45,   56,   67,   94]
+_DP_CRUISE_MAX_V =       [3.4, 2.8, 1.8, 1.4, 1.06, .88, .68,  .46, .35, .13]
+_DP_CRUISE_MAX_V_ECO =   [3.2, 2.6, 1.6, 1.2, .76,  .62, .48,  .36, .28, .09]
+_DP_CRUISE_MAX_V_SPORT = [3.5, 3.0, 2.4, 2.9, 2.1,  1.7,  1.3, .9,  .7,  .5]
+_DP_CRUISE_MAX_BP =      [0.,  3,   6.,  8.,  11.,  15.,  20., 25., 30., 55.]
+#DP_CRUISE_MAX_BP in mph=[0.,  6.7, 13,  18,  25,   33,   45,  56,  67,  123]
 
 # d-e2e, from modeldata.h
 TRAJECTORY_SIZE = 33
@@ -253,20 +253,17 @@ class LongitudinalPlanner:
       return desired_tf
     if self.dp_following_profile_ctrl:
       if self.dp_following_profile == 0:
-        x_vel =  [0.0,  3.0,   3.01,  8.3,   8.31, 13.9, 13.91, 25.0,  25.01, 41.67]
-        y_dist = [0.90, 0.90,  0.95,  0.95,  1.1,  1.1,  1.2,   1.2,   1.23,  1.25]
+        x_vel =  [0,    11,   13,   15,   25,   40]
+        y_dist = [1.12, 1.12, 1.13, 1.12, 1.22, 1.22]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
-        #self.personality = log.LongitudinalPersonality.aggressive
       elif self.dp_following_profile == 1:
-        x_vel =  [0.0,   3.0,  3.01, 8.3,  8.31, 13.9, 19.7,  25.0,  41.67]
-        y_dist = [1.17,  1.17, 1.26, 1.26, 1.34, 1.34, 1.43,  1.50,  1.55]
+        x_vel =  [0,    11,   13,   15,   25,   40]
+        y_dist = [1.5,  1.5,  1.51,  1.5,  1.5,  1.45]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
-        #self.personality = log.LongitudinalPersonality.standard
       elif self.dp_following_profile == 2:
-        x_vel =  [0.0,   3.0,  3.01, 8.3,  8.31, 13.9, 19.7,  25.0,  41.67]
-        y_dist = [1.3,   1.3,  1.35, 1.35, 1.43, 1.43, 1.6,   1.8,   2.0]
+        x_vel =  [0,    11,   13,   15,   25,   40]
+        y_dist = [1.75, 1.75, 1.77, 1.75, 1.8,  1.8]
         desired_tf = np.interp(v_ego, x_vel, y_dist)
-        #self.personality = log.LongitudinalPersonality.relaxed
     return desired_tf
 
   def update(self, sm):
