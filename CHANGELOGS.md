@@ -1,3 +1,30 @@
+dragonpilot [2023.6.4]
+=======================
+* Synced with openpilot master 2023.06.2 commits.
+* comma 0.9.4 release
+  * MoonRise Model. 
+  * Navigate on openpilot
+    * When navigation has a destination openpilot will input the map information into the model, generally improving behavior
+    * When navigating on openpilot, openpilot will keep left or right appropriately at forks/exits and take turns
+    * When navigating on openpilot, lane change behavior is unchanged and still activated by the driver 
+  * UI updates
+    * Navigation settings moved to home screen and map
+  * UI alerts rework
+    * Border color always shows engagement status. Blue means disengaged, green means engaged, and grey means engaged with human overriding
+    * Alerts are shown inside the border. Black/grey means info, orange means warning, and red means critical alert 
+  * Ford Focus 2018 support
+* DP Highlight
+  * ADDED: 3 new Diplay mode.
+  * ADDED: 2 new Audible alert mode.
+  * TWEAK: Better TSS2 Long and DF tune. @cgw1968-5779
+  * TWEAK: Gpxd Refactored. 
+  * TWEAK: Fix Vision Turn Controller bug.
+  * TWEAK: DE2E tune. (Quicker detection)
+  * FIXED: Mapd toggle respects it's setting.
+  * FIXED: Display Mode.
+  * Various Bug fixes.
+  * coming to dp, soon™️ https://bit.ly/navonop
+
 dragonpilot [2023.5.12]
 =======================
 * Synced with openpilot master 2023.05.12 commits.
